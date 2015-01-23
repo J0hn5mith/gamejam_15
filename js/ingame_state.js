@@ -1,3 +1,4 @@
+var gameLogic =
 function IngameState() {
 
   this.cube;
@@ -16,7 +17,13 @@ function IngameState() {
     //cam.initOrthographicCamera(200.0, 1.0, 1000.0);
   };
 
-
+  this.createGameLogic = function(){
+    gameLogic = new GameLogic();
+    this.drawableMap = new DrawableMap();
+    this.drawableMap.init(this.gameLogic.map, s);
+  };
+  
+  
   this.show = function() {
 
     var ambientLight = new THREE.AmbientLight(0x333333);
