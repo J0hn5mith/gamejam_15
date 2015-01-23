@@ -57,14 +57,24 @@ function IngameState() {
   
   this.update = function() {
     this.cube.rotation.y += 1.5 * timer.delta;
-    this.lookAtX += 0.3 * timer.delta;
+    //this.lookAtX += 0.3 * timer.delta;
+    this.drawableMap.update(0.1)
     var results = cam.getObjectsAtCoords(mouse.x, mouse.y, s.children);
     //console.log(mouse.x, mouse.y);
     if(results.length > 0) {
+      this.moveCamera(mouse.x);
       //console.log(mouse.x, mouse.y);
       //console.log(mouse.x, mouse.y, results[0]);
     }
   };
+
+  this.moveCamera = function(distance) {
+    cam.threeJSCamera.rotation.x += 1.1;
+    //currentPosition = cam.threeJSCamera;
+    //currentPosition.setRotation(1,2,3,0);
+    //currentPosition.rotation.z += 0.01;
+
+  }
   
   
   this.draw = function() {
