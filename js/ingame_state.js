@@ -1,12 +1,17 @@
+var gameLogic =
 function IngameState() {
   
   this.cube;
   this.stats;
-  
+  this.drawableMap;
+
   this.lookAtX = 0.0;
   
   
   this.init = function() {
+    gameLogic = new GameLogic();
+    this.drawableMap =
+
     
     s = new THREE.Scene();
     
