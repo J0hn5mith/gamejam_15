@@ -9,57 +9,58 @@ function IngameState() {
 
   this.init = function() {
     
-    s = new THREE.Scene();
-    cam = new Camera();
-    cam.initPerspectiveCamera(75, 1.0, 1000.0);
-    
-    this.camVerticalAngle = toRad(15);
-    this.camHorizontalAngle = toRad(45);
-    this.camZoom = 7.0;
-    this.moveCamera();
-    
-    gameLogic = GameLogic.makeGameLogic();
-
-    gui = new Gui();
-    gui.init();
+      s = new THREE.Scene();
+      cam = new Camera();
+      cam.initPerspectiveCamera(75, 1.0, 1000.0);
+      
+      this.camVerticalAngle = toRad(15);
+      this.camHorizontalAngle = toRad(45);
+      this.camZoom = 7.0;
+      this.moveCamera();
+      
+      gameLogic = GameLogic.makeGameLogic();
+      
+      gui = new Gui();
+      gui.init();
   };
 
 
-  this.debugShow = function() {
-    var effect = new NeighbourTownEffect();
-    effect.townId = 1;
-    effect.productivityDelta = 10;
-    gameLogic.neighbourTownEffectQueue.add(effect);
-    var event = new NeighbourTownEvent();
-    event.init(1);
-    gameLogic.neighbourTownEvents.push(event);
-  };
+    this.debugShow = function() {
+        var effect = new NeighbourTownEffect();
+        effect.townId = 1;
+        effect.productivityDelta = 10;
+        this.gameLogic.neighbourTownEffectQueue.add(effect);
+        var event = new NeighbourTownEvent();
+        event.init(1);
+        this.gameLogic.neighbourTownEvents.push(event);
+    };
 
 
-  this.show = function() {
-    
-    renderer.setClearColor(0xffffff);
-    
-    this.drawableMap = DrawableMap.makeDrawableMap(gameLogic.map);
-    this.debugShow();
+    this.show = function() {
 
-    var ambientLight = new THREE.AmbientLight(0x333333);
-    s.add(ambientLight);
+        renderer.setClearColor(0xffffff);
 
-    var light = new THREE.DirectionalLight(0xffffff);
-    light.position.set(0.5, 0.5, 0.0).normalize();
+        this.gameLogic = GameLogic.makeGameLogic();
+        this.drawableMap = DrawableMap.makeDrawableMap(this.gameLogic.map);
+        this.debugShow();
 
-    light.castShadow = true;
+        var ambientLight = new THREE.AmbientLight(0x333333);
+        s.add(ambientLight);
 
-    light.shadowCameraVisible = false;
+        var light = new THREE.DirectionalLight(0xffffff);
+        light.position.set(0.5, 0.5, 0.0).normalize();
 
-    light.shadowCameraNear = -5;
-    light.shadowCameraFar = 25;
+        light.castShadow = true;
 
-    light.shadowCameraLeft = -10;
-    light.shadowCameraRight = 10;
-    light.shadowCameraTop = 10;
-    light.shadowCameraBottom = -10;
+        light.shadowCameraVisible = false;
+        
+        light.shadowCameraNear = -5;
+        light.shadowCameraFar = 25;
+
+        light.shadowCameraLeft = -10;
+        light.shadowCameraRight = 10;
+        light.shadowCameraTop = 10;
+        light.shadowCameraBottom = -10;
 
     s.add(light);
     
@@ -80,7 +81,7 @@ function IngameState() {
       //gameLogic.map.increaseCurrentRadius();
     }
   };
-
+  
   
   this.update = function() {
     

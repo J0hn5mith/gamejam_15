@@ -13,6 +13,7 @@ function GameLogic() {
     this.neighbourTownEffectQueue = new NeighbourTownEffectQueue();
     this.neighbourTownEvents = [];
     this.map = new Map();
+    this.town = new Town();
 
 
     this.init = function() {
@@ -24,6 +25,7 @@ function GameLogic() {
         this.map.init(6);
         this.neighbourTownEvents = [];
         this.initNeighbourCities();
+        this.town = Town.make(this.map);
     };
 
     
@@ -40,6 +42,9 @@ function GameLogic() {
         this.harvestResources();
         this.handleNeighbourTownEvents();
         this.applyNeighbourTownEffects();
+
+        this.town.update(timeDelta, this.playerState);
+        //console.log("Resouces", this.playerState.resources.coal);
     };
 
     
@@ -87,6 +92,10 @@ function GameLogic() {
             var targetTown = this.neighbourTowns[effect.townId];
             targetTown.applyEffect(effect);
         }
+    };
+
+    this.updateBuildings = function(delta) {
+
     }
 };
 
