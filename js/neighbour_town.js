@@ -125,9 +125,9 @@ function NeighbourTownEffect() {
     this.targetTown;
 
     this.productivityDelta = 0;
-    this.productivityFactor = 0;
+    this.productivityFactor = 1;
     this.happynessDelta = 0;
-    this.happynessFactor = 0;
+    this.happynessFactor = 1;
 
     this.apply = function(town) {
         town.state.productivity *= this.productivityFactor;
