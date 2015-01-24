@@ -10,6 +10,8 @@ function GameLogic() {
 
     this.playerState;
     this.neighbourTowns;
+
+    this.neighbourTownEffectQueue
     this.map = new Map();
     this.init = function () {
         this.playerState = new PlayerState();
@@ -46,7 +48,6 @@ function GameLogic() {
             resourcesIncome.add(town.harvestResources());
         }
         this.playerState.resources.add(resourcesIncome);
-        console.log('new income', this.playerState.resources.coal);
     };
 };
 

@@ -6,6 +6,7 @@
 function NeighbourTown() {
     this.resourcesPool;
     this.attackPool = [];
+    this.state;
 
     this.resourcesProductionStrategy;
     this.attackProductionStrategy;
@@ -50,8 +51,11 @@ function NeighbourTown() {
         this.attackPool = [];
         return returnValue;
 
-    }
+    };
 
+    this.applyEffect = function(effect){
+        effect.apply(this);
+    }
 
 }
 NeighbourTown.makeNeighbourTown = function() {
@@ -60,6 +64,12 @@ NeighbourTown.makeNeighbourTown = function() {
     return neighbourTown;
 
 };
+
+function NeighbourTownState() {
+    this.productivity = 0;
+    this.happyness = 0;
+
+}
 
 
 function ResourcesProductionStrategy() {
@@ -78,3 +88,61 @@ function AttackProductionStrategy() {
 
     }
 }
+
+
+function NeighbourTownEffect() {
+    this.productivityDelta = 0;
+    this.productivityFactor = 0;
+    this.happynessDelta = 0;
+    this.happynessFactor = 0;
+
+    this.apply = function(town) {
+        town.state.productivity *= this.productivityFactor;
+        town.state.productivity += this.productivityDelta;
+
+        town.state.happyness *= this.happynessFactor;
+        town.state.happyness += this.happynessDelta;
+
+        this.applySideEffect(town);
+
+    };
+
+    this.applySideEffect = function(town) {
+        // Do something
+
+    }
+}
+
+
+function NeighbourTownEffectQueue() {
+
+    this.entries = [];
+
+    this.add  = function(targetTown, effect){
+        this.
+
+    };
+
+    this.getEntry =  function() {
+        // Returns entry and null if there is no further entry
+
+    }
+
+}
+
+function NeighbourTownEffectQueueEntry() {
+    this.targetTown = 0;
+    this.effect = null;
+
+    this.init = function(targetTown, effect){
+        this.targetTown = targetTown;
+        this.effect = effect;
+    }
+}
+
+NeighbourTownEffectQueueEntry.make = function(targetTown, effect){
+    var entry =  new NeighbourTownEffectQueueEntry();
+    entry.init(targetTown, effect);
+    return entry;
+}
+
