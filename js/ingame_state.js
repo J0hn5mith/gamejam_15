@@ -60,10 +60,10 @@ function IngameState() {
     cam.lookAt(0.0, 0.0, 0.0);
   };
 
-  this.timeForRadius = 0;
+  this.timeForRadius = 9;
   this.debugUpdate = function(delta){
     this.timeForRadius += timer.delta;
-    if(this.timeForRadius > 2){
+    if(this.timeForRadius > 10){
       this.timeForRadius = 0;
       this.gameLogic.map.increaseCurrentRadius();
     }
