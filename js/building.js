@@ -58,7 +58,7 @@ function Farm() {
     this.code = BuildingCodes.FARM;
 
     this.init = function(tile) {
-
+        var i = 10;
     };
 }
 
@@ -70,6 +70,11 @@ function House() {
     this.hasFarmInrang = false;
 
     this.init = function(tile) {
+        var i = 10;
+
+    };
+
+    this.update = function(timeDelta){
 
     };
 }
@@ -84,6 +89,10 @@ function Factory() {
     this.init = function(tile) {
 
     };
+
+    this.update = function(timeDelta){
+
+    };
 }
 
 
@@ -93,6 +102,10 @@ function SteamPlant() {
     this.isActive = true;
 
     this.init = function(tile) {
+
+    };
+
+    this.update = function(timeDelta){
 
     };
 
@@ -106,7 +119,7 @@ function SteamPlant() {
         resources.coal -= consumption;
         return true;
 
-    }
+    };
 
     this.getCurrentConsumption = function(){
         return 10;
@@ -127,7 +140,13 @@ function MiniLov() {
     this.code = BuildingCodes.MINI_LOV;
     this.hasHouseInRange = false;
 
+
     this.init = function(tile) {
+
+    };
+
+
+    this.update = function(timeDelta){
 
     };
 
@@ -144,6 +163,11 @@ function MiniTru() {
 
     };
 
+
+    this.update = function(timeDelta){
+
+    };
+
 }
 
 
@@ -157,6 +181,10 @@ function Tower() {
 
     };
 
+
+    this.update = function(timeDelta){
+
+    };
 }
 
 function DrawableBuilding() {
