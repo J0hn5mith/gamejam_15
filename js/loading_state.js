@@ -61,9 +61,16 @@ function LoadingState() {
     };
 
 
-    this.draw = function () {
+    this.draw = function() {
         jQuery("#loading_text").text(Math.ceil(this.percentage) + "%");
-        jQuery("#loading_bar").width(jQuery("#loading_bar_box").width * (this.percentage / 100.0));
+        jQuery("#loading_bar").width(jQuery("#loading_bar_box").width() * (this.percentage / 100.0));
+    };
+    
+    
+    this.resize = function() {
+      var hPadding = (game.WIDTH - 210) / 2;
+      var vPadding = (game.HEIGHT - 50) / 2;
+      jQuery("#loading").css("padding", vPadding + "px " + hPadding + "px");
     };
 
 }

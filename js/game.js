@@ -3,6 +3,9 @@ function Game() {
   this.WIDTH = 900;
   this.HEIGHT = 600;
   
+  this.MIN_WIDTH = 600;
+  this.MIN_HEIGHT = 400;
+  
   this.DEBUG = true;
   
   this.TIME_PER_FRAME = 20;
@@ -41,6 +44,10 @@ function Game() {
     
     renderer = new Renderer();
     renderer.init(this.ANTI_ALIASING, this.SHADOWS);
+    
+    jQuery(window).resize(function() {
+      game.resize();
+    });
     
     for(var stateName in this.STATES) {
       if(this.STATES[stateName].hasOwnProperty("init")) {
@@ -91,6 +98,7 @@ function Game() {
       if(this.state.hasOwnProperty("show")) {
         this.state.show();
       }
+      this.resize();
     }
   };
   
@@ -105,6 +113,27 @@ function Game() {
   this.draw = function() {
     if(this.state.hasOwnProperty("draw")) {
       this.state.draw();
+    }
+  };
+  
+  
+  this.resize = function() {
+    
+    this.WIDTH = jQuery(window).width();
+    this.HEIGHT = jQuery(window).height();
+    
+    if(this.WIDTH < this.MIN_WIDTH) {
+      this.WIDTH = this.MIN_WIDTH;
+    }
+    if(this.HEIGHT < this.MIN_HEIGHT) {
+      this.HEIGHT = this.MIN_HEIGHT;
+    }
+    
+    jQuery("#game_box, #game").width(this.WIDTH).height(this.HEIGHT);
+    renderer.setSize(this.WIDTH, this.HEIGHT);
+    
+    if(this.state != null && this.state.hasOwnProperty("resize")) {
+      this.state.resize();
     }
   };
 

@@ -15,8 +15,7 @@ function Preloader() {
     this.totalAssets = 1;
     var preloader = this;
     SHADER_LOADER.load(
-        function (data)
-        {
+        function (data) {
           shaders = data;
           preloader.reportAssetLoaded();
         }
