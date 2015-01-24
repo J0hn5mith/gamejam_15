@@ -3,6 +3,7 @@ function Map() {
 
     this.radius = 0;
     this.size = 0;
+    this.currentRadius = 3;
     this.centerPosition = null;
     this.tiles = [];
 
@@ -22,6 +23,17 @@ function Map() {
     };
 
 
+    this.increaseCurrentRadius = function() {
+        this.currentRadius++;
+    };
+
+
+    this.getCurrentRadius = function(){
+        return this.currentRadius;
+
+    };
+
+
     this.setTile = function (x, y, tile) {
 
         if (!this.doesTileExist(x, y)) {
@@ -38,6 +50,34 @@ function Map() {
         }
 
         return this.tiles[x][y];
+    };
+
+
+    this.getTilesForRadius = function (radius) {
+        var result = [];
+        for (var x = 0; x < this.size; x++) {
+            for (var y = 0; y < this.size; y++) {
+                var tile = this.getTile(x, y);
+                var tileOnRadius = this.getDistanceToCenter(Position2D.makePosition(x,y)) == radius;
+                if (tile && tileOnRadius) {
+                    result.push(tile);
+                }
+            }
+        }
+        return result;
+    };
+    this.getAllVisibleTiles = function () {
+        var result = [];
+        for (var x = 0; x < this.size; x++) {
+            for (var y = 0; y < this.size; y++) {
+                var tile = this.getTile(x, y);
+                var tileIsVisible = this.getDistanceToCenter(Position2D.makePosition(x,y)) <= this.getCurrentRadius();
+                if (tile && tileIsVisible) {
+                    result.push(tile);
+                }
+            }
+        }
+        return result;
     };
 
 
@@ -141,10 +181,14 @@ DrawableMap = function () {
     this.scene = null;
     this.tiles = [];
 
+    this.rcurrentRadius = 0 ;
+
 
     this.init = function (map, scene) {
         this.map = map;
         this.scene = scene;
+        this.scene = scene;
+        this.currentRadius = map.getCurrentRadius();
 
     };
 
@@ -156,21 +200,33 @@ DrawableMap = function () {
         for (var index = 0; index < this.tiles.length; index++){
            this.tiles[index].update(timeDelta);
         }
+        if (this.currentRadius < this.map.getCurrentRadius()){
+           this.increaseRadius();
+        }
+    };
+
+
+    this.increaseRadius = function() {
+        this.currentRadius++;
+        var tiles = this.map.getTilesForRadius(this.currentRadius);
+        this.addTiles(tiles);
     };
 
 
     this.createTiles = function () {
-        var tiles = this.map.getAllValidTiles();
+        var tiles = this.map.getAllVisibleTiles();
+        this.addTiles(tiles);
+    };
+
+
+    this.addTiles = function (tiles) {
         for (var index = 0; index < tiles.length; index++) {
             var tile = tiles[index];
             if (tile) {
                 this.addTile(tile);
             }
         }
-
-    };
-
-
+    }
     this.addTile = function (tile) {
         var hexagonTile = new DrawableHexagonTile(tile);
         this.scene.add(hexagonTile.getShape());
@@ -183,6 +239,5 @@ DrawableMap.makeDrawableMap = function(map){
     drawableMap.init(map, s);
     drawableMap.createTiles();
     return drawableMap;
-
-}
+};
 

@@ -3,6 +3,8 @@
  */
 
 function PlayerState() {
+    this.level = 0;
+    this.levelUpHandler = null;
     this.resources = new ResourcesState();
     this.components = new ComponentsState();
 
