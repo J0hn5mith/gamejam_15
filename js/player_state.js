@@ -26,7 +26,7 @@ function ComponentsState() {
 
     this.gears = 0;
     this.pipes = 0;
-    this.bars = 0;
-    this.pumps = 0;
+    this.beam = 0;
+    this.piston = 0;
 
 }

@@ -4,20 +4,26 @@
 
 
 function NeighbourTown() {
+    this.townId;
+
     this.resourcesPool;
     this.attackPool = [];
+    this.eventPool = [];
     this.state;
 
     this.resourcesProductionStrategy;
     this.attackProductionStrategy;
+    this.eventProductionStrategy;
 
     this.init = function() {
         this.resoucresPool = new ResourcesState();
         this.attackPool = [];
+        this.eventPool = [];
         this.state = new NeighbourTownState();
 
         this.resourcesProductionStrategy = new ResourcesProductionStrategy();
         this.attackProductionStrategy = new AttackProductionStrategy();
+        this.eventProductionStrategy = new NeighbourTownEventProductionStrategy();
 
     };
 
@@ -25,6 +31,7 @@ function NeighbourTown() {
     this.update = function(delta) {
         this.produceResources(delta);
         this.produceAttacks(delta);
+        this.produceEvents(delta);
     };
 
 
@@ -41,15 +48,30 @@ function NeighbourTown() {
     };
 
 
+    this.produceEvents = function(delta) {
+        var result = this.eventProductionStrategy.produce(this, delta);
+        this.eventPool.concat(result)
+
+    };
+
+
     this.harvestResources = function(delta) {
         returnValue = jQuery.extend(true, {}, this.resoucresPool);
         this.resoucresPool = new ResourcesState();
         return returnValue;
     };
 
+
     this.harvestAttacks = function(delta) {
         returnValue = this.attackPool.slice();
         this.attackPool = [];
+        return returnValue;
+
+    };
+
+    this.harvestEvents = function(delta) {
+        returnValue = this.eventPool.slice();
+        this.eventPool = [];
         return returnValue;
 
     };
@@ -76,7 +98,6 @@ function NeighbourTownState() {
 function ResourcesProductionStrategy() {
     this.produce = function(neighbourTown, delta) {
         var result = new ResourcesState();
-        result.coal = 1;
         return result;
     }
 
@@ -90,8 +111,19 @@ function AttackProductionStrategy() {
     }
 }
 
+function NeighbourTownEventProductionStrategy() {
+    this.produce = function(neighbourTown, delta) {
+        /*
+            Returns an array of events
+         */
+        return [];
+    }
+}
+
 
 function NeighbourTownEffect() {
+    this.targetTown;
+
     this.productivityDelta = 0;
     this.productivityFactor = 0;
     this.happynessDelta = 0;
@@ -116,39 +148,42 @@ function NeighbourTownEffect() {
 
 function NeighbourTownEffectQueue() {
 
-    this.entries = [];
+    this.effects = [];
 
-    this.add = function(targetTown, effect) {
-        var entry = NeighbourTownEffectQueueEntry.make(targetTown, effect);
-        this.entries.push(entry);
+    this.add = function(effect) {
+        this.effects.push(effect);
+
+    };
+
+    this.addArray = function(effectArray) {
+        this.effects.concat(effectArray);
+
 
     };
 
     this.getEntry = function() {
         // Returns entry and null if there is no further entry
-        if (this.entries.length > 0) {
-            return this.entries.pop()
+        if (this.effects.length > 0) {
+            return this.effects.pop()
         }
         else {
             return false
         }
-    }
+    };
 
 }
 
-function NeighbourTownEffectQueueEntry() {
-    this.targetTown = 0;
-    this.effect = null;
 
-    this.init = function(targetTown, effect) {
-        this.targetTown = targetTown;
-        this.effect = effect;
-    }
+function NeighbourTownEvent() {
+    this.townId;
+
+    this.init = function(townId) {
+        this.townId = townId;
+    };
+
+    this.getNeighbourTownEffects = function(neighbourTownArray) {
+        // Return array of effects
+        return [];
+    };
 }
-
-NeighbourTownEffectQueueEntry.make = function(targetTown, effect) {
-    var entry = new NeighbourTownEffectQueueEntry();
-    entry.init(targetTown, effect);
-    return entry;
-};
 
