@@ -7,6 +7,7 @@
 
 function Town() {
     this.map;
+    this.buildings = [];
     this.addedBuildings = [];
     this.removedBuildings = [];
 
@@ -23,6 +24,12 @@ function Town() {
 
     this.update = function(timeDelta, playerState) {
         this.updateSteamPlants(timeDelta, playerState);
+        for(var i = 0; i < this.buildings.length; i++){
+            var building = this.buildings[i];
+            building.update(timeDelta);
+        }
+
+
     };
 
 
@@ -63,6 +70,7 @@ function Town() {
     this.addBuilding = function(building, tile) {
         tile.addBuilding(building);
         this.addedBuildings.push(building);
+        this.buildings.push(building);
 
         switch (building.code) {
             case BuildingCodes.STEAM_PLANT:
@@ -75,6 +83,9 @@ function Town() {
         // Remove the buidling from the tiles
         s.remove(building.tile.shape);
         this.removedBuildings.push(building);
+        var index = this.buildings.indexOf(building);
+        this.buildings.splice(index,1);
+
         switch (building.code) {
             case BuildingCodes.STEAM_PLANT:
                 this.removePlant(building)

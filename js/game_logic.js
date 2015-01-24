@@ -44,6 +44,7 @@ function GameLogic() {
         this.applyNeighbourTownEffects();
 
         this.town.update(timeDelta, this.playerState);
+        //console.log("Resouces", this.playerState.resources.coal);
     };
 
     

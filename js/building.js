@@ -109,7 +109,7 @@ function SteamPlant() {
     }
 
     this.getCurrentConsumption = function(){
-        return 1;
+        return 10;
     }
 
 

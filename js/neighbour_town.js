@@ -98,6 +98,8 @@ function NeighbourTownState() {
 function ResourcesProductionStrategy() {
     this.produce = function(neighbourTown, delta) {
         var result = new ResourcesState();
+        // DEBUG shit
+        result.coal = 1;
         return result;
     }
 
