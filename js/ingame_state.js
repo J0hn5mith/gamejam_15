@@ -18,6 +18,8 @@ function IngameState() {
   
   
   this.show = function() {
+    
+    renderer.setClearColor(0xffffff);
    
     var ambientLight = new THREE.AmbientLight(0x333333);
     s.add(ambientLight);
