@@ -4,5 +4,4 @@ bower_components/*
 lib/*
 node_modules/*
 build/*
-/.settings/
-/.gitignore
+.gitignore

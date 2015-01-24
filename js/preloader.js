@@ -10,7 +10,20 @@ function Preloader() {
   
   this.endCallback = null;
   
-  
+
+  this.loadShaders = function(){
+    this.totalAssets = 1;
+    var preloader = this;
+    SHADER_LOADER.load(
+        function (data)
+        {
+          shaders = data;
+          preloader.reportAssetLoaded();
+        }
+    );
+
+  };
+
   this.loadImages = function(sources) {
     this.sources = sources;
     this.totalAssets = Object.keys(this.sources).length;

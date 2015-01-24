@@ -178,3 +178,11 @@ DrawableMap = function () {
     };
 };
 
+DrawableMap.makeDrawableMap = function(map){
+    var drawableMap = new DrawableMap();
+    drawableMap.init(map, s);
+    drawableMap.createTiles();
+    return drawableMap;
+
+}
+
