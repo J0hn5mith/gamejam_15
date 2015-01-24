@@ -19,12 +19,24 @@ function IngameState() {
   };
 
 
+  this.debugShow = function() {
+    var effect = new NeighbourTownEffect();
+    effect.townId = 1;
+    effect.productivityDelta = 10;
+    this.gameLogic.neighbourTownEffectQueue.add(effect);
+    var event = new NeighbourTownEvent();
+    event.init(1);
+    this.gameLogic.neighbourTownEvents.push(event);
+  };
+
+
   this.show = function() {
     
     renderer.setClearColor(0xffffff);
 
     this.gameLogic = GameLogic.makeGameLogic();
     this.drawableMap = DrawableMap.makeDrawableMap(this.gameLogic.map);
+    this.debugShow();
 
     var ambientLight = new THREE.AmbientLight(0x333333);
     s.add(ambientLight);
@@ -50,11 +62,27 @@ function IngameState() {
     cam.lookAt(0.0, 0.0, 0.0);
   };
 
+  this.timeForRadius = 9;
+  this.debugUpdate = function(delta){
+    this.timeForRadius += timer.delta;
+    if(this.timeForRadius > 10){
+      this.timeForRadius = 0;
+      this.gameLogic.map.increaseCurrentRadius();
+    }
+    else {
+
+    }
+
+    this.gameLogic.update(timer.delta);
+
+  };
 
   this.update = function() {
     //this.lookAtX += 0.3 * timer.delta;
     this.drawableMap.update(0.1);
     this.gameLogic.update(timer.delta);
+    this.debugUpdate()
+
     var results = cam.getObjectsAtCoords(mouse.x, mouse.y, s.children);
     //console.log(mouse.x, mouse.y);
     if(results.length > 0) {
