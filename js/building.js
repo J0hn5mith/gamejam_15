@@ -60,6 +60,11 @@ function Farm() {
     this.init = function(tile) {
         var i = 10;
     };
+
+
+    this.update = function(timeDelta){
+
+    };
 }
 
 
@@ -68,6 +73,7 @@ function House() {
     this.debugColor = 0xff00ff;
     this.code = BuildingCodes.HOUSE;
     this.hasFarmInrang = false;
+    this.isActive = ture;
 
     this.init = function(tile) {
         var i = 10;
@@ -75,8 +81,13 @@ function House() {
     };
 
     this.update = function(timeDelta){
+        this.isActive = this.checkForFarm();
 
     };
+
+    this.checkForFarm = function(){
+
+    }
 }
 
 

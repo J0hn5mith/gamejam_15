@@ -44,6 +44,11 @@ function Map() {
     };
 
 
+    this.getTileByPosition = function(position) {
+        return this.getTile(position.x, position.y)
+    };
+
+
     this.getTile = function(x, y) {
         if (!this.doesTileExist(x, y)) {
             return false;
@@ -53,6 +58,20 @@ function Map() {
     };
 
 
+    this.getTilesInRadiusWithCenter = function(radius, center) {
+        var result = [];
+        for (var x = 0; x < this.size; x++) {
+            for (var y = 0; y < this.size; y++) {
+                var tile = this.getTile(x, y);
+                var isTileIncluded = this.getDistance(center, Position2D.makePosition(x, y)) <= radius;
+                if (tile && isTileIncluded) {
+                    result.push(tile);
+                }
+            }
+        }
+        return result;
+
+    }
     this.getTilesForRadius = function(radius) {
         var result = [];
         for (var x = 0; x < this.size; x++) {
@@ -66,6 +85,7 @@ function Map() {
         }
         return result;
     };
+
     this.getAllVisibleTiles = function() {
         var result = [];
         for (var x = 0; x < this.size; x++) {

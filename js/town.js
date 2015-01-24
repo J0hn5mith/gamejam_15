@@ -26,9 +26,21 @@ function Town() {
         this.updateSteamPlants(timeDelta, playerState);
         for(var i = 0; i < this.buildings.length; i++){
             var building = this.buildings[i];
-            //building.update(timeDelta);
+            building.update(timeDelta);
         }
 
+
+    };
+
+    this.checkForBuilding = function(position, radius, buildingType){
+        var tiles = this.map.getTilesInRadiusWithCenter(position);
+        for (var i = 0; i < tiles.length; i++){
+            var tile = tiles[i];
+            if (tile.building){
+
+            }
+
+        }
 
     };
 
