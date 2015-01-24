@@ -4,122 +4,125 @@ function IngameState() {
   this.stats;
   this.drawableMap;
 
-  this.lookAtX = 0.0;
+    this.lookAtX = 0.0;
 
 
-  this.init = function() {
-    
-    s = new THREE.Scene();
-    cam = new Camera();
-    cam.initPerspectiveCamera(75, 1.0, 1000.0);
-    //cam.initIsometricCamera(20.0, 0.5, 1.0, 1000.0);
-    //cam.initOrthographicCamera(200.0, 1.0, 1000.0);
-    
-    gameLogic = GameLogic.makeGameLogic();
+    this.init = function() {
 
-    gui = new Gui();
-    gui.init();
-  };
+        s = new THREE.Scene();
+        cam = new Camera();
+        cam.initPerspectiveCamera(75, 1.0, 1000.0);
+        //cam.initIsometricCamera(20.0, 0.5, 1.0, 1000.0);
+        //cam.initOrthographicCamera(200.0, 1.0, 1000.0);
+
+    };
 
 
-  this.debugShow = function() {
-    var effect = new NeighbourTownEffect();
-    effect.townId = 1;
-    effect.productivityDelta = 10;
-    gameLogic.neighbourTownEffectQueue.add(effect);
-    var event = new NeighbourTownEvent();
-    event.init(1);
-    gameLogic.neighbourTownEvents.push(event);
-  };
+    this.debugShow = function() {
+        var effect = new NeighbourTownEffect();
+        effect.townId = 1;
+        effect.productivityDelta = 10;
+        this.gameLogic.neighbourTownEffectQueue.add(effect);
+        var event = new NeighbourTownEvent();
+        event.init(1);
+        this.gameLogic.neighbourTownEvents.push(event);
+    };
 
 
-  this.show = function() {
-    
-    renderer.setClearColor(0xffffff);
-    
-    this.drawableMap = DrawableMap.makeDrawableMap(gameLogic.map);
-    this.debugShow();
+    this.show = function() {
 
-    var ambientLight = new THREE.AmbientLight(0x333333);
-    s.add(ambientLight);
+        renderer.setClearColor(0xffffff);
 
-    var light = new THREE.DirectionalLight(0xffffff);
-    light.position.set(0.5, 0.5, 0.0).normalize();
+        this.gameLogic = GameLogic.makeGameLogic();
+        this.drawableMap = DrawableMap.makeDrawableMap(this.gameLogic.map);
+        this.debugShow();
 
-    light.castShadow = true;
+        var ambientLight = new THREE.AmbientLight(0x333333);
+        s.add(ambientLight);
 
-    light.shadowCameraVisible = false;
+        var light = new THREE.DirectionalLight(0xffffff);
+        light.position.set(0.5, 0.5, 0.0).normalize();
 
-    light.shadowCameraNear = -5;
-    light.shadowCameraFar = 25;
+        light.castShadow = true;
 
-    light.shadowCameraLeft = -10;
-    light.shadowCameraRight = 10;
-    light.shadowCameraTop = 10;
-    light.shadowCameraBottom = -10;
+        light.shadowCameraVisible = false;
 
-    s.add(light);
+        light.shadowCameraNear = -5;
+        light.shadowCameraFar = 25;
 
-    cam.setPosition(5.0, 5.0, 5.0);
-    cam.lookAt(0.0, 0.0, 0.0);
-    
-    gui.show();
-  };
-  
-  
-  this.hide = function() {
-    gui.hide();  
-  };
+        light.shadowCameraLeft = -10;
+        light.shadowCameraRight = 10;
+        light.shadowCameraTop = 10;
+        light.shadowCameraBottom = -10;
 
-  this.timeForRadius = 9;
-  this.debugUpdate = function(delta){
-    this.timeForRadius += timer.delta;
-    if(this.timeForRadius > 10){
-      this.timeForRadius = 0;
-      gameLogic.map.increaseCurrentRadius();
-    }
-    else {
+        s.add(light);
 
-    }
+        cam.setPosition(5.0, 5.0, 5.0);
+        cam.lookAt(0.0, 0.0, 0.0);
 
-    gameLogic.update(timer.delta);
+        jQuery("#gui").show();
+    };
 
-  };
 
-  this.update = function() {
-    //this.lookAtX += 0.3 * timer.delta;
-    this.drawableMap.update(0.1);
-    gameLogic.update(timer.delta);
-    this.debugUpdate()
+    this.hide = function() {
+        jQuery("#gui").hide();
+    };
 
-    var results = cam.getObjectsAtCoords(mouse.x, mouse.y, s.children);
-    //console.log(mouse.x, mouse.y);
-    if(results.length > 0) {
-      this.moveCamera(mouse.x);
-      //console.log(mouse.x, mouse.y);
-      //console.log(mouse.x, mouse.y, results[0]);
-    }
-  };
+    this.timeForRadius = 9;
+    this.tileCounter = 0;
+    this.debugUpdate = function(delta) {
+        this.timeForRadius += timer.delta;
+        if (this.timeForRadius > 1) {
+            this.timeForRadius = 0;
+            this.gameLogic.map.increaseCurrentRadius();
+            if (this.tileCounter <= 6){
+                var tile = this.gameLogic.map.getTilesForRadius(2)[this.tileCounter+1];
+                this.gameLogic.town.addBuilding(Building.make(this.tileCounter,tile), tile);
+                this.tileCounter++;
+            }
+        }
+        else {
 
-  this.moveCamera = function(distance) {
-    cam.threeJSCamera.rotation.x += 1.1;
-    //currentPosition = cam.threeJSCamera;
-    //currentPosition.setRotation(1,2,3,0);
-    //currentPosition.rotation.z += 0.01;
+        }
 
-  };
-  
-  
-  this.draw = function() {
-    cam.lookAt(this.lookAtX, 0.0);
-    renderer.render(s, cam);
-  };
-  
-  
-  this.resize = function() {
-    cam.setAspectRatio(game.WIDTH / game.HEIGHT);
-    jQuery("#gui").width(game.WIDTH).height(game.HEIGHT);
-    jQuery("#assembly_panel").css("left", ((game.WIDTH / 2.0) - 150) + "px");
-  };
-  
+        this.gameLogic.update(timer.delta);
+
+    };
+
+    this.update = function() {
+        //this.lookAtX += 0.3 * timer.delta;
+        this.drawableMap.update(0.1);
+        this.gameLogic.update(timer.delta);
+        this.debugUpdate()
+
+        var results = cam.getObjectsAtCoords(mouse.x, mouse.y, s.children);
+        //console.log(mouse.x, mouse.y);
+        if (results.length > 0) {
+            this.moveCamera(mouse.x);
+            //console.log(mouse.x, mouse.y);
+            //console.log(mouse.x, mouse.y, results[0]);
+        }
+    };
+
+    this.moveCamera = function(distance) {
+        cam.threeJSCamera.rotation.x += 1.1;
+        //currentPosition = cam.threeJSCamera;
+        //currentPosition.setRotation(1,2,3,0);
+        //currentPosition.rotation.z += 0.01;
+
+    };
+
+
+    this.draw = function() {
+        cam.lookAt(this.lookAtX, 0.0);
+        renderer.render(s, cam);
+    };
+
+
+    this.resize = function() {
+        cam.setAspectRatio(game.WIDTH / game.HEIGHT);
+        jQuery("#gui").width(game.WIDTH).height(game.HEIGHT);
+        jQuery("#assembly_panel").css("left", ((game.WIDTH / 2.0) - 150) + "px");
+    };
+
 }
