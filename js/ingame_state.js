@@ -24,7 +24,7 @@ function IngameState() {
     this.gameLogic = GameLogic.makeGameLogic();
     var effect = new NeighbourTownEffect();
     effect.productivityDelta = 10;
-    this.gameLogic.neighbourTownEffectQueue.add(effect);
+    this.gameLogic.neighbourTownEffectQueue.add(1, effect);
     this.drawableMap = DrawableMap.makeDrawableMap(this.gameLogic.map);
 
     var ambientLight = new THREE.AmbientLight(0x333333);

@@ -11,9 +11,10 @@ function NeighbourTown() {
     this.resourcesProductionStrategy;
     this.attackProductionStrategy;
 
-    this.init = function(){
+    this.init = function() {
         this.resoucresPool = new ResourcesState();
         this.attackPool = [];
+        this.state = new NeighbourTownState();
 
         this.resourcesProductionStrategy = new ResourcesProductionStrategy();
         this.attackProductionStrategy = new AttackProductionStrategy();
@@ -21,39 +22,39 @@ function NeighbourTown() {
     };
 
 
-    this.update = function(delta){
+    this.update = function(delta) {
         this.produceResources(delta);
         this.produceAttacks(delta);
     };
 
 
-    this.produceResources = function (delta) {
+    this.produceResources = function(delta) {
         var result = this.resourcesProductionStrategy.produce(this, delta);
         this.resoucresPool.add(result);
     };
 
 
-    this.produceAttacks = function (delta) {
+    this.produceAttacks = function(delta) {
         var result = this.attackProductionStrategy.produce(this, delta);
         this.attackPool.concat(result)
 
     };
 
 
-    this.harvestResources = function (delta) {
+    this.harvestResources = function(delta) {
         returnValue = jQuery.extend(true, {}, this.resoucresPool);
         this.resoucresPool = new ResourcesState();
         return returnValue;
     };
 
-    this.harvestAttacks = function (delta) {
+    this.harvestAttacks = function(delta) {
         returnValue = this.attackPool.slice();
         this.attackPool = [];
         return returnValue;
 
     };
 
-    this.applyEffect = function(effect){
+    this.applyEffect = function(effect) {
         effect.apply(this);
     }
 
@@ -73,7 +74,7 @@ function NeighbourTownState() {
 
 
 function ResourcesProductionStrategy() {
-    this.produce = function(neighbourTown, delta){
+    this.produce = function(neighbourTown, delta) {
         var result = new ResourcesState();
         result.coal = 1;
         return result;
@@ -83,7 +84,7 @@ function ResourcesProductionStrategy() {
 
 
 function AttackProductionStrategy() {
-    this.produce = function(neighbourTown, delta){
+    this.produce = function(neighbourTown, delta) {
         return [];
 
     }
@@ -109,7 +110,6 @@ function NeighbourTownEffect() {
 
     this.applySideEffect = function(town) {
         // Do something
-
     }
 }
 
@@ -118,18 +118,19 @@ function NeighbourTownEffectQueue() {
 
     this.entries = [];
 
-    this.add  = function(targetTown, effect){
-        this.entries.push(NeighbourTownEffectQueueEntry.make(targetTown, effect));
+    this.add = function(targetTown, effect) {
+        var entry = NeighbourTownEffectQueueEntry.make(targetTown, effect);
+        this.entries.push(entry);
 
     };
 
-    this.getEntry =  function() {
+    this.getEntry = function() {
         // Returns entry and null if there is no further entry
-        if(!this.entries.isEmpty()){
-           return this.entries.pop()
+        if (this.entries.length > 0) {
+            return this.entries.pop()
         }
         else {
-           return false
+            return false
         }
     }
 
@@ -139,15 +140,15 @@ function NeighbourTownEffectQueueEntry() {
     this.targetTown = 0;
     this.effect = null;
 
-    this.init = function(targetTown, effect){
+    this.init = function(targetTown, effect) {
         this.targetTown = targetTown;
         this.effect = effect;
     }
 }
 
-NeighbourTownEffectQueueEntry.make = function(targetTown, effect){
-    var entry =  new NeighbourTownEffectQueueEntry();
+NeighbourTownEffectQueueEntry.make = function(targetTown, effect) {
+    var entry = new NeighbourTownEffectQueueEntry();
     entry.init(targetTown, effect);
     return entry;
-}
+};
 

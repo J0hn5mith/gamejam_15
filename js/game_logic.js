@@ -31,7 +31,7 @@ function GameLogic() {
         this.updateNeighbours(timeDelta);
         this.harvestResources();
 
-        this.applyNeigbourTownEffects();
+        this.applyNeighbourTownEffects();
 
     };
 
@@ -52,7 +52,7 @@ function GameLogic() {
         this.playerState.resources.add(resourcesIncome);
     };
 
-    this.applyNeighbourRownEffects = function () {
+    this.applyNeighbourTownEffects = function () {
         for (var entry; entry = this.neighbourTownEffectQueue.getEntry();) {
             var targetTown = this.neighbourTowns[entry.targetTown];
             targetTown.applyEffect(entry.effect);
