@@ -12,7 +12,13 @@ function PlayerState() {
 function ResourcesState() {
 
     this.iron = 0;
-    this.cola = 0;
+    this.coal = 0;
+
+    this.add = function (resourcesState) {
+        this.iron = resourcesState.iron;
+        this.coal = resourcesState.iron;
+
+    }
 
 }
 

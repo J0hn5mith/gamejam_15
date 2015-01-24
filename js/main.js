@@ -3,6 +3,7 @@ var game;
 var resources;
 var img;
 var sound;
+var shaders;
 var timer;
 
 var preloadingManager;
@@ -15,18 +16,10 @@ var renderer;
 
 var cam;
 var s;
-var shaders;
 
 
 
 jQuery(document).ready(function() {
-  
-  var shader = SHADER_LOADER.load(
-      function (data)
-      {
-        shaders = data
-      }
-  );
   resources = new Resources();
   img = new Img();
   sound = new Sound();
