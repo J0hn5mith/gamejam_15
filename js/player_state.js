@@ -3,7 +3,7 @@
  */
 
 function PlayerState() {
-    this.resources = new Resources();
+    this.resources = new ResourcesState();
     this.components = new ComponentsState();
 
 }
@@ -16,7 +16,7 @@ function ResourcesState() {
 
     this.add = function (resourcesState) {
         this.iron = resourcesState.iron;
-        this.coal = resourcesState.iron;
+        this.coal = resourcesState.coal;
 
     }
 

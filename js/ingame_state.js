@@ -22,7 +22,7 @@ function IngameState() {
   this.show = function() {
 
     this.gameLogic = GameLogic.makeGameLogic();
-    this.drawableMap = DrawableMap.makeDrawableMap(this.gameLogic.map)
+    this.drawableMap = DrawableMap.makeDrawableMap(this.gameLogic.map);
 
     var ambientLight = new THREE.AmbientLight(0x333333);
     s.add(ambientLight);
@@ -51,7 +51,8 @@ function IngameState() {
 
   this.update = function() {
     //this.lookAtX += 0.3 * timer.delta;
-    this.drawableMap.update(0.1)
+    this.drawableMap.update(0.1);
+    this.gameLogic.update(timer.delta);
     var results = cam.getObjectsAtCoords(mouse.x, mouse.y, s.children);
     //console.log(mouse.x, mouse.y);
     if(results.length > 0) {

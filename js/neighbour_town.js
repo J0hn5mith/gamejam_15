@@ -27,13 +27,13 @@ function NeighbourTown() {
 
 
     this.produceResources = function (delta) {
-        result = this.resourcesProductionStrategy.produce(this, delta);
+        var result = this.resourcesProductionStrategy.produce(this, delta);
         this.resoucresPool.add(result);
     };
 
 
     this.produceAttacks = function (delta) {
-        result = this.attackProductionStrategy.produce(this, delta);
+        var result = this.attackProductionStrategy.produce(this, delta);
         this.attackPool.concat(result)
 
     };
@@ -43,8 +43,6 @@ function NeighbourTown() {
         returnValue = jQuery.extend(true, {}, this.resoucresPool);
         this.resoucresPool = new ResourcesState();
         return returnValue;
-
-
     };
 
     this.harvestAttacks = function (delta) {
@@ -66,7 +64,9 @@ NeighbourTown.makeNeighbourTown = function() {
 
 function ResourcesProductionStrategy() {
     this.produce = function(neighbourTown, delta){
-        return new ResourcesState();
+        var result = new ResourcesState();
+        result.coal = 1;
+        return result;
     }
 
 }
