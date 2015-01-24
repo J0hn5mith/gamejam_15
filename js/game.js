@@ -3,6 +3,9 @@ function Game() {
   this.WIDTH = 900;
   this.HEIGHT = 600;
   
+  this.MIN_WIDTH = 600;
+  this.MIN_HEIGHT = 400;
+  
   this.DEBUG = true;
   
   this.TIME_PER_FRAME = 20;
@@ -95,6 +98,7 @@ function Game() {
       if(this.state.hasOwnProperty("show")) {
         this.state.show();
       }
+      this.resize();
     }
   };
   
@@ -118,9 +122,17 @@ function Game() {
     this.WIDTH = jQuery(window).width();
     this.HEIGHT = jQuery(window).height();
     
-    jQuery("#game_box, #game").width(this.WIDTH).height(this.HEIGHT);
+    if(this.WIDTH < this.MIN_WIDTH) {
+      this.WIDTH = this.MIN_WIDTH;
+    }
+    if(this.HEIGHT < this.MIN_HEIGHT) {
+      this.HEIGHT = this.MIN_HEIGHT;
+    }
     
-    if(this.state.hasOwnProperty("resize")) {
+    jQuery("#game_box, #game").width(this.WIDTH).height(this.HEIGHT);
+    renderer.setSize(this.WIDTH, this.HEIGHT);
+    
+    if(this.state != null && this.state.hasOwnProperty("resize")) {
       this.state.resize();
     }
   };

@@ -3,6 +3,7 @@
 <head>
     <title>My Game</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="css/fontface.css"/>
     <link rel="stylesheet" type="text/css" href="css/main.css"/>
     <script type="text/javascript" src="js/jquery-1.11.2.min.js"></script>
     <script type="text/javascript" src="lib/shader_loader.js"></script>
@@ -52,10 +53,35 @@
         </div>
     </div>
     <div id="gui">
-     <div id="resources_panel"></div>
-     <div id="components_panel"></div>
+    
+     <div id="resources_panel">
+      <div id="coal_stock" class="resource_stock">
+       <div class="value">0</div>
+       <div class="trend"></div>
+      </div>
+      <div id="iron_stock" class="resource_stock">
+       <div class="value">0</div>
+       <div class="trend"></div>
+      </div>
+     </div>
+     
+     <div id="components_panel">
+      <div id="beam_inventory" class="component_stock">0</div>
+      <div id="pipe_inventory" class="component_stock">0</div>
+      <div id="gear_inventory" class="component_stock">0</div>
+      <div id="piston_inventory" class="component_stock">0</div>
+     </div>
+     
      <div id="building_hint"></div>
-     <div id="assembly_panel"></div>
+     
+     <div id="assembly_panel">
+      <div id="assemply_input_1" class="assemply_input">&nbsp;</div>
+      <div id="assemply_input_2" class="assemply_input">&nbsp;</div>
+      <div id="assemply_input_3" class="assemply_input">&nbsp;</div>
+      <div id="assemply_arrow" class="active">&nbsp;</div>
+      <div id="assemply_output">&nbsp;</div>
+     </div>
+     
      <div id="assembly_hint"></div>
     </div>
 </div>

@@ -29,6 +29,11 @@ function Renderer() {
   };
   
   
+  this.setSize = function(width, height) {
+    this.threeJSRenderer.setSize(width, height);
+  };
+  
+  
   this.render = function(scene, camera) {
     this.threeJSRenderer.render(scene, camera.threeJSCamera);
   };  

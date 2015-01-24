@@ -48,6 +48,13 @@ function IngameState() {
 
     cam.setPosition(5.0, 5.0, 5.0);
     cam.lookAt(0.0, 0.0, 0.0);
+    
+    jQuery("#gui").show();
+  };
+  
+  
+  this.hide = function() {
+    jQuery("#gui").hide();   
   };
 
 
@@ -70,12 +77,19 @@ function IngameState() {
     //currentPosition.setRotation(1,2,3,0);
     //currentPosition.rotation.z += 0.01;
 
-  }
+  };
   
   
   this.draw = function() {
     cam.lookAt(this.lookAtX, 0.0);
     renderer.render(s, cam);
+  };
+  
+  
+  this.resize = function() {
+    cam.setAspectRatio(game.WIDTH / game.HEIGHT);
+    jQuery("#gui").width(game.WIDTH).height(game.HEIGHT);
+    jQuery("#assembly_panel").css("left", ((game.WIDTH / 2.0) - 150) + "px");
   };
   
 }
