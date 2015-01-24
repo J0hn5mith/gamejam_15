@@ -42,6 +42,10 @@ function Game() {
     renderer = new Renderer();
     renderer.init(this.ANTI_ALIASING, this.SHADOWS);
     
+    jQuery(window).resize(function() {
+      game.resize();
+    });
+    
     for(var stateName in this.STATES) {
       if(this.STATES[stateName].hasOwnProperty("init")) {
         this.STATES[stateName].init();
@@ -105,6 +109,19 @@ function Game() {
   this.draw = function() {
     if(this.state.hasOwnProperty("draw")) {
       this.state.draw();
+    }
+  };
+  
+  
+  this.resize = function() {
+    
+    this.WIDTH = jQuery(window).width();
+    this.HEIGHT = jQuery(window).height();
+    
+    jQuery("#game_box, #game").width(this.WIDTH).height(this.HEIGHT);
+    
+    if(this.state.hasOwnProperty("resize")) {
+      this.state.resize();
     }
   };
 

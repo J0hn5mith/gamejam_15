@@ -63,6 +63,12 @@ function Camera() {
   };
   
   
+  this.setAspectRatio = function(aspectRatio) {
+    this.threeJSCamera.aspect = aspectRatio;
+    this.threeJSCamera.updateProjectionMatrix();
+  };
+  
+  
   this.setPosition = function(x, y, z) {
     this.threeJSCamera.position.set(x, y, z);
   };
