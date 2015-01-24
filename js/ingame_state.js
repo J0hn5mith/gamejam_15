@@ -70,13 +70,17 @@ function IngameState() {
     };
 
     this.timeForRadius = 9;
+    this.tileCounter = 0;
     this.debugUpdate = function(delta) {
         this.timeForRadius += timer.delta;
-        if (this.timeForRadius > 10) {
+        if (this.timeForRadius > 1) {
             this.timeForRadius = 0;
             this.gameLogic.map.increaseCurrentRadius();
-            var tile = this.gameLogic.map.getTilesForRadius(1)[1];
-            tile.addBuilding(new Building());
+            if (this.tileCounter <= 6){
+                var tile = this.gameLogic.map.getTilesForRadius(2)[this.tileCounter+1];
+                tile.addBuilding(Building.make(this.tileCounter,tile));
+                this.tileCounter++;
+            }
 
         }
         else {

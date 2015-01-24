@@ -86,7 +86,7 @@ function DrawableHexagonTile(tile) {
 
     this.addBuilding = function() {
 
-        this.attributes.aCol.value[3]=(new THREE.Color());
+        this.attributes.aCol.value[3]=(new THREE.Color(this.tile.building.debugColor));
         this.attributes.aCol.needsUpdate = true;
         this.building = new DrawableBuilding();
 
