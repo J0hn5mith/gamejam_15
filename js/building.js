@@ -67,6 +67,7 @@ function House() {
     this.tile;
     this.debugColor = 0xff00ff;
     this.code = BuildingCodes.HOUSE;
+    this.hasFarmInrang = false;
 
     this.init = function(tile) {
 
@@ -78,6 +79,7 @@ function Factory() {
     this.tile;
     this.debugColor = 0xffff00;
     this.code = BuildingCodes.FACTORY;
+    this.hasSteamPlantInrange = false;
 
     this.init = function(tile) {
 
@@ -88,6 +90,7 @@ function Factory() {
 function SteamPlant() {
     this.STEAM_PLANT;
     this.debugColor = 0x00ff00;
+    this.plantsInRange =[];
 
     this.init = function(tile) {
 
@@ -100,6 +103,7 @@ function MiniLov() {
     this.tile;
     this.debugColor = 0x0000ff;
     this.code = BuildingCodes.MINI_LOV;
+    this.hasHouseInRange = false;
 
     this.init = function(tile) {
 
@@ -112,6 +116,7 @@ function MiniTru() {
     this.tile;
     this.debugColor = 0xff0000;
     this.code = BuildingCodes.MINI_TRU;
+    this.plantsInRange = false;
 
     this.init = function(tile) {
 
@@ -124,6 +129,7 @@ function Tower() {
     this.tile;
     this.debugColor = 0xff9900;
     this.code = BuildingCodes.TOWER;
+    this.plantsInRange =[];
 
     this.init = function(tile) {
 

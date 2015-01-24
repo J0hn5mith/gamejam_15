@@ -78,10 +78,9 @@ function IngameState() {
             this.gameLogic.map.increaseCurrentRadius();
             if (this.tileCounter <= 6){
                 var tile = this.gameLogic.map.getTilesForRadius(2)[this.tileCounter+1];
-                tile.addBuilding(Building.make(this.tileCounter,tile));
+                this.gameLogic.town.addBuilding(Building.make(this.tileCounter,tile), tile);
                 this.tileCounter++;
             }
-
         }
         else {
 
