@@ -1,12 +1,23 @@
 function Mouse() {
   
+  this.DRAGGING_THRESHOLD = 3;
+  
   this.x = 0;
   this.y = 0;
   
   this.downAreas = {};
   this.upAreas = {};
   
+  
   this.down = false;
+  this.downX = 0;
+  this.downY = 0;
+  
+  this.draging = false;
+  this.lastDragX = 0;
+  this.lastDragY = 0;
+  this.dragDeltaX = 0;
+  this.dragDeltaY = 0;
   
   this.init = function() {
     
@@ -18,6 +29,10 @@ function Mouse() {
     }).mousedown(function(event) {
       mouse.down = true;
       mouse.updatePosition(event);
+      mouse.downX = mouse.x;
+      mouse.downY = mouse.y;
+      mouse.lastDragX = mouse.x;
+      mouse.lastDragY = mouse.y;
       if(event.which == 1) {
         for(var name in mouse.downAreas) {
           var area = mouse.downAreas[name];
@@ -30,6 +45,7 @@ function Mouse() {
     }).mouseup(function(event) {
       mouse.down = false;
       mouse.updatePosition(event);
+      mouse.dragging = false;
       if(event.which == 1) {
         for(var name in mouse.upAreas) {
           var area = mouse.upAreas[name];
@@ -46,6 +62,25 @@ function Mouse() {
     var offset = jQuery("#game").offset();
     this.x = event.pageX - offset.left;
     this.y = event.pageY - offset.top;
+    
+    if(this.down && 
+        (Math.abs(this.x - this.downX) >= this.DRAGGING_THRESHOLD || 
+         Math.abs(this.y - this.downY) >= this.DRAGGING_THRESHOLD)) {
+      this.dragging = true;
+    }
+  };
+  
+  
+  this.update = function() {
+    if(this.dragging) {
+      this.dragDeltaX = this.x - this.lastDragX;
+      this.dragDeltaY = this.y - this.lastDragY;
+      this.lastDragX = this.x;
+      this.lastDragY = this.y;
+    } else {
+      this.dragDeltaX = 0;
+      this.dragDeltaY = 0;
+    }
   };
   
   

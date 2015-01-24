@@ -78,6 +78,7 @@ function Game() {
   this.loop = function() {
     this.initState();
     timer.update();
+    mouse.update();
     this.update();
     this.draw();
     performanceMonitor.update();
