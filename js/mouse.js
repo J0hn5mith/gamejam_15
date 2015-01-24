@@ -12,7 +12,7 @@ function Mouse() {
     
     jQuery("body").attr("unselectable", "on").css("user-select", "none").on("selectstart", false);
     
-    jQuery("#game").mousemove(function(event) {
+    jQuery("body").mousemove(function(event) {
       mouse.updatePosition(event);
       
     }).mousedown(function(event) {

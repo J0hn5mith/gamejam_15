@@ -2,20 +2,23 @@ function IngameState() {
 
   this.cube;
   this.stats;
-  this.gameLogic;
   this.drawableMap;
 
   this.lookAtX = 0.0;
 
 
   this.init = function() {
-
+    
     s = new THREE.Scene();
     cam = new Camera();
     cam.initPerspectiveCamera(75, 1.0, 1000.0);
     //cam.initIsometricCamera(20.0, 0.5, 1.0, 1000.0);
     //cam.initOrthographicCamera(200.0, 1.0, 1000.0);
+    
+    gameLogic = GameLogic.makeGameLogic();
 
+    gui = new Gui();
+    gui.init();
   };
 
 
@@ -23,19 +26,18 @@ function IngameState() {
     var effect = new NeighbourTownEffect();
     effect.townId = 1;
     effect.productivityDelta = 10;
-    this.gameLogic.neighbourTownEffectQueue.add(effect);
+    gameLogic.neighbourTownEffectQueue.add(effect);
     var event = new NeighbourTownEvent();
     event.init(1);
-    this.gameLogic.neighbourTownEvents.push(event);
+    gameLogic.neighbourTownEvents.push(event);
   };
 
 
   this.show = function() {
     
     renderer.setClearColor(0xffffff);
-
-    this.gameLogic = GameLogic.makeGameLogic();
-    this.drawableMap = DrawableMap.makeDrawableMap(this.gameLogic.map);
+    
+    this.drawableMap = DrawableMap.makeDrawableMap(gameLogic.map);
     this.debugShow();
 
     var ambientLight = new THREE.AmbientLight(0x333333);
@@ -61,12 +63,12 @@ function IngameState() {
     cam.setPosition(5.0, 5.0, 5.0);
     cam.lookAt(0.0, 0.0, 0.0);
     
-    jQuery("#gui").show();
+    gui.show();
   };
   
   
   this.hide = function() {
-    jQuery("#gui").hide();   
+    gui.hide();  
   };
 
   this.timeForRadius = 9;
@@ -74,20 +76,20 @@ function IngameState() {
     this.timeForRadius += timer.delta;
     if(this.timeForRadius > 10){
       this.timeForRadius = 0;
-      this.gameLogic.map.increaseCurrentRadius();
+      gameLogic.map.increaseCurrentRadius();
     }
     else {
 
     }
 
-    this.gameLogic.update(timer.delta);
+    gameLogic.update(timer.delta);
 
   };
 
   this.update = function() {
     //this.lookAtX += 0.3 * timer.delta;
     this.drawableMap.update(0.1);
-    this.gameLogic.update(timer.delta);
+    gameLogic.update(timer.delta);
     this.debugUpdate()
 
     var results = cam.getObjectsAtCoords(mouse.x, mouse.y, s.children);

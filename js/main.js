@@ -17,6 +17,9 @@ var renderer;
 var cam;
 var s;
 
+var gameLogic;
+var gui;
+
 
 
 jQuery(document).ready(function() {

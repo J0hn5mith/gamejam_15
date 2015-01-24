@@ -3,11 +3,27 @@
  */
 
 function PlayerState() {
-    this.level = 0;
+  
+    this.level = 1;
     this.levelUpHandler = null;
+    
     this.resources = new ResourcesState();
     this.components = new ComponentsState();
+    
+    this.resourceTrend = new ResourcesState();
 
+    
+    this.init = function() {
+      
+      this.resources.iron = 10;
+      this.resources.coal = 10;
+      
+      this.components.beams = 5;
+      this.components.pipes = 5;
+      this.components.gears = 0;
+      this.components.pistons = 0;
+      
+    };
 }
 
 
@@ -16,19 +32,19 @@ function ResourcesState() {
     this.iron = 0;
     this.coal = 0;
 
-    this.add = function (resourcesState) {
+    this.add = function(resourcesState) {
         this.iron += resourcesState.iron;
         this.coal += resourcesState.coal;
 
-    }
+    };
 
 }
 
 function ComponentsState() {
-
-    this.gears = 0;
+  
+    this.beams = 0;
     this.pipes = 0;
-    this.beam = 0;
-    this.piston = 0;
-
+    this.gears = 0;
+    this.pistons = 0;
+    
 }

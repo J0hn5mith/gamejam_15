@@ -3,9 +3,8 @@
  * Created by janmeier on 23.01.15.
  */
 
-
-
 function GameLogic() {
+  
     this.NUM_TOWNS = 6;
 
     this.playerState;
@@ -17,13 +16,17 @@ function GameLogic() {
 
 
     this.init = function() {
+      
         this.playerState = new PlayerState();
+        this.playerState.init();
+        
         this.map = new Map();
         this.map.init(10);
         this.neighbourTownEvents = [];
         this.initNeighbourCities();
     };
 
+    
     this.initNeighbourCities = function() {
         this.neighbourTowns = [];
         for (var i = 0; i < this.NUM_TOWNS; i++) {
@@ -31,6 +34,7 @@ function GameLogic() {
         }
     };
 
+    
     this.update = function(timeDelta) {
         this.updateNeighbours(timeDelta);
         this.harvestResources();
@@ -38,6 +42,7 @@ function GameLogic() {
         this.applyNeighbourTownEffects();
     };
 
+    
     this.updateNeighbours = function(timeDelta) {
         for (var i = 0; i < this.NUM_TOWNS; i++) {
             neigbourTown = this.neighbourTowns[i];
@@ -45,6 +50,7 @@ function GameLogic() {
         }
     };
 
+    
     this.harvestResources = function() {
 
         var resourcesIncome = new ResourcesState();
@@ -53,6 +59,7 @@ function GameLogic() {
             resourcesIncome.add(town.harvestResources());
         }
         this.playerState.resources.add(resourcesIncome);
+        this.playerState.resourceTrend = resourcesIncome;
     };
 
 
