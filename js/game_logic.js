@@ -43,7 +43,7 @@ function GameLogic() {
         this.handleNeighbourTownEvents();
         this.applyNeighbourTownEffects();
 
-        this.town.update(timeDelta);
+        this.town.update(timeDelta, this.playerState);
     };
 
     

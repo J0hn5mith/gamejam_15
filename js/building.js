@@ -88,13 +88,35 @@ function Factory() {
 
 
 function SteamPlant() {
-    this.STEAM_PLANT;
+    this.code = BuildingCodes.STEAM_PLANT;
     this.debugColor = 0x00ff00;
-    this.plantsInRange =[];
+    this.isActive = true;
 
     this.init = function(tile) {
 
     };
+
+    this.fuel = function(resources){
+        var consumption = this.getCurrentConsumption();
+
+        if (consumption > resources.coal){
+            return false;
+        }
+
+        resources.coal -= consumption;
+        return true;
+
+    }
+
+    this.getCurrentConsumption = function(){
+        return 1;
+    }
+
+
+    this.setIsActive = function(isActive){
+        this.isActive = isActive;
+
+    }
 
 }
 
