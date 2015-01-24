@@ -119,13 +119,18 @@ function NeighbourTownEffectQueue() {
     this.entries = [];
 
     this.add  = function(targetTown, effect){
-        this.
+        this.entries.push(NeighbourTownEffectQueueEntry.make(targetTown, effect));
 
     };
 
     this.getEntry =  function() {
         // Returns entry and null if there is no further entry
-
+        if(!this.entries.isEmpty()){
+           return this.entries.pop()
+        }
+        else {
+           return false
+        }
     }
 
 }

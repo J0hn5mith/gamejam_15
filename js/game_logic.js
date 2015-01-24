@@ -11,7 +11,7 @@ function GameLogic() {
     this.playerState;
     this.neighbourTowns;
 
-    this.neighbourTownEffectQueue
+    this.neighbourTownEffectQueue = new NeighbourTownEffectQueue();
     this.map = new Map();
     this.init = function () {
         this.playerState = new PlayerState();
@@ -31,6 +31,8 @@ function GameLogic() {
         this.updateNeighbours(timeDelta);
         this.harvestResources();
 
+        this.applyNeigbourTownEffects();
+
     };
 
     this.updateNeighbours = function (timeDelta) {
@@ -49,6 +51,14 @@ function GameLogic() {
         }
         this.playerState.resources.add(resourcesIncome);
     };
+
+    this.applyNeighbourRownEffects = function () {
+        for (var entry; entry = this.neighbourTownEffectQueue.getEntry();) {
+            var targetTown = this.neighbourTowns[entry.targetTown];
+            targetTown.applyEffect(entry.effect);
+        }
+
+    }
 };
 
 GameLogic.makeGameLogic = function () {
