@@ -58,8 +58,8 @@ Vector3D.makeVector = function(x, y, z) {
 
 function Tile() {
   
-   this.position = new Position2D();
-   this.map;
+    this.position = new Position2D();
+    this.map;
     this.building = null;
 
 
@@ -75,55 +75,95 @@ function Tile() {
 }
 
 
-function DrawableHexagonTile(tile) {
+function DrawableHexagonTile() {
 
-    this.tile = tile;
-    this.shape = null;
-    this.building = null;
-
-
-    this.update = function(delta) {
-        var uniforms = this.getUniforms();
-        uniforms.time.value += delta;
-        uniforms.uCol.value = new THREE.Color(0xffaa00);
-        uniforms.amplitude.value = Math.sin(timer.lastTime * 0.0005) * 0.2;
-        if (!this.building && this.tile.building) {
-            this.addBuilding()
+    this.tile;
+    this.orthogonalPosition;
+    
+    this.shaderUniforms;
+    this.shaderAttributes;
+    
+    this.tileModel;
+    this.buildingModel;
+    
+   
+    this.init = function(tile) {
+      this.tile = tile;
+      this.setOrthogonalPosition();
+      
+      this.createTileModel();
+      this.buildingModel = null;
+    };
+    
+    
+    this.setOrthogonalPosition = function() {
+      var x = (this.tile.position.x * 0.866) - (this.tile.position.y * 0.433);
+      var y = this.tile.position.y * 0.75;
+      var mapRadius = this.tile.map.radius;
+      x -= mapRadius * 0.433;
+      y -= mapRadius * 0.75;
+      this.orthogonalPosition = Position2D.makePosition(x, y);
+    };
+    
+    
+    this.createShaderUniforms = function(geometry) {
+        this.shaderUniforms = {
+            time : { type : "f", value : 0 },
+            amplitude : { type : "f", value : 0 },
+            tileX : { type : "f", value : this.orthogonalPosition.x },
+            tileY : { type : "f", value : this.orthogonalPosition.y },
+        };
+    };
+    
+    
+    this.createShaderAttributes = function(geometry) {
+        this.shaderAttributes = {
+            aCol : { type : "c", value : [] }
+        };
+  
+        var color = this.getColorCode();
+        
+        for(var v = 0; v < geometry.vertices.length; v++) {
+          this.shaderAttributes.aCol.value.push(new THREE.Color(color));
         }
     };
+    
+    
+    this.createTileModel = function() {
 
-    this.addBuilding = function() {
+      var geometry = Shapes3D.makeHexagonVolume(1.0, -0.2, 0.0);
 
-        this.attributes.aCol.value[3] = (new THREE.Color(this.tile.building.debugColor));
-        this.attributes.aCol.needsUpdate = true;
-        this.building = new DrawableBuilding();
-
-    };
-
-
-    this.getShape = function() {
-        if (!this.shape) {
-            this.shape = this.createShape(0xffffff);
-        }
-        return this.shape;
-    };
-
-
-    this.createShape = function() {
-        var material = this.getMaterial();
-        var hexagon = Shapes3D.makeHexagon(material);
-
-      var tPosition = this.getTranslatedPosition();
-      hexagon.position.set(tPosition.x, 0, tPosition.y);
-      return hexagon;
+      this.createShaderUniforms(geometry);
+      this.createShaderAttributes(geometry);
+      
+      var material = new THREE.ShaderMaterial({
+        uniforms: this.shaderUniforms,
+        attributes: this.shaderAttributes,
+        vertexShader: shaders.floatingHexagon.vertex,
+        fragmentShader: shaders.floatingHexagon.fragment
+      });
+      
+      this.tileModel = new THREE.Mesh(geometry, material);
+      this.tileModel.position.set(this.orthogonalPosition.x, 0, this.orthogonalPosition.y);
    };
 
 
-    this.getTranslatedPosition = function() {
-        if (!this.translatedPosition) {
-            this.translatedPosition = this.tile.map.pointInOrthogonalCoordinates(this.tile.position);
+    this.update = function() {
+        this.shaderUniforms.time.value += timer.delta;
+        this.shaderUniforms.amplitude.value = Math.sin(this.shaderUniforms.time.value) * 0.2;
+        if(!this.buildingModel && this.tile.building) {
+            this.addBuilding();
         }
-        return this.translatedPosition;
+    };
+
+    
+    this.addBuilding = function() {
+      
+        //DEBUG:
+        this.shaderAttributes.aCol.value[0] = (new THREE.Color(this.tile.building.debugColor));
+        this.shaderAttributes.aCol.needsUpdate = true;
+        
+        this.buildingModel = new DrawableBuilding();
     };
 
 
@@ -149,50 +189,7 @@ function DrawableHexagonTile(tile) {
             color = Math.random() * 0xffffff;
         }
         return color;
-
     };
-
-
-    this.getMaterial = function() {
-        var material = new THREE.ShaderMaterial({
-            uniforms: this.getUniforms(),
-            attributes: this.getAttributes(),
-            vertexShader: shaders.floatingHexagon.vertex,
-            fragmentShader: shaders.floatingHexagon.fragment
-        });
-        return material;
-    };
-
-
-    this.getUniforms = function() {
-        if (!this.uniforms) {
-            this.uniforms = {
-                time: {type: "f", value: 0},
-                "uCol": {type: "c", value: new THREE.Color(0xffaa00)},
-                amplitude: {type: "f", value: 0}
-            };
-        }
-        return this.uniforms;
-    };
-
-
-    this.getAttributes = function() {
-        if (!this.attributes) {
-            this.attributes = {
-                "aX": {type: 'f', value: []},
-                "aY": {type: 'f', value: []},
-                "aCol": {type: "c", value: []}
-            };
-
-            var tPosition = this.getTranslatedPosition();
-            var color = this.getColorCode();
-            for (var v = 0; v < 10; v++) {
-                this.attributes.aCol.value.push(new THREE.Color(color));
-                this.attributes.aX.value.push(tPosition.x);
-                this.attributes.aY.value.push(tPosition.y);
-            }
-        }
-        return this.attributes;
-    }
+    
 }
 
