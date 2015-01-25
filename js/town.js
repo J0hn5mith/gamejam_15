@@ -37,11 +37,12 @@ function Town() {
         for (var i = 0; i < tiles.length; i++){
             var tile = tiles[i];
             if (tile.building){
-
+                if (tile.building.code == buildingType){
+                    return true;
+                }
             }
-
         }
-
+        return false;
     };
 
 
@@ -81,6 +82,7 @@ function Town() {
 
     this.addBuilding = function(building, tile) {
         tile.addBuilding(building);
+        building.town = this;
         this.addedBuildings.push(building);
         this.buildings.push(building);
 

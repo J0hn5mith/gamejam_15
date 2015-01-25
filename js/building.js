@@ -73,7 +73,7 @@ function House() {
     this.debugColor = 0xff00ff;
     this.code = BuildingCodes.HOUSE;
     this.hasFarmInrang = false;
-    this.isActive = ture;
+    this.isActive = true;
 
     this.init = function(tile) {
         var i = 10;
@@ -86,7 +86,7 @@ function House() {
     };
 
     this.checkForFarm = function(){
-
+        //return this.town.checkForBuilding(this.tile.position, 2, BuildingCodes.FARM);
     }
 }
 
