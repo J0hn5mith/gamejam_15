@@ -11,6 +11,7 @@ function PlayerState() {
     this.components = new ComponentsState();
     
     this.resourceTrend = new ResourcesState();
+    this.componentTrend = new ComponentsState();
 
     
     this.init = function() {
@@ -23,6 +24,13 @@ function PlayerState() {
       this.components.gears = 0;
       this.components.pistons = 0;
       
+    };
+
+    this.applyTrends = function(){
+        this.components.add(this.componentTrend);
+        this.resources.add(this.resourceTrend);
+        this.componentTrend = new ComponentsState();
+        this.resourceTrend = new ResourcesState();
     };
 }
 

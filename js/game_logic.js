@@ -42,10 +42,11 @@ function GameLogic() {
         this.harvestResources();
         this.handleNeighbourTownEvents();
         this.applyNeighbourTownEffects();
-
         this.town.update(timeDelta, this.playerState);
-        //console.log("Resouces", this.playerState.resources.coal);
+
+        this.playerState.applyTrends();
     };
+
 
     
     this.updateNeighbours = function(timeDelta) {
@@ -63,7 +64,6 @@ function GameLogic() {
             var town = this.neighbourTowns[i];
             resourcesIncome.add(town.harvestResources());
         }
-        this.playerState.resources.add(resourcesIncome);
         this.playerState.resourceTrend = resourcesIncome;
     };
 

@@ -37,7 +37,7 @@ function Town() {
             }
 
             if (building.code == BuildingCodes.FACTORY) {
-                playerState.components.add(building.harvestComponents());
+                playerState.componentTrend.add(building.harvestComponents());
 
             }
         }
