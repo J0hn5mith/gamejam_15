@@ -69,7 +69,9 @@ function Map() {
         }
         return result;
 
-    }
+    };
+
+
     this.getTilesForRadius = function(radius) {
         var result = [];
         for(var x = 0; x < this.size; x++) {

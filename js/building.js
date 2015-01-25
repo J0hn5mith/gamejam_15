@@ -16,12 +16,15 @@ var BuildingCodes = {
 function Building() {
     this.tile;
     this.code;
+    this.town;
 
-    this.init = function(tile) {
+    this.init = function(tile, town) {
 
     };
 }
-Building.make = function(code, tile) {
+
+
+Building.make = function(code, tile, town) {
     var building = null;
     switch (code) {
         case BuildingCodes.FARM:
@@ -47,7 +50,8 @@ Building.make = function(code, tile) {
             break;
 
     }
-    building.init(tile);
+    building.tile = tile;
+    building.town = town;
     return building;
 };
 
@@ -57,15 +61,11 @@ function Farm() {
     this.debugColor = 0x00ffff;
     this.code = BuildingCodes.FARM;
 
-    this.init = function(tile) {
-        var i = 10;
-    };
-
-
     this.update = function(timeDelta){
 
     };
 }
+Farm.RANGE = 2;
 
 
 function House() {
@@ -75,20 +75,23 @@ function House() {
     this.hasFarmInrang = false;
     this.isActive = true;
 
-    this.init = function(tile) {
-        var i = 10;
-
-    };
-
     this.update = function(timeDelta){
         this.isActive = this.checkForFarm();
+        if (!this.isActive){
+           var i = 0;
+        }
 
     };
 
     this.checkForFarm = function(){
-        //return this.town.checkForBuilding(this.tile.position, 2, BuildingCodes.FARM);
+        return this.town.checkForBuilding(
+            this.tile.position,
+            Farm.RANGE,
+            BuildingCodes.FARM
+        );
     }
 }
+House.RANGE = 2;
 
 
 function Factory() {
@@ -97,12 +100,19 @@ function Factory() {
     this.code = BuildingCodes.FACTORY;
     this.hasSteamPlantInrange = false;
 
-    this.init = function(tile) {
+    this.update = function(timeDelta){
+        var hasFarm = this.checkForHouse();
+        var hasPlant = true;
+        this.isActive = hasFarm && hasPlant;
 
     };
 
-    this.update = function(timeDelta){
-
+    this.checkForHouse = function(){
+        return this.town.checkForBuilding(
+            this.tile.position,
+            House.RANGE,
+            BuildingCodes.HOUSE
+        );
     };
 }
 
@@ -134,23 +144,30 @@ function SteamPlant() {
 
     this.getCurrentConsumption = function(){
         return 10;
-    }
+    };
 
 
     this.setIsActive = function(isActive){
         this.isActive = isActive;
 
-    }
+    };
 
+    this.checkForHouse = function(){
+        return this.town.checkForBuilding(
+            this.tile.position,
+            House.RANGE,
+            BuildingCodes.HOUSE
+        );
+    };
 }
+
 
 
 function MiniLov() {
     this.tile;
     this.debugColor = 0x0000ff;
     this.code = BuildingCodes.MINI_LOV;
-    this.hasHouseInRange = false;
-
+    this.isActive = false;
 
     this.init = function(tile) {
 
@@ -158,7 +175,16 @@ function MiniLov() {
 
 
     this.update = function(timeDelta){
+        this.isActive = this.checkForHouse();
 
+    };
+
+    this.checkForHouse = function(){
+        return this.town.checkForBuilding(
+            this.tile.position,
+            House.RANGE,
+            BuildingCodes.HOUSE
+        );
     };
 
 }
@@ -176,9 +202,16 @@ function MiniTru() {
 
 
     this.update = function(timeDelta){
-
+        this.isActive = this.checkForHouse();
     };
 
+    this.checkForHouse = function(){
+        return this.town.checkForBuilding(
+            this.tile.position,
+            House.RANGE,
+            BuildingCodes.HOUSE
+        );
+    };
 }
 
 

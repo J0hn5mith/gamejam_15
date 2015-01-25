@@ -18,7 +18,7 @@ function Town() {
         this.map = map;
         this.activePlants = [];
         this.inactivePlants = [];
-
+        this.buildings = [];
     };
 
 
@@ -28,12 +28,10 @@ function Town() {
             var building = this.buildings[i];
             building.update(timeDelta);
         }
-
-
     };
 
     this.checkForBuilding = function(position, radius, buildingType){
-        var tiles = this.map.getTilesInRadiusWithCenter(position);
+        var tiles = this.map.getTilesInRadiusWithCenter(radius, position);
         for (var i = 0; i < tiles.length; i++){
             var tile = tiles[i];
             if (tile.building){
@@ -80,9 +78,9 @@ function Town() {
 
     };
 
-    this.addBuilding = function(building, tile) {
+    this.addBuilding = function(buildingCode, tile) {
+        var building = Building.make(buildingCode, tile, this);
         tile.addBuilding(building);
-        building.town = this;
         this.addedBuildings.push(building);
         this.buildings.push(building);
 

@@ -35,7 +35,6 @@ function ResourcesState() {
     this.add = function(resourcesState) {
         this.iron += resourcesState.iron;
         this.coal += resourcesState.coal;
-
     };
 
 }
