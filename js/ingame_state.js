@@ -3,7 +3,6 @@ function IngameState() {
     this.camVerticalAngle;
     this.camHorizontalAngle;
     this.camZoom;
-    this.gameLogic;
 
     this.drawableMap;
 
@@ -20,7 +19,6 @@ function IngameState() {
         this.moveCamera();
 
         gameLogic = GameLogic.makeGameLogic();
-        this.gameLogic = gameLogic;
 
         gui = new Gui();
         gui.init();
@@ -31,10 +29,10 @@ function IngameState() {
         var effect = new NeighbourTownEffect();
         effect.townId = 1;
         effect.productivityDelta = 10;
-        this.gameLogic.neighbourTownEffectQueue.add(effect);
+        gameLogic.neighbourTownEffectQueue.add(effect);
         var event = new NeighbourTownEvent();
         event.init(1);
-        this.gameLogic.neighbourTownEvents.push(event);
+        gameLogic.neighbourTownEvents.push(event);
     };
 
 
@@ -42,8 +40,8 @@ function IngameState() {
 
         renderer.setClearColor(0xffffff);
 
-        this.gameLogic = GameLogic.makeGameLogic();
-        this.drawableMap = DrawableMap.makeDrawableMap(this.gameLogic.map);
+        gameLogic = GameLogic.makeGameLogic();
+        this.drawableMap = DrawableMap.makeDrawableMap(gameLogic.map);
         this.debugShow();
 
         var ambientLight = new THREE.AmbientLight(0x333333);
@@ -81,10 +79,10 @@ function IngameState() {
         this.timeForRadius += timer.delta;
         if (this.timeForRadius > 1) {
             this.timeForRadius = 0;
-            this.gameLogic.map.increaseCurrentRadius();
-            if (this.tileCounter <= 7) {
-                var tile = this.gameLogic.map.getTilesForRadius(2)[this.tileCounter + 1];
-                this.gameLogic.town.addBuilding(this.tileCounter, tile);
+            gameLogic.map.increaseCurrentRadius();
+            if (this.tileCounter <= 6) {
+                var tile = gameLogic.map.getTilesForRadius(2)[this.tileCounter + 1];
+                gameLogic.town.addBuilding(this.tileCounter, tile);
                 this.tileCounter++;
             }
 
@@ -99,8 +97,12 @@ function IngameState() {
         }
 
         this.drawableMap.update(timer.delta);
-        this.gameLogic.update(timer.delta);
+        gameLogic.update(timer.delta);
         this.debugUpdate();
+        if(gui){
+            gui.updateResources();
+            gui.updateComponents();
+        }
 
         /*var results = cam.getObjectsAtCoords(mouse.x, mouse.y, s.children);
          if(results.length > 0) {

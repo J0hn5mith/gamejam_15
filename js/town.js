@@ -28,16 +28,21 @@ function Town() {
         for (var i = 0; i < this.buildings.length; i++) {
             var building = this.buildings[i];
             building.update(timeDelta);
-            if(
+            if (
                 this.plantListUpdateRequired
                 && (building.code == BuildingCodes.FACTORY || building.code == BuildingCodes.TOWER )
-            ){
+            ) {
                 building.updateSteamPlantsInRange();
+
+            }
+
+            if (building.code == BuildingCodes.FACTORY) {
+                playerState.components.add(building.harvestComponents());
 
             }
         }
 
-        if(this.plantListUpdateRequired) {
+        if (this.plantListUpdateRequired) {
             this.plantListUpdateRequired = false;
         }
     };
@@ -153,3 +158,4 @@ Town.make = function(map) {
     town.init(map);
     return town;
 };
+

@@ -106,12 +106,13 @@ function Factory() {
     this.hasSteamPlantInrange = false;
     this.steamPlantsInRange = [];
     this.justBuilt = true;
+    this.timer = 0;
 
     this.update = function(timeDelta){
         var hasFarm = this.checkForHouse();
         var hasPlant = true;
         this.isActive = hasFarm && hasPlant;
-
+        this.timer += timeDelta;
     };
 
     this.getIsActive = function(){
@@ -130,7 +131,7 @@ function Factory() {
         }
         return false;
 
-    }
+    };
 
     this.checkForHouse = function(){
         return this.town.checkForBuilding(
@@ -147,6 +148,18 @@ function Factory() {
             BuildingCodes.STEAM_PLANT
         )
     };
+
+
+    this.harvestComponents = function(){
+        var components = new ComponentsState();
+        if (this.timer >= 1 && this.getIsActive()) {
+            this.timer -= 1;
+            components.gears = 10;
+        }
+        components.gears = 10;
+        return components;
+
+    }
 }
 
 
