@@ -52,6 +52,11 @@ Building.make = function(code, tile, town) {
     }
     building.tile = tile;
     building.town = town;
+
+    if(building.code == BuildingCodes.FACTORY || building.code == BuildingCodes.TOWER ){
+        building.updateSteamPlantsInRange();
+
+    }
     return building;
 };
 
@@ -99,6 +104,8 @@ function Factory() {
     this.debugColor = 0xffff00;
     this.code = BuildingCodes.FACTORY;
     this.hasSteamPlantInrange = false;
+    this.steamPlantsInRange = [];
+    this.justBuilt = true;
 
     this.update = function(timeDelta){
         var hasFarm = this.checkForHouse();
@@ -107,12 +114,38 @@ function Factory() {
 
     };
 
+    this.getIsActive = function(){
+        var hasFarm = this.checkForHouse();
+        var hasPlant = true;
+        return hasFarm && this.hasActivePlantInRange();
+    };
+
+    this.hasActivePlantInRange = function(){
+        for(var i = 0; i < this.plantsInRange.length; i++){
+            var plant = this.plantsInRange[i];
+
+            if(plant.isActive){
+                return true;
+            }
+        }
+        return false;
+
+    }
+
     this.checkForHouse = function(){
         return this.town.checkForBuilding(
             this.tile.position,
             House.RANGE,
             BuildingCodes.HOUSE
         );
+    };
+
+
+    this.updateSteamPlantsInRange = function(){
+        this.plantsInRange = this.town.getBuildingsOfTypeInRange(this.tile.position,
+            SteamPlant.RANGE,
+            BuildingCodes.STEAM_PLANT
+        )
     };
 }
 
@@ -160,6 +193,7 @@ function SteamPlant() {
         );
     };
 }
+SteamPlant.RANGE = 1;
 
 
 
@@ -196,11 +230,6 @@ function MiniTru() {
     this.code = BuildingCodes.MINI_TRU;
     this.plantsInRange = false;
 
-    this.init = function(tile) {
-
-    };
-
-
     this.update = function(timeDelta){
         this.isActive = this.checkForHouse();
     };
@@ -219,15 +248,19 @@ function Tower() {
     this.tile;
     this.debugColor = 0xff9900;
     this.code = BuildingCodes.TOWER;
-    this.plantsInRange =[];
-
-    this.init = function(tile) {
-
-    };
+    this.steamPlantsInRange = [];
 
 
     this.update = function(timeDelta){
 
+    };
+
+
+    this.updateSteamPlantsInRange = function(){
+        this.plantsInRange = this.town.getBuildingsOfTypeInRange(this.tile.position,
+            SteamPlant.RANGE,
+            BuildingCodes.STEAM_PLANT
+        )
     };
 }
 
