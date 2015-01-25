@@ -9,7 +9,9 @@ var BuildingCodes = {
     STEAM_PLANT: 3,
     MINI_LOV: 4,
     MINI_TRU: 5,
-    TOWER: 6
+    CANON: 6,
+	TOWER: 7,
+	NONE: 10
 }
 
 
@@ -59,10 +61,15 @@ Building.make = function(code, tile, town) {
         case BuildingCodes.MINI_TRU:
             building = new MiniTru();
             break;
-        case BuildingCodes.TOWER:
+        case BuildingCodes.CANON:
+            building = new Canon();
+            break;
+		case BuildingCodes.TOWER:
             building = new Tower();
             break;
-
+		case BuildingCodes.NONE:
+            //
+            break;
     }
     building.tile = tile;
     building.town = town;
@@ -290,6 +297,20 @@ function Tower() {
         )
     };
 }
+
+function Canon() {
+    this.tile;
+    this.debugColor = 0xff99ff;
+    this.code = BuildingCodes.CANON;
+    this.steamPlantsInRange = [];
+
+
+    this.update = function(timeDelta) {
+
+    };
+
+}
+
 
 function DrawableBuilding() {
 
