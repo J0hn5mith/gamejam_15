@@ -10,11 +10,11 @@ function ResearchResult(){
     this.variableSets = [];
 
     this.init = function(name, effect, text, variableSets) {
-		this.name = name;
-		this.effect = effect;
-		this.text = text;
-		this.variableSets = variableSets;
-	}
+        this.name = name;
+        this.effect = effect;
+        this.text = text;
+        this.variableSets = variableSets;
+    }
 
     this.getDescriptionText = function() {
        var randomIndex = Math.floor(Math.random()*1000)%this.variableSets.length;
