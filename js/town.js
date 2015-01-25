@@ -10,6 +10,7 @@ function Town() {
     this.buildings = [];
     this.addedBuildings = [];
     this.removedBuildings = [];
+    this.plantListUpdateRequired = false;
 
     this.activePlants = [];
     this.inactivePlants = [];
@@ -18,18 +19,51 @@ function Town() {
         this.map = map;
         this.activePlants = [];
         this.inactivePlants = [];
-
+        this.buildings = [];
     };
 
 
     this.update = function(timeDelta, playerState) {
         this.updateSteamPlants(timeDelta, playerState);
-        for(var i = 0; i < this.buildings.length; i++){
+        for (var i = 0; i < this.buildings.length; i++) {
             var building = this.buildings[i];
-            //building.update(timeDelta);
+            building.update(timeDelta);
+            if (
+                this.plantListUpdateRequired
+                && (building.code == BuildingCodes.FACTORY || building.code == BuildingCodes.TOWER )
+            ) {
+                building.updateSteamPlantsInRange();
+
+            }
+
+            if (building.code == BuildingCodes.FACTORY) {
+                playerState.components.add(building.harvestComponents());
+
+            }
         }
 
+        if (this.plantListUpdateRequired) {
+            this.plantListUpdateRequired = false;
+        }
+    };
 
+
+    this.getBuildingsOfTypeInRange = function(position, radius, buildingType) {
+        var tiles = this.map.getTilesInRadiusWithCenter(radius, position);
+        var result = [];
+        for (var i = 0; i < tiles.length; i++) {
+            var tile = tiles[i];
+            if (tile.building) {
+                if (tile.building.code == buildingType) {
+                    result.push(tile.building);
+                }
+            }
+        }
+        return result;
+    };
+
+    this.checkForBuilding = function(position, radius, buildingType) {
+        return this.getBuildingsOfTypeInRange(position, radius, buildingType).length > 0;
     };
 
 
@@ -67,7 +101,8 @@ function Town() {
 
     };
 
-    this.addBuilding = function(building, tile) {
+    this.addBuilding = function(buildingCode, tile) {
+        var building = Building.make(buildingCode, tile, this);
         tile.addBuilding(building);
         this.addedBuildings.push(building);
         this.buildings.push(building);
@@ -75,6 +110,7 @@ function Town() {
         switch (building.code) {
             case BuildingCodes.STEAM_PLANT:
                 this.activePlants.push(building);
+                this.plantListUpdateRequired = true;
                 break;
         }
     };
@@ -84,7 +120,7 @@ function Town() {
         s.remove(building.tile.shape);
         this.removedBuildings.push(building);
         var index = this.buildings.indexOf(building);
-        this.buildings.splice(index,1);
+        this.buildings.splice(index, 1);
 
         switch (building.code) {
             case BuildingCodes.STEAM_PLANT:
@@ -93,22 +129,23 @@ function Town() {
         }
     };
 
-    this.removePlant = function(plant){
+    this.removePlant = function(plant) {
         var index = this.activePlants.indexOf(plant);
-        if (index >=0){
+        if (index >= 0) {
             this.activePlants.splice(index, 1);
             return;
         }
 
         index = this.inactivePlants.indexOf(plant);
-        if (index >=0){
+        if (index >= 0) {
             this.inactivePlants.splice(index, 1);
             this.activePlants.splice(index, 1);
             return;
         }
-        else{
+        else {
             console.log("Something strange happened:)")
         }
+        this.plantListUpdateRequired = true;
 
 
     }
@@ -121,3 +158,4 @@ Town.make = function(map) {
     town.init(map);
     return town;
 };
+

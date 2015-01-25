@@ -82,11 +82,11 @@ function DrawableHexagonTile(tile) {
     this.building = null;
 
 
-   this.update = function(delta) {
-      var uniforms = this.getUniforms();
-      uniforms.time.value += delta;
-      uniforms.uCol.value = new THREE.Color(0xffaa00);
-      uniforms.amplitude.value = Math.sin(timer.lastTime * 0.0005) * 0.2;
+    this.update = function(delta) {
+        var uniforms = this.getUniforms();
+        uniforms.time.value += delta;
+        uniforms.uCol.value = new THREE.Color(0xffaa00);
+        uniforms.amplitude.value = Math.sin(timer.lastTime * 0.0005) * 0.2;
         if (!this.building && this.tile.building) {
             this.addBuilding()
         }
@@ -94,7 +94,7 @@ function DrawableHexagonTile(tile) {
 
     this.addBuilding = function() {
 
-        this.attributes.aCol.value[3]=(new THREE.Color(this.tile.building.debugColor));
+        this.attributes.aCol.value[3] = (new THREE.Color(this.tile.building.debugColor));
         this.attributes.aCol.needsUpdate = true;
         this.building = new DrawableBuilding();
 
