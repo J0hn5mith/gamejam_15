@@ -94,7 +94,7 @@ function IngameState() {
 
     this.update = function() {
 
-        if (mouse.dragDeltaX != 0 || mouse.dragDeltaY != 0) {
+        if(mouse.dragging && mouse.draggingMode == "camera" && (mouse.dragDeltaX != 0 || mouse.dragDeltaY != 0)) {
             this.moveCamera();
         }
 

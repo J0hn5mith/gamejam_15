@@ -1,6 +1,7 @@
 function Mouse() {
   
   this.DRAGGING_THRESHOLD = 3;
+  this.DEFAULT_DRAGGING_MODE = "camera";
   
   this.x = 0;
   this.y = 0;
@@ -13,7 +14,9 @@ function Mouse() {
   this.downX = 0;
   this.downY = 0;
   
-  this.draging = false;
+  this.draggingModeOnDown = this.DEFAULT_DRAGGING_MODE;
+  this.draggingMode = null;
+  this.dragging = false;
   this.lastDragX = 0;
   this.lastDragY = 0;
   this.dragDeltaX = 0;
@@ -33,6 +36,7 @@ function Mouse() {
       mouse.downY = mouse.y;
       mouse.lastDragX = mouse.x;
       mouse.lastDragY = mouse.y;
+      mouse.draggingMode = mouse.draggingModeOnDown;
       if(event.which == 1) {
         for(var name in mouse.downAreas) {
           var area = mouse.downAreas[name];
