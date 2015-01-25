@@ -35,7 +35,6 @@ function ResourcesState() {
     this.add = function(resourcesState) {
         this.iron += resourcesState.iron;
         this.coal += resourcesState.coal;
-
     };
 
 }
@@ -46,5 +45,12 @@ function ComponentsState() {
     this.pipes = 0;
     this.gears = 0;
     this.pistons = 0;
+
+    this.add = function(componentsState){
+        this.beams += componentsState.beams;
+        this.pipes += componentsState.pipes;
+        this.gears += componentsState.gears;
+        this.pistons += componentsState.pistons;
+    }
     
 }

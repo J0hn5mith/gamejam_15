@@ -94,9 +94,6 @@ function GameLogic() {
         }
     };
 
-    this.updateBuildings = function(delta) {
-
-    }
 };
 
 GameLogic.makeGameLogic = function() {

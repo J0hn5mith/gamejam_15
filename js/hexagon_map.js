@@ -3,7 +3,7 @@ function Map() {
 
     this.radius = 0;
     this.size = 0;
-    this.currentRadius = 6;
+    this.currentRadius = 3;
     this.centerPosition = null;
     this.tiles = [];
 
@@ -43,11 +43,32 @@ function Map() {
     };
 
 
+    this.getTileByPosition = function(position) {
+        return this.getTile(position.x, position.y)
+    };
+
+
     this.getTile = function(x, y) {
         if (!this.doesTileExist(x, y)) {
             return false;
         }
         return this.tiles[x][y];
+    };
+
+
+    this.getTilesInRadiusWithCenter = function(radius, center) {
+        var result = [];
+        for (var x = 0; x < this.size; x++) {
+            for (var y = 0; y < this.size; y++) {
+                var tile = this.getTile(x, y);
+                var isTileIncluded = this.getDistance(center, Position2D.makePosition(x, y)) <= radius;
+                if (tile && isTileIncluded) {
+                    result.push(tile);
+                }
+            }
+        }
+        return result;
+
     };
 
 
