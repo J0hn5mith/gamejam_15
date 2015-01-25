@@ -131,7 +131,7 @@ function DrawableHexagonTile() {
     
     this.createTileModel = function() {
 
-      var geometry = Shapes3D.makeHexagonVolume(1.0, -0.2, 0.0);
+      var geometry = Shapes3D.makeHexagonVolume(0.92, -0.2, 0.0);
 
       this.createShaderUniforms(geometry);
       this.createShaderAttributes(geometry);
