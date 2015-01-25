@@ -72,7 +72,6 @@ function IngameState() {
         gui.hide();
     };
 
-
     this.timeForRadius = 9;
     this.tileCounter = 0;
     this.debugUpdate = function(delta) {
@@ -87,7 +86,6 @@ function IngameState() {
                 buff.assignToBuilding(building);
                 this.tileCounter++;
             }
-
         }
     };
 

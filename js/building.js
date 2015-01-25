@@ -2,6 +2,12 @@
  * Created by janmeier on 24.01.15.
  *
  */
+var BuildingConstants = {
+    COAL_CONSUMPTION: 1,
+    COAL_CONSUMPTION_INTERVAL: 1
+
+};
+
 var BuildingCodes = {
     FARM: 0,
     HOUSE: 1,
@@ -187,6 +193,7 @@ function Factory() {
 
 function SteamPlant() {
     this.code = BuildingCodes.STEAM_PLANT;
+    this.timer = 0;
     this.debugColor = 0x00ff00;
     this.isActive = true;
 
@@ -195,24 +202,26 @@ function SteamPlant() {
     };
 
     this.update = function(timeDelta) {
-
+        this.timer += timeDelta;
     };
 
-    this.fuel = function(resources) {
-        var consumption = this.getCurrentConsumption();
+    this.fuel = function(playerState) {
+        var resources = playerState.resources;
+        var resourcesTrend = playerState.resourceTrend;
+        var consumption = BuildingConstants.COAL_CONSUMPTION;
 
-        if (consumption > resources.coal) {
-            return false;
+        if (this.timer >= BuildingConstants.COAL_CONSUMPTION_INTERVAL) {
+            this.timer -= BuildingConstants.COAL_CONSUMPTION_INTERVAL;
+            if (consumption > resources.coal) {
+                this.isActive = false;
+            }
+            else {
+                resourcesTrend.coal -= consumption;
+                this.isActive = true;
+            }
         }
-
-        resources.coal -= consumption;
-        return true;
-
-    };
-
-    this.getCurrentConsumption = function() {
-        return 10;
-    };
+        return this.isActive;
+    }
 
 
     this.setIsActive = function(isActive) {

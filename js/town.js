@@ -73,7 +73,7 @@ function Town() {
         for (var i = 0; i < this.activePlants.length; i++) {
             var plant = this.activePlants[i];
             if (!outOfCoal) {
-                outOfCoal = plant.fuel(playerState.resources);
+                outOfCoal = plant.fuel(playerState);
             }
 
             if (!outOfCoal) {
