@@ -14,6 +14,8 @@ function GameLogic() {
     this.neighbourTownEvents = [];
     this.map = new Map();
     this.town = new Town();
+    
+    this.assembler;
 
 
     this.init = function() {
@@ -26,6 +28,9 @@ function GameLogic() {
         this.neighbourTownEvents = [];
         this.initNeighbourCities();
         this.town = Town.make(this.map);
+        
+        this.assembler = new Assembler();
+        this.assembler.init();
     };
 
     

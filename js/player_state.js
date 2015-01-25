@@ -36,8 +36,16 @@ function ResourcesState() {
         this.iron += resourcesState.iron;
         this.coal += resourcesState.coal;
     };
-
 }
+
+
+ResourcesState.create = function(resourcesState) {
+  var newResourcesState = new ResourcesState();
+  newResourcesState.iron = resourcesState.iron;
+  newResourcesState.coal = resourcesState.coal;
+  return newResourcesState;
+};
+
 
 function ComponentsState() {
   
@@ -54,3 +62,13 @@ function ComponentsState() {
     }
     
 }
+
+
+ComponentsState.create = function(componentsState) {
+  var newComponentsState = new ComponentsState();
+  newComponentsState.beams = componentsState.beams;
+  newComponentsState.pipes = componentsState.pipes;
+  newComponentsState.gears = componentsState.gears;
+  newComponentsState.pistons = componentsState.pistons;
+  return newComponentsState;
+};
