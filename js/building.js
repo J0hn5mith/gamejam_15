@@ -10,7 +10,8 @@ var BuildingCodes = {
     STEAM_PLANT : 3,
     MINI_LOV : 4,
     MINI_TRU : 5,
-    TOWER : 6,
+    CANON : 6,
+	TOWER : 7,
 	NONE : 10
 }
 
@@ -46,7 +47,10 @@ Building.make = function(code, tile) {
         case BuildingCodes.MINI_TRU:
             building = new MiniTru();
             break;
-        case BuildingCodes.TOWER:
+        case BuildingCodes.CANON:
+            building = new Canon();
+            break;
+		case BuildingCodes.TOWER:
             building = new Tower();
             break;
 		case BuildingCodes.NONE:
@@ -153,6 +157,17 @@ function MiniTru() {
 
 }
 
+function Canon() {
+    this.tile;
+    this.debugColor = 0xff9966;
+    this.code = BuildingCodes.CANON;
+    this.plantsInRange = false;
+
+    this.init = function(tile) {
+
+    };
+
+}
 
 function Tower() {
     this.tile;

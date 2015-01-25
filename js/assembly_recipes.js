@@ -113,7 +113,7 @@ var assemblyRecipes = {
 
 	//Steamengine
     "OII" : {
-      target : BuildingCodes.Steamengine,
+      target : BuildingCodes.STEAM_PLANT,
       title : "Building Steamengine Level 1",
       description : "Drag upgrade icon unto desired tile.",
       action : function() {
@@ -122,7 +122,7 @@ var assemblyRecipes = {
     },
 	
 	"IOO" : {
-      target : BuildingCodes.Steamengine,
+      target : BuildingCodes.STEAM_PLANT,
       title : "Upgrade Steamengine to Level 2",
       description : "Drag upgrade icon unto desired tile.",
       action : function() {
@@ -131,7 +131,7 @@ var assemblyRecipes = {
     },
 
 	"OXX" : {
-      target : BuildingCodes.Steamengine,
+      target : BuildingCodes.STEAM_PLANT,
       title : "Upgrade Steamengine to Level 3",
       description : "Drag upgrade icon unto desired tile.",
       action : function() {
@@ -140,7 +140,7 @@ var assemblyRecipes = {
     },
 	
     "OOX" : {
-      target : BuildingCodes.Steamengine,
+      target : BuildingCodes.STEAM_PLANT,
       title : "Increase Steamengine productivity",
       description : "Drag upgrade icon unto desired tile.",
       action : function() {
