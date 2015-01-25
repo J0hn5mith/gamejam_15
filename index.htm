@@ -39,6 +39,8 @@
     <script type="text/javascript" src="js/game_logic.js"></script>
     <script type="text/javascript" src="js/shapes.js"></script>
     <script type="text/javascript" src="js/gui.js"></script>
+    <script type="text/javascript" src="js/assembler.js"></script>
+    <script type="text/javascript" src="js/assembly_recipes.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
 
     <script data-src="js/shader/floatingHexagon/vertex.glsl" data-name='floatingHexagon' type="x-shader/x-vertex" id="floatingHexagon_vertex"></script>
@@ -58,7 +60,7 @@
     </div>
     <div id="gui">
     
-     <div id="resources_panel">
+     <div id="resources_panel" class="no_camera_dragging">
       <div id="coal_stock" class="resource_stock">
        <div class="value">0</div>
        <div class="trend"></div>
@@ -69,26 +71,26 @@
       </div>
      </div>
      
-     <div id="components_panel">
+     <div id="components_panel" class="no_camera_dragging">
       <div id="beam_stock" class="component_stock">0</div>
       <div id="pipe_stock" class="component_stock">0</div>
       <div id="gear_stock" class="component_stock">0</div>
       <div id="piston_stock" class="component_stock">0</div>
      </div>
      
-     <div id="one_line_hint"></div>
+     <div id="one_line_hint" class="no_camera_dragging"></div>
      
-     <div id="building_hint"></div>
+     <div id="building_hint" class="no_camera_dragging"></div>
      
-     <div id="assembly_panel">
-      <div id="assemply_input_0" class="assemply_input">&nbsp;</div>
-      <div id="assemply_input_1" class="assemply_input">&nbsp;</div>
-      <div id="assemply_input_2" class="assemply_input">&nbsp;</div>
-      <div id="assemply_arrow" class="active">&nbsp;</div>
-      <div id="assemply_output">&nbsp;</div>
+     <div id="assembly_panel" class="no_camera_dragging">
+      <div id="assembly_input_0" class="assembly_input">&nbsp;</div>
+      <div id="assembly_input_1" class="assembly_input">&nbsp;</div>
+      <div id="assembly_input_2" class="assembly_input">&nbsp;</div>
+      <div id="assembly_arrow">&nbsp;</div>
+      <div id="assembly_output">&nbsp;</div>
      </div>
      
-     <div id="assembly_hint"></div>
+     <div id="assembly_hint" class="no_camera_dragging"></div>
     </div>
 </div>
 </body>
