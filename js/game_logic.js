@@ -22,7 +22,7 @@ function GameLogic() {
         this.playerState.init();
         
         this.map = new Map();
-        this.map.init(10);
+        this.map.init(6);
         this.neighbourTownEvents = [];
         this.initNeighbourCities();
         this.town = Town.make(this.map);

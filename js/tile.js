@@ -18,19 +18,22 @@ function Position2D() {
     }
 }
 
+
 Position2D.makePosition = function(x, y) {
     var position = new Position2D();
     position.init(x, y);
     return position;
-
 };
 
+
 Position2D.Origin = Position2D.makePosition(0, 0);
+
 
 function Vector3D() {
     this.x = 0;
     this.y = 0;
     this.z = 0;
+
 
     this.init = function(x, y, z) {
         this.x = x;
@@ -38,12 +41,14 @@ function Vector3D() {
         this.z = z;
     };
 
+    
     this.isOrthogonalToBaseVector = function() {
         return this.x == 0 || this.y == 0 || this.z == 0;
-    }
-
+    };
 
 }
+
+
 Vector3D.makeVector = function(x, y, z) {
     var vector = new Vector3D();
     vector.init(x, y, z);
@@ -52,8 +57,9 @@ Vector3D.makeVector = function(x, y, z) {
 
 
 function Tile() {
-    this.position = new Position2D();
-    this.map;
+  
+   this.position = new Position2D();
+   this.map;
     this.building = null;
 
 
@@ -68,7 +74,9 @@ function Tile() {
     }
 }
 
+
 function DrawableHexagonTile(tile) {
+
     this.tile = tile;
     this.shape = null;
     this.building = null;
@@ -105,11 +113,10 @@ function DrawableHexagonTile(tile) {
         var material = this.getMaterial();
         var hexagon = Shapes3D.makeHexagon(material);
 
-        var tPosition = this.getTranslatedPosition();
-        hexagon.position.set(tPosition.x - this.tile.map.radius, 1, tPosition.y - this.tile.map.radius);
-        return hexagon;
-
-    };
+      var tPosition = this.getTranslatedPosition();
+      hexagon.position.set(tPosition.x, 0, tPosition.y);
+      return hexagon;
+   };
 
 
     this.getTranslatedPosition = function() {

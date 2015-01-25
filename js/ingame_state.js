@@ -1,21 +1,28 @@
 function IngameState() {
+  
+  this.camVerticalAngle;
+  this.camHorizontalAngle;
+  this.camZoom;
 
-  this.cube;
-  this.stats;
   this.drawableMap;
 
-    this.lookAtX = 0.0;
 
-
-    this.init = function() {
-
-        s = new THREE.Scene();
-        cam = new Camera();
-        cam.initPerspectiveCamera(75, 1.0, 1000.0);
-        //cam.initIsometricCamera(20.0, 0.5, 1.0, 1000.0);
-        //cam.initOrthographicCamera(200.0, 1.0, 1000.0);
-
-    };
+  this.init = function() {
+    
+      s = new THREE.Scene();
+      cam = new Camera();
+      cam.initPerspectiveCamera(75, 1.0, 1000.0);
+      
+      this.camVerticalAngle = toRad(15);
+      this.camHorizontalAngle = toRad(45);
+      this.camZoom = 7.0;
+      this.moveCamera();
+      
+      gameLogic = GameLogic.makeGameLogic();
+      
+      gui = new Gui();
+      gui.init();
+  };
 
 
     this.debugShow = function() {
@@ -46,7 +53,7 @@ function IngameState() {
         light.castShadow = true;
 
         light.shadowCameraVisible = false;
-
+        
         light.shadowCameraNear = -5;
         light.shadowCameraFar = 25;
 
@@ -55,74 +62,77 @@ function IngameState() {
         light.shadowCameraTop = 10;
         light.shadowCameraBottom = -10;
 
-        s.add(light);
+    s.add(light);
+    
+    gui.show();
+  };
+  
+  
+  this.hide = function() {
+    gui.hide();  
+  };
+  
 
-        cam.setPosition(5.0, 5.0, 5.0);
-        cam.lookAt(0.0, 0.0, 0.0);
+  this.timeForRadius = 9;
+  this.debugUpdate = function(delta){
+    this.timeForRadius += timer.delta;
+    if(this.timeForRadius > 10){
+      this.timeForRadius = 0;
+      //gameLogic.map.increaseCurrentRadius();
+    }
+  };
+  
+  
+  this.update = function() {
+    
+    if(mouse.dragDeltaX != 0 || mouse.dragDeltaY != 0) {
+      this.moveCamera();
+    }
+    
+    this.drawableMap.update(timer.delta);
+    gameLogic.update(timer.delta);
+    this.debugUpdate();
+    
+    /*var results = cam.getObjectsAtCoords(mouse.x, mouse.y, s.children);
+    if(results.length > 0) {
+    }*/
+  };
 
-        jQuery("#gui").show();
-    };
-
-
-    this.hide = function() {
-        jQuery("#gui").hide();
-    };
-
-    this.timeForRadius = 9;
-    this.tileCounter = 0;
-    this.debugUpdate = function(delta) {
-        this.timeForRadius += timer.delta;
-        if (this.timeForRadius > 1) {
-            this.timeForRadius = 0;
-            this.gameLogic.map.increaseCurrentRadius();
-            if (this.tileCounter <= 6){
-                var tile = this.gameLogic.map.getTilesForRadius(2)[this.tileCounter+1];
-                this.gameLogic.town.addBuilding(Building.make(this.tileCounter,tile), tile);
-                this.tileCounter++;
-            }
-        }
-        else {
-
-        }
-
-        this.gameLogic.update(timer.delta);
-
-    };
-
-    this.update = function() {
-        //this.lookAtX += 0.3 * timer.delta;
-        this.drawableMap.update(0.1);
-        this.gameLogic.update(timer.delta);
-        this.debugUpdate()
-
-        var results = cam.getObjectsAtCoords(mouse.x, mouse.y, s.children);
-        //console.log(mouse.x, mouse.y);
-        if (results.length > 0) {
-            this.moveCamera(mouse.x);
-            //console.log(mouse.x, mouse.y);
-            //console.log(mouse.x, mouse.y, results[0]);
-        }
-    };
-
-    this.moveCamera = function(distance) {
-        cam.threeJSCamera.rotation.x += 1.1;
-        //currentPosition = cam.threeJSCamera;
-        //currentPosition.setRotation(1,2,3,0);
-        //currentPosition.rotation.z += 0.01;
-
-    };
-
-
-    this.draw = function() {
-        cam.lookAt(this.lookAtX, 0.0);
-        renderer.render(s, cam);
-    };
-
-
-    this.resize = function() {
-        cam.setAspectRatio(game.WIDTH / game.HEIGHT);
-        jQuery("#gui").width(game.WIDTH).height(game.HEIGHT);
-        jQuery("#assembly_panel").css("left", ((game.WIDTH / 2.0) - 150) + "px");
-    };
-
+  
+  this.moveCamera = function() {
+    
+    this.camHorizontalAngle += mouse.dragDeltaX * toRad(0.2);
+    this.camVerticalAngle += mouse.dragDeltaY * toRad(0.2);
+    
+    if(this.camHorizontalAngle > toRad(180)) {
+      this.camHorizontalAngle -= toRad(360);
+    } else if(this.camHorizontalAngle < toRad(-180)) {
+      this.camHorizontalAngle += toRad(360);
+    }
+    if(this.camVerticalAngle > toRad(89)) {
+      this.camVerticalAngle = toRad(89);
+    } else if(this.camVerticalAngle < toRad(-89)) {
+      this.camVerticalAngle = toRad(-89);
+    }
+    
+    var camX = this.camZoom * Math.cos(this.camVerticalAngle) * Math.cos(this.camHorizontalAngle);
+    var camY = this.camZoom * Math.sin(this.camVerticalAngle);
+    var camZ = this.camZoom * Math.cos(this.camVerticalAngle) * Math.sin(this.camHorizontalAngle);
+    
+    cam.setPosition(camX, camY, camZ);
+    cam.lookAt(0, -2, 0);
+  };
+  
+  
+  this.draw = function() {
+    renderer.render(s, cam);
+  };
+  
+  
+  this.resize = function() {
+    cam.setAspectRatio(game.WIDTH / game.HEIGHT);
+    jQuery("#gui").width(game.WIDTH).height(game.HEIGHT);
+    jQuery("#assembly_panel").css("left", ((game.WIDTH / 2.0) - 150) + "px");
+  };
+  
 }

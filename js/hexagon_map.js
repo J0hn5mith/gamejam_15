@@ -7,14 +7,16 @@ function Map() {
     this.centerPosition = null;
     this.tiles = [];
 
+    
     this.init = function(radius) {
-        this.size = radius * 2 + 1;
+      
         this.radius = radius;
+        this.size = (radius * 2) + 1;
         this.centerPosition = new Position2D.makePosition(radius, radius);
 
-        for (var x = 0; x < this.size; x++) {
+        for(var x = 0; x < this.size; x++) {
             this.tiles[x] = [];
-            for (var y = 0; y < this.size; y++) {
+            for(var y = 0; y < this.size; y++) {
                 var tile = new Tile();
                 tile.init(x, y, this);
                 this.tiles[x][y] = tile;
@@ -30,17 +32,14 @@ function Map() {
 
     this.getCurrentRadius = function() {
         return this.currentRadius;
-
     };
 
 
     this.setTile = function(x, y, tile) {
-
         if (!this.doesTileExist(x, y)) {
             return false;
         }
         this.tiles[x][y] = tile;
-
     };
 
 
@@ -53,7 +52,6 @@ function Map() {
         if (!this.doesTileExist(x, y)) {
             return false;
         }
-
         return this.tiles[x][y];
     };
 
@@ -74,25 +72,26 @@ function Map() {
     }
     this.getTilesForRadius = function(radius) {
         var result = [];
-        for (var x = 0; x < this.size; x++) {
-            for (var y = 0; y < this.size; y++) {
+        for(var x = 0; x < this.size; x++) {
+            for(var y = 0; y < this.size; y++) {
                 var tile = this.getTile(x, y);
                 var tileOnRadius = this.getDistanceToCenter(Position2D.makePosition(x, y)) == radius;
-                if (tile && tileOnRadius) {
+                if(tile && tileOnRadius) {
                     result.push(tile);
                 }
             }
         }
         return result;
     };
-
+    
+    
     this.getAllVisibleTiles = function() {
         var result = [];
-        for (var x = 0; x < this.size; x++) {
-            for (var y = 0; y < this.size; y++) {
+        for(var x = 0; x < this.size; x++) {
+            for(var y = 0; y < this.size; y++) {
                 var tile = this.getTile(x, y);
-                var tileIsVisible = this.getDistanceToCenter(Position2D.makePosition(x, y)) <= this.getCurrentRadius();
-                if (tile && tileIsVisible) {
+                var tileIsVisible = this.getDistanceToCenter(Position2D.makePosition(x, y)) <= this.currentRadius;
+                if(tile && tileIsVisible) {
                     result.push(tile);
                 }
             }
@@ -103,10 +102,10 @@ function Map() {
 
     this.getAllValidTiles = function() {
         var result = [];
-        for (var x = 0; x < this.size; x++) {
-            for (var y = 0; y < this.size; y++) {
+        for(var x = 0; x < this.size; x++) {
+            for(var y = 0; y < this.size; y++) {
                 var tile = this.getTile(x, y);
-                if (tile) {
+                if(tile) {
                     result.push(tile);
                 }
             }
@@ -120,7 +119,6 @@ function Map() {
         var distanceY = endPoint.y - startPoint.y;
         var distanceZ = endPoint.getZ() - startPoint.getZ();
         return Vector3D.makeVector(distanceX, distanceY, distanceZ);
-
     };
 
 
@@ -140,20 +138,17 @@ function Map() {
 
 
     this.doesTileExist = function(x, y) {
-        if (x < 0 && y < 0) {
+        if(x < 0 && y < 0) {
             return false;
         }
-
         var tilePosition = Position2D.makePosition(x, y);
-
         var distance = this.getDistance(tilePosition, this.centerPosition);
-
         return distance <= this.radius;
     };
 
 
     this.getAdjacentTiles = function(x, y, radius) {
-        if (!this.doesTileExist(x, y)) {
+        if(!this.doesTileExist(x, y)) {
             return [];
         }
         var targetTilePosition = Position2D.makePosition(x, y);
@@ -177,26 +172,28 @@ function Map() {
                         if (!distanceVector.isOrthogonalToBaseVector()) {
                             result.push(this.getTile(indexX, indexY));
                         }
-                    }
-                    else {
+                    } else {
                         result.push(this.getTile(indexX, indexY));
                     }
                 }
             }
         }
-
         return result;
     };
 
+    
     this.pointInOrthogonalCoordinates = function(position) {
-        var xCoordinates = position.x - ((position.y) * 0.5);
-        var yCoordinates = position.y * 0.75;
-        return Position2D.makePosition(xCoordinates, yCoordinates)
+        var x = (position.x * 0.866) - (position.y * 0.433);
+        var y = position.y * 0.75;
+        x -= this.radius * 0.433;
+        y -= this.radius * 0.75;
+        return Position2D.makePosition(x, y)
     }
 }
 
 
-DrawableMap = function() {
+function DrawableMap() {
+  
     this.map = null;
     this.scene = null;
     this.tiles = [];
@@ -210,16 +207,12 @@ DrawableMap = function() {
         this.scene = scene;
         this.appearingTiles = [];
         this.currentRadius = map.getCurrentRadius();
-
     };
 
 
     this.update = function(timeDelta) {
-
-        var timeDelta = 0.01;
-
-        for (var index = 0; index < this.tiles.length; index++) {
-            this.tiles[index].update(timeDelta);
+        for(var i = 0; i < this.tiles.length; i++) {
+            this.tiles[i].update(timeDelta);
         }
         if (this.currentRadius < this.map.getCurrentRadius()) {
             this.increaseRadius(timeDelta);
@@ -227,6 +220,7 @@ DrawableMap = function() {
         this.updateAppearingTiles(timeDelta);
     };
 
+    
     this.updateAppearingTiles = function(timeDelta) {
         if (!this.appearingTiles.length > 0) {
             return;
@@ -234,9 +228,9 @@ DrawableMap = function() {
 
         for (var i = 0; i < this.appearingTiles.length; i++) {
             var shape = this.appearingTiles[i].shape;
-            shape.position.y += Math.sqrt(1 - shape.position.y)/18;
-            if (shape.position.y >= 1){
-                shape.position.y = 1;
+            shape.position.y += Math.sqrt(Math.abs(shape.position.y)) / 18;
+            if(shape.position.y >= 0){
+                shape.position.y = 0;
                 this.appearingTiles.splice(i, 1);
             }
         }
@@ -249,7 +243,7 @@ DrawableMap = function() {
         var tiles = this.map.getTilesForRadius(this.currentRadius);
         var newDrawableTiles = this.addTiles(tiles);
         for (var i = 0; i < newDrawableTiles.length; i++) {
-            newDrawableTiles[i].shape.position.y = (Math.random() -1)*20 -10;
+            newDrawableTiles[i].shape.position.y = (Math.random() * -20) - 10;
         }
         this.appearingTiles = this.appearingTiles.concat(newDrawableTiles);
     };
@@ -263,9 +257,9 @@ DrawableMap = function() {
 
     this.addTiles = function(tiles) {
         var newDrawableTiles = [];
-        for (var index = 0; index < tiles.length; index++) {
+        for(var index = 0; index < tiles.length; index++) {
             var tile = tiles[index];
-            if (tile) {
+            if(tile) {
                 var newDrawableTile = this.addTile(tile);
                 newDrawableTiles.push(newDrawableTile);
             }
@@ -280,7 +274,9 @@ DrawableMap = function() {
         this.tiles.push(hexagonTile);
         return hexagonTile;
     };
-};
+    
+}
+
 
 DrawableMap.makeDrawableMap = function(map) {
     var drawableMap = new DrawableMap();
