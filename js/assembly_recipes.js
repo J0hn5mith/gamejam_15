@@ -7,14 +7,5 @@ var assemblyRecipes = {
       action : function() {
         alert("HALLO");
       }
-    },
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    }
 };
