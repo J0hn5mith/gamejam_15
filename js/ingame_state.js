@@ -29,10 +29,10 @@ function IngameState() {
         var effect = new NeighbourTownEffect();
         effect.townId = 1;
         effect.productivityDelta = 10;
-        this.gameLogic.neighbourTownEffectQueue.add(effect);
+        gameLogic.neighbourTownEffectQueue.add(effect);
         var event = new NeighbourTownEvent();
         event.init(1);
-        this.gameLogic.neighbourTownEvents.push(event);
+        gameLogic.neighbourTownEvents.push(event);
     };
 
 
@@ -40,8 +40,8 @@ function IngameState() {
 
         renderer.setClearColor(0xffffff);
 
-        this.gameLogic = GameLogic.makeGameLogic();
-        this.drawableMap = DrawableMap.makeDrawableMap(this.gameLogic.map);
+        gameLogic = GameLogic.makeGameLogic();
+        this.drawableMap = DrawableMap.makeDrawableMap(gameLogic.map);
         this.debugShow();
 
         var ambientLight = new THREE.AmbientLight(0x333333);

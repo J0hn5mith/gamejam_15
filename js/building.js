@@ -3,13 +3,14 @@
  *
  */
 var BuildingCodes = {
-    FARM: 0,
-    HOUSE: 1,
-    FACTORY: 2,
-    STEAM_PLANT: 3,
-    MINI_LOV: 4,
-    MINI_TRU: 5,
-    TOWER: 6
+    EMPTY : -1,
+    FARM : 0,
+    HOUSE : 1,
+    FACTORY : 2,
+    STEAM_PLANT : 3,
+    MINI_LOV : 4,
+    MINI_TRU : 5,
+    TOWER : 6
 }
 
 
@@ -21,6 +22,8 @@ function Building() {
 
     };
 }
+
+
 Building.make = function(code, tile) {
     var building = null;
     switch (code) {
