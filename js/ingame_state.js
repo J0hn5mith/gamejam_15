@@ -41,14 +41,15 @@ function IngameState() {
         renderer.setClearColor(0xffffff);
 
         gameLogic = GameLogic.makeGameLogic();
+        
         this.drawableMap = DrawableMap.makeDrawableMap(gameLogic.map);
         this.debugShow();
 
-        var ambientLight = new THREE.AmbientLight(0x333333);
+        var ambientLight = new THREE.AmbientLight(0x444444);
         s.add(ambientLight);
 
         var light = new THREE.DirectionalLight(0xffffff);
-        light.position.set(0.5, 0.5, 0.0).normalize();
+        light.position.set(0.5, 0.8, 0.0).normalize();
 
         light.castShadow = true;
 
@@ -96,17 +97,12 @@ function IngameState() {
             this.moveCamera();
         }
 
-        this.drawableMap.update(timer.delta);
+        this.drawableMap.update();
         gameLogic.update(timer.delta);
         this.debugUpdate();
-        if(gui){
-            gui.updateResources();
-            gui.updateComponents();
-        }
-
-        /*var results = cam.getObjectsAtCoords(mouse.x, mouse.y, s.children);
-         if(results.length > 0) {
-         }*/
+        
+        gui.updateResources();
+        gui.updateComponents();
     };
 
 

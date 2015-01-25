@@ -9,6 +9,8 @@ function Gui() {
   this.gotGear = false;
   this.gotPiston = false;
   
+  this.selectedMapTile = null;
+  
   
   this.init = function() {
     
@@ -263,6 +265,19 @@ function Gui() {
   
   this.hideOneLineHint = function(text) {
     jQuery("#one_line_hint").hide();
+  };
+  
+  
+  this.setSelectedMapTile = function(newMapTile) {
+      if(newMapTile != this.selectedMapTile) {
+          if(this.selectedMapTile != null) {
+              this.selectedMapTile.hideSelection();
+          }
+          if(newMapTile != null) {
+              newMapTile.showSelection(0xff0000);
+          }
+          this.selectedMapTile = newMapTile;
+      }
   };
   
 }
