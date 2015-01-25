@@ -142,11 +142,23 @@ function NeighbourTownEffect() {
 
     };
 
+	this.init = function(productivityDelta,productivityFactor,happynessDelta,happynessFactor) {
+        this.productivityDelta = productivityDelta;
+		this.productivityFactor = productivityFactor;
+		this.happynessDelta = happynessDelta;
+		this.happynessFactor = happynessFactor;
+    };
+	
     this.applySideEffect = function(town) {
         // Do something
     }
 }
 
+NeighbourTownEffect.make = function(productivityDelta,productivityFactor,happynessDelta,happynessFactor) {
+	var result = new NeighbourTownEffect()
+	result.init(productivityDelta,productivityFactor,happynessDelta,happynessFactor)
+	return result
+}
 
 function NeighbourTownEffectQueue() {
 
