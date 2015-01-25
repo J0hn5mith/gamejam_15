@@ -28,6 +28,7 @@ function Town() {
         for (var i = 0; i < this.buildings.length; i++) {
             var building = this.buildings[i];
             building.update(timeDelta);
+            Building.updateBuffs(building, timeDelta);
             if (
                 this.plantListUpdateRequired
                 && (building.code == BuildingCodes.FACTORY || building.code == BuildingCodes.TOWER )
@@ -113,6 +114,7 @@ function Town() {
                 this.plantListUpdateRequired = true;
                 break;
         }
+        return building
     };
 
     this.removeBuilding = function(building) {
