@@ -122,8 +122,8 @@ function IngameState() {
         }
         if (this.camVerticalAngle > toRad(89)) {
             this.camVerticalAngle = toRad(89);
-        } else if (this.camVerticalAngle < toRad(20)) {
-            this.camVerticalAngle = toRad(20);
+        } else if (this.camVerticalAngle < toRad(-920)) {
+            this.camVerticalAngle = toRad(-920);
         }
 
         var camX = this.camZoom * Math.cos(this.camVerticalAngle) * Math.cos(this.camHorizontalAngle);

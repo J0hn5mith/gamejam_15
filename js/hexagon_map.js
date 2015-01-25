@@ -183,14 +183,6 @@ function Map() {
         return result;
     };
 
-    
-    this.pointInOrthogonalCoordinates = function(position) {
-        var x = (position.x * 0.866) - (position.y * 0.433);
-        var y = position.y * 0.75;
-        x -= this.radius * 0.433;
-        y -= this.radius * 0.75;
-        return Position2D.makePosition(x, y)
-    }
 }
 
 
@@ -212,14 +204,14 @@ function DrawableMap() {
     };
 
 
-    this.update = function(timeDelta) {
+    this.update = function() {
         for(var i = 0; i < this.tiles.length; i++) {
-            this.tiles[i].update(timeDelta);
+            this.tiles[i].update();
         }
         if (this.currentRadius < this.map.getCurrentRadius()) {
-            this.increaseRadius(timeDelta);
+            this.increaseRadius(timer.delta);
         }
-        this.updateAppearingTiles(timeDelta);
+        this.updateAppearingTiles(timer.delta);
     };
 
     
@@ -229,7 +221,7 @@ function DrawableMap() {
         }
 
         for (var i = 0; i < this.appearingTiles.length; i++) {
-            var shape = this.appearingTiles[i].shape;
+            var shape = this.appearingTiles[i].tileModel;
             shape.position.y += Math.sqrt(Math.abs(shape.position.y)) / 18;
             if(shape.position.y >= 0){
                 shape.position.y = 0;
@@ -245,7 +237,7 @@ function DrawableMap() {
         var tiles = this.map.getTilesForRadius(this.currentRadius);
         var newDrawableTiles = this.addTiles(tiles);
         for (var i = 0; i < newDrawableTiles.length; i++) {
-            newDrawableTiles[i].shape.position.y = (Math.random() * -20) - 10;
+            newDrawableTiles[i].tileModel.position.y = (Math.random() * -20) - 10;
         }
         this.appearingTiles = this.appearingTiles.concat(newDrawableTiles);
     };
@@ -271,8 +263,9 @@ function DrawableMap() {
 
 
     this.addTile = function(tile) {
-        var hexagonTile = new DrawableHexagonTile(tile);
-        this.scene.add(hexagonTile.getShape());
+        var hexagonTile = new DrawableHexagonTile();
+        hexagonTile.init(tile);
+        this.scene.add(hexagonTile.tileModel);
         this.tiles.push(hexagonTile);
         return hexagonTile;
     };
