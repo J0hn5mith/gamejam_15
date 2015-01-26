@@ -137,9 +137,7 @@ function IngameState() {
 
     this.resize = function() {
         cam.setAspectRatio(game.WIDTH / game.HEIGHT);
-        jQuery("#gui").width(game.WIDTH).height(game.HEIGHT);
-        jQuery("#assembly_panel").css("left", ((game.WIDTH / 2.0) - 150) + "px");
-        jQuery("#assembly_hint").css("max-width", ((game.WIDTH / 2.0) - 194) + "px");
+        gui.resize();
     };
 
 }

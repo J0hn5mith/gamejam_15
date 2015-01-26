@@ -11,6 +11,12 @@ function Gui() {
   
   this.assemblyOutputHover = false;
   
+  this.assemblyOutputX = 0;
+  this.assemblyOutputY = 0;
+  
+  this.draggingGrabOffsetX = 0;
+  this.draggingGrabOffsetY = 0;
+  
   this.selectedMapTile = null;
   
   
@@ -301,6 +307,10 @@ function Gui() {
   
   
   this.startDraggingAssemblyOutput = function() {
+      
+      this.draggingGrabOffsetX = mouse.x - this.assemblyOutputX;
+      this.draggingGrabOffsetY = mouse.y - this.assemblyOutputY;
+      
       jQuery("#assembly_output").addClass("dragging");
       mouse.registerUpArea("place", -10000, -10000, 30000, 30000, function() {
           jQuery("#assembly_output").removeClass("dragging");
@@ -312,9 +322,8 @@ function Gui() {
   
   this.updateAssemblyOutputDragging = function() {
       if(mouse.dragging && mouse.draggingMode == "assembly_output") {
-          var position = jQuery("#assembly_output_draggable").position();
-          var left = position.left + mouse.dragDeltaX;
-          var top = position.top + mouse.dragDeltaY;
+          var left = mouse.x - (this.assemblyOutputX + this.draggingGrabOffsetX);
+          var top = mouse.y - (this.assemblyOutputY + this.draggingGrabOffsetY);
           jQuery("#assembly_output_draggable").css({ left : left + "px", top : top + "px" });
       }
   };
@@ -325,13 +334,8 @@ function Gui() {
       jQuery("#assembly_output_draggable").css({ left : "0px", top : "0px" });
       this.hideAssemblyHint();
       
-      var outputOffset = jQuery("#assembly_output").offset();
-      var gameOffset = jQuery("#game").offset();
-      var outputLeft = outputOffset.left - gameOffset.left;
-      var outputTop = outputOffset.top - gameOffset.top;
-      
-      if(mouse.x < outputLeft || mouse.x > outputLeft + 50 ||
-              mouse.y < outputTop || mouse.y > outputTop + 50) {
+      if(mouse.x < this.assemblyOutputX || mouse.x > this.assemblyOutputX + 50 ||
+              mouse.y < this.assemblyOutputY || mouse.y > this.assemblyOutputY + 50) {
           
           var recipe = this.assemblyInput[0] + this.assemblyInput[1] + this.assemblyInput[2];
           if(gameLogic.assembler.doesRecipeExist(recipe)) {
@@ -379,6 +383,18 @@ function Gui() {
           }
           this.selectedMapTile = newMapTile;
       }
+  };
+  
+  
+  this.resize = function() {
+      jQuery("#gui").width(game.WIDTH).height(game.HEIGHT);
+      jQuery("#assembly_panel").css("left", ((game.WIDTH / 2.0) - 150) + "px");
+      jQuery("#assembly_hint").css("max-width", ((game.WIDTH / 2.0) - 194) + "px");
+      
+      var assemblyPanelPosition = jQuery("#assembly_panel").position();
+      
+      this.assemblyOutputX = assemblyPanelPosition.left + 250;
+      this.assemblyOutputY = assemblyPanelPosition.top;
   };
   
 }
