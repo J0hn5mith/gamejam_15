@@ -17,8 +17,8 @@ var BuildingCodes = {
     MINI_LOV: 4,
     MINI_TRU: 5,
     CANON: 6,
-	TOWER: 7,
-	NONE: 10,
+    TOWER: 7,
+    NONE: 10,
 }
 
 
@@ -39,7 +39,7 @@ Building.updateBuffs = function(building, timeDelta) {
     for (var i = 0; i < building.buffs.length; i++) {
         var buff = building.buffs[i];
         var toDelete = buff.update(timeDelta);
-        if (!toDelete){
+        if (!toDelete) {
             newBuffList.push(buff)
         }
     }
@@ -71,10 +71,10 @@ Building.make = function(code, tile, town) {
         case BuildingCodes.CANON:
             building = new Canon();
             break;
-		case BuildingCodes.TOWER:
+        case BuildingCodes.TOWER:
             building = new Tower();
             break;
-		case BuildingCodes.NONE:
+        case BuildingCodes.NONE:
             //
             break;
     }
@@ -91,22 +91,26 @@ Building.make = function(code, tile, town) {
 
 
 function Farm() {
-    this.tile;
-    this.debugColor = 0x00ffff;
     this.code = BuildingCodes.FARM;
+    this.tile = null;
+    this.level = 1;
 
     this.update = function(timeDelta) {
 
     };
+
+    this.upgrade = function() {
+        this.level ++;
+    };
 }
 Farm.RANGE = 2;
+Farm.COLOR_CODE = 0x00ffff;
 
 
 function House() {
-    this.tile;
-    this.debugColor = 0xff00ff;
     this.code = BuildingCodes.HOUSE;
-    this.hasFarmInrang = false;
+    this.tile = null;
+    this.level = 1;
     this.isActive = true;
 
     this.update = function(timeDelta) {
@@ -123,17 +127,22 @@ function House() {
             Farm.RANGE,
             BuildingCodes.FARM
         );
-    }
+    };
+
+    this.upgrade = function() {
+        this.level++;
+
+    };
 }
 House.RANGE = 2;
+House.COLOR_CODE = 0xff00ff;
 
 
 function Factory() {
-    this.tile;
-    this.debugColor = 0xffff00;
     this.code = BuildingCodes.FACTORY;
-    this.hasSteamPlantInrange = false;
-    this.steamPlantsInRange = [];
+    this.tile = null;
+    this.level = 1;
+    this.debugColor = 0xffff00;
     this.timer = 0;
 
     this.update = function(timeDelta) {
@@ -141,6 +150,11 @@ function Factory() {
         var hasPlant = true;
         this.isActive = hasFarm && hasPlant;
         this.timer += timeDelta;
+    };
+
+    this.upgrade = function() {
+        this.level++;
+
     };
 
     this.getIsActive = function() {
@@ -188,21 +202,26 @@ function Factory() {
 
     }
 }
+Factory.COLOR_CODE = 0xff00ff;
 
 
 function SteamPlant() {
     this.code = BuildingCodes.STEAM_PLANT;
+    this.tile = null;
+    this.level = 1;
     this.timer = 0;
-    this.debugColor = 0x00ff00;
     this.isActive = true;
 
-    this.init = function(tile) {
-
-    };
 
     this.update = function(timeDelta) {
         this.timer += timeDelta;
     };
+
+
+    this.upgrade = function() {
+        this.level ++;
+    };
+
 
     this.fuel = function(playerState) {
         var resources = playerState.resources;
@@ -220,13 +239,14 @@ function SteamPlant() {
             }
         }
         return this.isActive;
-    }
+    };
 
 
     this.setIsActive = function(isActive) {
         this.isActive = isActive;
 
     };
+
 
     this.checkForHouse = function() {
         return this.town.checkForBuilding(
@@ -237,23 +257,25 @@ function SteamPlant() {
     };
 }
 SteamPlant.RANGE = 1;
+SteamPlant.COLOR_CODE = 0x00ff00;
 
 
 function MiniLov() {
-    this.tile;
-    this.debugColor = 0x0000ff;
     this.code = BuildingCodes.MINI_LOV;
+    this.tile = null;
+    this.level = 1;
     this.isActive = false;
-
-    this.init = function(tile) {
-
-    };
 
 
     this.update = function(timeDelta) {
         this.isActive = this.checkForHouse();
-
     };
+
+
+    this.upgrade = function() {
+        this.level ++;
+    };
+
 
     this.checkForHouse = function() {
         return this.town.checkForBuilding(
@@ -264,18 +286,25 @@ function MiniLov() {
     };
 
 }
+MiniLov.COLOR_CODE = 0x0000ff;
 
 
 function MiniTru() {
-    this.tile;
-    this.debugColor = 0xff0000;
     this.code = BuildingCodes.MINI_TRU;
+    this.tile = null;
+    this.level = 1;
     this.plantsInRange = false;
 
     this.update = function(timeDelta) {
         this.isActive = this.checkForHouse();
     };
 
+
+    this.upgrade = function() {
+        this.level ++;
+    };
+
+
     this.checkForHouse = function() {
         return this.town.checkForBuilding(
             this.tile.position,
@@ -284,17 +313,23 @@ function MiniTru() {
         );
     };
 }
+MiniTru.COLOR_CODE = 0xff0000;
 
 
 function Tower() {
-    this.tile;
-    this.debugColor = 0xff9900;
     this.code = BuildingCodes.TOWER;
+    this.tile = null;
+    this.level = 1;
     this.steamPlantsInRange = [];
 
 
     this.update = function(timeDelta) {
 
+    };
+
+
+    this.upgrade = function() {
+        this.level ++;
     };
 
 
@@ -305,11 +340,12 @@ function Tower() {
         )
     };
 }
+Tower.COLOR_CODE = 0xff9900;
 
 function Canon() {
-    this.tile;
-    this.debugColor = 0xff99ff;
     this.code = BuildingCodes.CANON;
+    this.tile = null;
+    this.level = 1;
     this.steamPlantsInRange = [];
 
 
@@ -317,55 +353,61 @@ function Canon() {
 
     };
 
+
+    this.upgrade = function() {
+        this.level ++;
+    };
+
 }
+Canon.COLOR_CODE = 0xff99ff;
 
 
 function BuildingModel() {
 
 }
 
-BuildingModel.make = function(code){
+BuildingModel.make = function(code) {
     var color = null;
-    var geometry = new THREE.CylinderGeometry( 0.1, 0.1, 0.5, 32 );
+    var geometry = new THREE.CylinderGeometry(0.1, 0.1, 0.5, 32);
     switch (code) {
         case BuildingCodes.FARM:
             color = Farm;
-            color = 0x00ffff;
-            geometry = new THREE.CylinderGeometry( 0.1, 0.1, 1.0, 32 );
+            color = Farm.COLOR_CODE;
+            geometry = new THREE.CylinderGeometry(0.1, 0.1, 1.0, 32);
             break;
         case BuildingCodes.HOUSE:
-            color = 0xff0000;
-            geometry = new THREE.CylinderGeometry( 0.1, 0.1, 1.5, 32 );
+            color = House.COLOR_CODE;
+            geometry = new THREE.CylinderGeometry(0.1, 0.1, 1.5, 32);
             break;
         case BuildingCodes.FACTORY:
-            color = 0xff0000;
-            geometry = new THREE.CylinderGeometry( 0.1, 0.1, 2.0, 32 );
+            color = Factory.COLOR_CODE;
+            geometry = new THREE.CylinderGeometry(0.1, 0.1, 2.0, 32);
             break;
         case BuildingCodes.STEAM_PLANT:
-            color = 0xff0000;
-            geometry = new THREE.CylinderGeometry( 0.1, 0.1, 2.5, 32 );
+            color = SteamPlant.COLOR_CODE;
+            geometry = new THREE.CylinderGeometry(0.1, 0.1, 2.5, 32);
             break;
         case BuildingCodes.MINI_LOV:
-            color = 0xff0000;
-            geometry = new THREE.CylinderGeometry( 0.1, 0.1, 3.0, 32 );
+            color = MiniLov.COLOR_CODE;
+            geometry = new THREE.CylinderGeometry(0.1, 0.1, 3.0, 32);
             break;
         case BuildingCodes.MINI_TRU:
-            color = 0xff0000;
-            geometry = new THREE.CylinderGeometry( 0.1, 0.1, 3.5, 32 );
+            color = MiniTru.COLOR_CODE;
+            geometry = new THREE.CylinderGeometry(0.1, 0.1, 3.5, 32);
             break;
         case BuildingCodes.CANON:
-            color = 0xff0000;
-            geometry = new THREE.CylinderGeometry( 0.1, 0.1, 4.0, 32 );
+            color = Canon.COLOR_CODE;
+            geometry = new THREE.CylinderGeometry(0.1, 0.1, 4.0, 32);
             break;
         case BuildingCodes.TOWER:
-            color = 0xff0000;
+            color = Tower.COLOR_CODE;
             break;
         case BuildingCodes.NONE:
             //
             break;
     }
-    var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
-    var cylinder = new THREE.Mesh( geometry, material );
+    var material = new THREE.MeshBasicMaterial({color: color});
+    var cylinder = new THREE.Mesh(geometry, material);
     return cylinder;
 
 }
@@ -412,7 +454,7 @@ function BuildingBuff() {
     };
 }
 
-BuildingBuff.make = function(duration, onStartFunction, onEndFunction){
+BuildingBuff.make = function(duration, onStartFunction, onEndFunction) {
     var buff = new BuildingBuff();
     buff.duration = duration;
     buff.onStartFunction = onStartFunction;

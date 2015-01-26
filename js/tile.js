@@ -196,10 +196,7 @@ function DrawableHexagonTile() {
         //this.shaderUniforms.time.value += timer.delta;
         //this.shaderUniforms.amplitude.value = 0.05 + (Math.sin(this.shaderUniforms.time.value) * 0.05);
         
-        if(!this.buildingModel && this.tile.building) {
-            this.addBuilding();
-        }
-        
+
         if(this.spawnY < 0) {
             var velocity = Math.sqrt(Math.abs(this.spawnY)) * this.SPAWN_ANIMATION_SPEED;
             this.spawnY += velocity * timer.delta;
@@ -221,12 +218,20 @@ function DrawableHexagonTile() {
         if(this.selectionNode != null) {
             this.selectionNode.position.copy(this.node.position);
         }
+
+        if(!this.buildingModel && this.tile.building) {
+            this.addBuilding();
+        }
     };
 
     
     this.addBuilding = function() {
         //this.buildingModel = new DrawableBuilding();
-        this.buildingModel = true;
+        this.buildingModel = BuildingModel.make(this.tile.building.code);
+        this.node.add(this.buildingModel);
+        //s.add(this.buildingModel);
+        //this.buildingModel.position.copy(this.node.position);
+        //this.buildingModel = true;
     };
 
 
