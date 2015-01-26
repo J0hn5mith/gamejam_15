@@ -19,5 +19,10 @@ function Assembler() {
     this.getDescription = function(recipe) {
         return assemblyRecipes[recipe].description;
     };
+    
+    
+    this.getRecipeAssembly = function(recipe) {
+        
+    };
   
 };
