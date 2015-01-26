@@ -101,9 +101,13 @@ function Camera() {
   
   
   this.getObjectsAtCoords = function(x, y, objects) {
-    var vector = new THREE.Vector3(x, y, 1.0).unproject(this.threeJSCamera);
+    var vector = new THREE.Vector3();
+    vector.x = (2.0 * x / game.WIDTH) - 1.0;
+    vector.y = 1.0 - (2.0 * y / game.HEIGHT);
+    vector.z = 0.5;
+    vector.unproject(this.threeJSCamera);
     this.raycaster.set(this.threeJSCamera.position, vector.sub(this.threeJSCamera.position).normalize());
-    return this.raycaster.intersectObjects(objects);
+    return this.raycaster.intersectObjects(objects, true);
   };
   
 }

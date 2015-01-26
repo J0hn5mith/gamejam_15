@@ -187,87 +187,76 @@ function Map() {
 
 
 function DrawableMap() {
-  
-    this.map = null;
-    this.scene = null;
-    this.tiles = [];
-    this.appearingTiles = [];
-
-    this.currentRadius = 0;
-
-
-    this.init = function(map, scene) {
-        this.map = map;
-        this.scene = scene;
-        this.appearingTiles = [];
-        this.currentRadius = map.getCurrentRadius();
-    };
-
-
-    this.update = function() {
-        for(var i = 0; i < this.tiles.length; i++) {
-            this.tiles[i].update();
-        }
-        if (this.currentRadius < this.map.getCurrentRadius()) {
-            this.increaseRadius(timer.delta);
-        }
-        this.updateAppearingTiles(timer.delta);
-    };
-
     
-    this.updateAppearingTiles = function() {
-        if (!this.appearingTiles.length > 0) {
-            return;
-        }
-
-        for (var i = 0; i < this.appearingTiles.length; i++) {
-            var shape = this.appearingTiles[i].tileModel;
-            shape.position.y += Math.sqrt(Math.abs(shape.position.y)) / 18;
-            if(shape.position.y >= 0){
-                shape.position.y = 0;
-                this.appearingTiles.splice(i, 1);
-            }
-        }
-
-    };
+    this.FLOATING_AMPLITUDE_MIN = 0.05;
+    this.FLOATING_AMPLITUDE_MAX = 0.1;
+    this.FLOATING_AMPLITUDE_SPEED = 0.5;
+  
+    this.map;
+    this.node;
+    
+    this.drawableTiles = [];
+    this.currentRadius = 0;
+    
+    this.floatingAmplitudeTimer = 0;
 
 
-    this.increaseRadius = function() {
-        this.currentRadius++;
-        var tiles = this.map.getTilesForRadius(this.currentRadius);
-        var newDrawableTiles = this.addTiles(tiles);
-        for (var i = 0; i < newDrawableTiles.length; i++) {
-            newDrawableTiles[i].tileModel.position.y = (Math.random() * -20) - 10;
-        }
-        this.appearingTiles = this.appearingTiles.concat(newDrawableTiles);
-    };
-
-
-    this.createTiles = function() {
+    this.init = function(map) {
+      
+        this.map = map;
+        
+        this.node = new THREE.Object3D();
+        s.add(this.node);
+        
+        this.currentRadius = map.getCurrentRadius();
+        
         var tiles = this.map.getAllVisibleTiles();
-        this.addTiles(tiles);
+        this.addDrawableTiles(tiles, false);
     };
 
 
-    this.addTiles = function(tiles) {
-        var newDrawableTiles = [];
-        for(var index = 0; index < tiles.length; index++) {
-            var tile = tiles[index];
-            if(tile) {
-                var newDrawableTile = this.addTile(tile);
-                newDrawableTiles.push(newDrawableTile);
-            }
+    this.addDrawableTiles = function(tiles, animateSpawn) {
+        for(var i = 0; i < tiles.length; i++) {
+           this.addDrawableTile(tiles[i], animateSpawn);
         }
-        return newDrawableTiles
     };
 
 
-    this.addTile = function(tile) {
-        var hexagonTile = new DrawableHexagonTile();
-        hexagonTile.init(tile);
-        this.scene.add(hexagonTile.tileModel);
-        this.tiles.push(hexagonTile);
-        return hexagonTile;
+    this.addDrawableTile = function(tile, animateSpawn) {
+        var drawableTileIndex = this.drawableTiles.length;
+        var drawableTile = new DrawableHexagonTile();
+        drawableTile.init(tile, drawableTileIndex, animateSpawn);
+        this.node.add(drawableTile.node);
+        this.drawableTiles.push(drawableTile);
+    };
+    
+    
+    this.update = function() {
+        
+        if(this.currentRadius < this.map.getCurrentRadius()) {
+            this.currentRadius++;
+            this.addDrawableTiles(this.map.getTilesForRadius(this.currentRadius), true);
+        }
+        
+        this.floatingAmplitudeTimer += timer.delta * this.FLOATING_AMPLITUDE_SPEED;
+        if(this.floatingAmplitudeTimer > 6.2832) {
+            this.floatingAmplitudeTimer -= 6.2832;
+        }
+        var floatingAmplitude = 0.5 + (0.5 * Math.sin(this.floatingAmplitudeTimer));
+        floatingAmplitude *= this.FLOATING_AMPLITUDE_MAX - this.FLOATING_AMPLITUDE_MIN;
+        floatingAmplitude += this.FLOATING_AMPLITUDE_MIN;
+
+        for(var i = 0; i < this.drawableTiles.length; i++) {
+            this.drawableTiles[i].update(floatingAmplitude);
+        }
+        
+        var results = cam.getObjectsAtCoords(mouse.x, mouse.y, this.node.children);
+        if(results.length > 0) {
+            var index = results[0].object.userData.drawableTileIndex;
+            gui.setSelectedMapTile(this.drawableTiles[index]);
+        } else {
+            gui.setSelectedMapTile(null);
+        }
     };
     
 }
@@ -275,8 +264,6 @@ function DrawableMap() {
 
 DrawableMap.makeDrawableMap = function(map) {
     var drawableMap = new DrawableMap();
-    drawableMap.init(map, s);
-    drawableMap.createTiles();
+    drawableMap.init(map);
     return drawableMap;
 };
-

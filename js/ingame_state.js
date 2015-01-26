@@ -13,7 +13,7 @@ function IngameState() {
         cam = new Camera();
         cam.initPerspectiveCamera(75, 1.0, 1000.0);
 
-        this.camVerticalAngle = toRad(15);
+        this.camVerticalAngle = toRad(30);
         this.camHorizontalAngle = toRad(45);
         this.camZoom = 7.0;
         this.moveCamera();
@@ -48,14 +48,15 @@ function IngameState() {
         renderer.setClearColor(0xffffff);
 
         gameLogic = GameLogic.makeGameLogic();
+        
         this.drawableMap = DrawableMap.makeDrawableMap(gameLogic.map);
         this.debugShow();
 
-        var ambientLight = new THREE.AmbientLight(0x333333);
+        var ambientLight = new THREE.AmbientLight(0x444444);
         s.add(ambientLight);
 
         var light = new THREE.DirectionalLight(0xffffff);
-        light.position.set(0.5, 0.5, 0.0).normalize();
+        light.position.set(0.5, 0.8, 0.0).normalize();
 
         light.castShadow = true;
 
@@ -99,17 +100,11 @@ function IngameState() {
             this.moveCamera();
         }
 
-        this.drawableMap.update(timer.delta);
+        this.drawableMap.update();
         gameLogic.update(timer.delta);
         this.debugUpdate();
-        if(gui){
-            gui.updateResources();
-            gui.updateComponents();
-        }
-
-        /*var results = cam.getObjectsAtCoords(mouse.x, mouse.y, s.children);
-         if(results.length > 0) {
-         }*/
+        
+        gui.update();
     };
 
 
@@ -147,6 +142,7 @@ function IngameState() {
         cam.setAspectRatio(game.WIDTH / game.HEIGHT);
         jQuery("#gui").width(game.WIDTH).height(game.HEIGHT);
         jQuery("#assembly_panel").css("left", ((game.WIDTH / 2.0) - 150) + "px");
+        jQuery("#assembly_hint").css("max-width", ((game.WIDTH / 2.0) - 194) + "px");
     };
 
 }

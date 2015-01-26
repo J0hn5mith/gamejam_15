@@ -9,27 +9,31 @@ Shapes3D = function () {
 }
 
 
-Shapes3D.makeHexagon = function (material) {
+Shapes3D.makeHexagon = function(size) {
   
-    var hexagonGeometry = new THREE.Geometry();
+    var geometry = new THREE.Geometry();
     
-    hexagonGeometry.vertices.push(new THREE.Vector3(0.0, 0.0, 0.0));
+    geometry.vertices.push(new THREE.Vector3(0.0, 0.0, 0.0));
     
-    hexagonGeometry.vertices.push(new THREE.Vector3(0.433, 0.0, -0.25));
-    hexagonGeometry.vertices.push(new THREE.Vector3(0.433, 0.0, 0.25));
-    hexagonGeometry.vertices.push(new THREE.Vector3(0.0, 0.0, -0.5));
-    hexagonGeometry.vertices.push(new THREE.Vector3(0.0, 0.0, 0.5));
-    hexagonGeometry.vertices.push(new THREE.Vector3(-0.433, 0.0, -0.25));
-    hexagonGeometry.vertices.push(new THREE.Vector3(-0.433, 0.0, 0.25));
+    geometry.vertices.push(new THREE.Vector3(size * 0.0, 0.0, size * -0.5));
+    geometry.vertices.push(new THREE.Vector3(size * 0.433, 0.0, size * -0.25));
+    geometry.vertices.push(new THREE.Vector3(size * 0.433, 0.0, size * 0.25));
+    geometry.vertices.push(new THREE.Vector3(size * 0.0, 0.0, size * 0.5));
+    geometry.vertices.push(new THREE.Vector3(size * -0.433, 0.0, size * 0.25));
+    geometry.vertices.push(new THREE.Vector3(size * -0.433, 0.0, size * -0.25));
     
-    hexagonGeometry.faces.push(new THREE.Face3(0, 2, 1));
-    hexagonGeometry.faces.push(new THREE.Face3(0, 4, 2));
-    hexagonGeometry.faces.push(new THREE.Face3(0, 6, 4));
-    hexagonGeometry.faces.push(new THREE.Face3(0, 5, 6));
-    hexagonGeometry.faces.push(new THREE.Face3(0, 3, 5));
-    hexagonGeometry.faces.push(new THREE.Face3(0, 1, 3));
+    geometry.faces.push(new THREE.Face3(0, 2, 1));
+    geometry.faces.push(new THREE.Face3(0, 3, 2));
+    geometry.faces.push(new THREE.Face3(0, 4, 3));
+    geometry.faces.push(new THREE.Face3(0, 5, 4));
+    geometry.faces.push(new THREE.Face3(0, 6, 5));
+    geometry.faces.push(new THREE.Face3(0, 1, 6));
+    
+    geometry.computeFaceNormals();
+    geometry.computeBoundingBox();
+    geometry.computeBoundingSphere();
 
-    return new THREE.Mesh(hexagonGeometry, material);
+    return geometry;
 }
 
 
@@ -86,6 +90,10 @@ Shapes3D.makeHexagonVolume = function(size, bottom, top) {
   
   geometry.faces.push(new THREE.Face3(6, 1, 13));
   geometry.faces.push(new THREE.Face3(8, 13, 1));
+  
+  geometry.computeFaceNormals();
+  geometry.computeBoundingBox();
+  geometry.computeBoundingSphere();
  
   return geometry;
 }

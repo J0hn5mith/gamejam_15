@@ -9,6 +9,10 @@ function Gui() {
   this.gotGear = false;
   this.gotPiston = false;
   
+  this.assemblyOutputHover = false;
+  
+  this.selectedMapTile = null;
+  
   
   this.init = function() {
     
@@ -81,6 +85,26 @@ function Gui() {
       mouse.draggingModeOnDown = "camera";
     });
     
+    jQuery("#assembly_output").mouseover(function() {
+        if(jQuery("#assembly_output").hasClass("active")) {
+            mouse.draggingModeOnDown = "assembly_output";
+        } else {
+            mouse.draggingModeOnDown = "";
+        }
+        gui.assemblyOutputHover = true;
+        gui.showAssemblyHint();
+        
+    }).mouseout(function() {
+        mouse.draggingModeOnDown = "camera";
+        gui.assemblyOutputHover = false;
+        gui.hideAssemblyHint();
+        
+    }).mousedown(function() {
+        if(jQuery("#assembly_output").hasClass("active")) {
+            gui.startDraggingAssemblyOutput();
+        }
+    });
+    
     jQuery("#gui").show();
   };
   
@@ -117,6 +141,13 @@ function Gui() {
     }
     
     this.updateAssembly();
+  };
+  
+  
+  this.update = function() {
+      this.updateResources();
+      this.updateComponents();
+      this.updateAssemblyOutputDragging();
   };
   
   
@@ -241,6 +272,19 @@ function Gui() {
       }
     }
     
+    var recipe = this.assemblyInput[0] + this.assemblyInput[1] + this.assemblyInput[2];
+    if(gameLogic.assembler.doesRecipeExist(recipe)) {
+        if(canAssemble) {
+            jQuery("#assembly_output_draggable").css("opacity", "1.0");
+        } else {
+            jQuery("#assembly_output_draggable").css("opacity", "0.4");
+        }
+        jQuery("#assembly_output_draggable").css("background-position", "-52px -2px");
+    } else {
+        jQuery("#assembly_output_draggable").css("background-position", "-2px -2px");
+        canAssemble = false;
+    }
+    
     if(canAssemble) {
       jQuery("#assembly_arrow").css("background-position", "0px 0px");
       if(!jQuery("#assembly_output").hasClass("active")) {
@@ -256,6 +300,38 @@ function Gui() {
   };
   
   
+  this.startDraggingAssemblyOutput = function() {
+      jQuery("#assembly_output").addClass("dragging");
+      mouse.registerUpArea("place", -10000, -10000, 30000, 30000, function() {
+          jQuery("#assembly_output").removeClass("dragging");
+          mouse.deleteUpArea("place");
+          gui.placeAssemblyOutput();
+      });
+  };
+  
+  
+  this.updateAssemblyOutputDragging = function() {
+      if(mouse.dragging && mouse.draggingMode == "assembly_output") {
+          var position = jQuery("#assembly_output_draggable").position();
+          var left = position.left + mouse.dragDeltaX;
+          var top = position.top + mouse.dragDeltaY;
+          jQuery("#assembly_output_draggable").css({ left : left + "px", top : top + "px" });
+      }
+  };
+  
+  
+  this.placeAssemblyOutput = function() {
+      
+      jQuery("#assembly_output_draggable").css({ left : "0px", top : "0px" });
+      this.hideAssemblyHint();
+      
+      var recipe = this.assemblyInput[0] + this.assemblyInput[1] + this.assemblyInput[2];
+      if(gameLogic.assembler.doesRecipeExist(recipe)) {
+          console.log(recipe); //TODO
+      }
+  };
+  
+  
   this.showOneLineHint = function(text) {
     jQuery("#one_line_hint").html(text).show();
   };
@@ -263,6 +339,37 @@ function Gui() {
   
   this.hideOneLineHint = function(text) {
     jQuery("#one_line_hint").hide();
+  };
+  
+  
+  this.showAssemblyHint = function() {
+      var recipe = this.assemblyInput[0] + this.assemblyInput[1] + this.assemblyInput[2];
+      if(gameLogic.assembler.doesRecipeExist(recipe)) {
+          jQuery("#assembly_hint_title").html(gameLogic.assembler.getTitle(recipe));
+          jQuery("#assembly_hint_description").html(gameLogic.assembler.getDescription(recipe));
+      }
+      jQuery("#assembly_hint").show();
+  };
+  
+  
+  this.hideAssemblyHint = function() {
+      if(!this.assemblyOutputHover &&
+              (!mouse.dragging || mouse.draggingMode != "assembly_output")) {
+          jQuery("#assembly_hint").hide();
+      }
+  };
+  
+  
+  this.setSelectedMapTile = function(newMapTile) {
+      if(newMapTile != this.selectedMapTile) {
+          if(this.selectedMapTile != null) {
+              this.selectedMapTile.hideSelection();
+          }
+          if(newMapTile != null) {
+              newMapTile.showSelection(0x0000ff);
+          }
+          this.selectedMapTile = newMapTile;
+      }
   };
   
 }

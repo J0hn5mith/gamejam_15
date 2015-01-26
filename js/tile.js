@@ -76,23 +76,54 @@ function Tile() {
 
 
 function DrawableHexagonTile() {
+    
+    this.TILE_HEIGHT = 0.12;
+    this.TILE_SIZE = 0.92;
+    
+    this.SPAWN_ANIMATION_Y_MIN = -10;
+    this.SPAWN_ANIMATION_Y_MAX = -30;
+    this.SPAWN_ANIMATION_SPEED = 3.6;
+    
+    this.FLOATING_ANIMATION_SPEED = 1.0;
+    
+    this.DISTANCE_TO_TOWER_Y_INFLUENCE = 0.3;
 
     this.tile;
+    this.drawableTileIndex;
     this.orthogonalPosition;
     
-    this.shaderUniforms;
-    this.shaderAttributes;
+    //this.shaderUniforms;
+    //this.shaderAttributes;
+    
+    this.node;
+    this.selectionNode;
     
     this.tileModel;
     this.buildingModel;
     
+    this.spawnY;
+    this.distanceToTowerY;
+    this.floatingAnimationTimer;
+    
    
-    this.init = function(tile) {
+    this.init = function(tile, drawableTileIndex, animateSpawn) {
       this.tile = tile;
+      this.drawableTileIndex = drawableTileIndex;
       this.setOrthogonalPosition();
       
-      this.createTileModel();
+      this.node = new THREE.Object3D();
+      this.node.position.set(this.orthogonalPosition.x, 0, this.orthogonalPosition.y);
+      
+      this.createTileModel(animateSpawn);
       this.buildingModel = null;
+      
+      this.spawnY = 0;
+      if(animateSpawn) {
+          this.spawnY = randFloat(this.SPAWN_ANIMATION_Y_MIN, this.SPAWN_ANIMATION_Y_MAX);
+      }
+      var distanceToTower = this.tile.map.getDistanceToCenter(this.tile.position) + 1.0;
+      this.distanceToTowerY = -Math.sqrt(distanceToTower) * this.DISTANCE_TO_TOWER_Y_INFLUENCE;
+      this.floatingAnimationTimer = randFloat(0.0, 6.2832);
     };
     
     
@@ -106,17 +137,17 @@ function DrawableHexagonTile() {
     };
     
     
-    this.createShaderUniforms = function(geometry) {
+    /*this.createShaderUniforms = function(geometry) {
         this.shaderUniforms = {
             time : { type : "f", value : 0 },
             amplitude : { type : "f", value : 0 },
             tileX : { type : "f", value : this.orthogonalPosition.x },
             tileY : { type : "f", value : this.orthogonalPosition.y },
         };
-    };
+    };*/
     
     
-    this.createShaderAttributes = function(geometry) {
+    /*this.createShaderAttributes = function(geometry) {
         this.shaderAttributes = {
             aCol : { type : "c", value : [] }
         };
@@ -126,43 +157,74 @@ function DrawableHexagonTile() {
         for(var v = 0; v < geometry.vertices.length; v++) {
           this.shaderAttributes.aCol.value.push(new THREE.Color(color));
         }
-    };
+    };*/
     
     
     this.createTileModel = function() {
 
-      var geometry = Shapes3D.makeHexagonVolume(0.92, -0.2, 0.0);
+      var geometry = Shapes3D.makeHexagonVolume(
+          this.TILE_SIZE,
+          -this.TILE_HEIGHT / 2,
+          this.TILE_HEIGHT / 2
+      );
 
-      this.createShaderUniforms(geometry);
-      this.createShaderAttributes(geometry);
+      //this.createShaderUniforms(geometry);
+      //this.createShaderAttributes(geometry);
       
-      var material = new THREE.ShaderMaterial({
-        uniforms: this.shaderUniforms,
-        attributes: this.shaderAttributes,
-        vertexShader: shaders.floatingHexagon.vertex,
-        fragmentShader: shaders.floatingHexagon.fragment
+      /*var material = new THREE.ShaderMaterial({
+        uniforms : THREE.ShaderLib["lambert"].uniforms, //this.shaderUniforms,
+        attributes : this.shaderAttributes,
+        vertexShader : "#define USE_MAP\n"+THREE.ShaderLib["lambert"].vertexShader, //shaders.floatingHexagon.vertex,
+        fragmentShader : "#define USE_MAP\n"+THREE.ShaderLib["lambert"].fragmentShader
+      });*/
+      
+      var color = this.getColorCode();
+      var material = new THREE.MeshLambertMaterial({ 
+          color : color,
+          ambient : color,
       });
       
       this.tileModel = new THREE.Mesh(geometry, material);
-      this.tileModel.position.set(this.orthogonalPosition.x, 0, this.orthogonalPosition.y);
+      this.tileModel.userData = { drawableTileIndex : this.drawableTileIndex };
+      
+      this.node.add(this.tileModel);
    };
 
 
-    this.update = function() {
-        this.shaderUniforms.time.value += timer.delta;
-        this.shaderUniforms.amplitude.value = Math.sin(this.shaderUniforms.time.value) * 0.2;
+    this.update = function(floatingAmplitude) {
+        
+        //this.shaderUniforms.time.value += timer.delta;
+        //this.shaderUniforms.amplitude.value = 0.05 + (Math.sin(this.shaderUniforms.time.value) * 0.05);
+        
         if(!this.buildingModel && this.tile.building) {
             this.addBuilding();
+        }
+        
+        if(this.spawnY < 0) {
+            var velocity = Math.sqrt(Math.abs(this.spawnY)) * this.SPAWN_ANIMATION_SPEED;
+            this.spawnY += velocity * timer.delta;
+            if(this.spawnY > 0) {
+                this.spawnY = 0;
+            }
+        }
+        
+        this.floatingAnimationTimer += timer.delta * this.FLOATING_ANIMATION_SPEED;
+        if(this.floatingAnimationTimer > 6.2832) {
+            this.floatingAnimationTimer -= 6.2832;
+        }
+        var floatingAnimationY = Math.sin(this.floatingAnimationTimer + this.orthogonalPosition.x);
+        floatingAnimationY *= Math.sin(this.floatingAnimationTimer + this.orthogonalPosition.y);
+        floatingAnimationY *= Math.sin(this.floatingAnimationTimer + this.orthogonalPosition.y);
+        floatingAnimationY *= floatingAmplitude;
+        
+        this.node.position.setY(this.spawnY + this.distanceToTowerY + floatingAnimationY);
+        if(this.selectionNode != null) {
+            this.selectionNode.position.copy(this.node.position);
         }
     };
 
     
     this.addBuilding = function() {
-      
-        //DEBUG:
-        this.shaderAttributes.aCol.value[0] = (new THREE.Color(this.tile.building.debugColor));
-        this.shaderAttributes.aCol.needsUpdate = true;
-        
         this.buildingModel = new DrawableBuilding();
     };
 
@@ -189,6 +251,37 @@ function DrawableHexagonTile() {
             color = Math.random() * 0xffffff;
         }
         return color;
+    };
+    
+    
+    this.showSelection = function(color) {
+
+        this.selectionNode = new THREE.Object3D();
+        
+        var outlineWidth = 0.006 * cam.threeJSCamera.position.distanceTo(this.node.position);
+        
+        var geometry = Shapes3D.makeHexagonVolume(
+            this.TILE_SIZE + (2 * outlineWidth),
+            (-this.TILE_HEIGHT / 2) - outlineWidth,
+            (this.TILE_HEIGHT / 2) + outlineWidth
+        );
+        
+        var material = new THREE.MeshBasicMaterial({
+            color : color,
+            side : THREE.BackSide
+        });
+        
+        var selectionTile = new THREE.Mesh(geometry, material);
+        this.selectionNode.add(selectionTile);
+
+        this.selectionNode.position.copy(this.node.position);
+        s.add(this.selectionNode);
+    };
+    
+    
+    this.hideSelection = function() {
+        s.remove(this.selectionNode);
+        this.selectionNode = null;
     };
     
 }
