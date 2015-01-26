@@ -9,6 +9,7 @@ var BuildingConstants = {
 };
 
 var BuildingCodes = {
+    EMPTY: -1,
     FARM: 0,
     HOUSE: 1,
     FACTORY: 2,
@@ -17,7 +18,7 @@ var BuildingCodes = {
     MINI_TRU: 5,
     CANON: 6,
 	TOWER: 7,
-	NONE: 10
+	NONE: 10,
 }
 
 

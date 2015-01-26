@@ -327,7 +327,12 @@ function Gui() {
       
       var recipe = this.assemblyInput[0] + this.assemblyInput[1] + this.assemblyInput[2];
       if(gameLogic.assembler.doesRecipeExist(recipe)) {
-          console.log(recipe); //TODO
+          
+          if(this.selectedMapTile != null) {
+              var building = this.selectedMapTile.tile.building;
+              //if(this.sele)
+              console.log(recipe); //TODO
+          }
       }
   };
   
