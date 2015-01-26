@@ -215,7 +215,7 @@ function DrawableMap() {
     };
 
     
-    this.updateAppearingTiles = function(timeDelta) {
+    this.updateAppearingTiles = function() {
         if (!this.appearingTiles.length > 0) {
             return;
         }

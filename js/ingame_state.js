@@ -33,6 +33,13 @@ function IngameState() {
         var event = new NeighbourTownEvent();
         event.init(1);
         gameLogic.neighbourTownEvents.push(event);
+
+        var tiles = gameLogic.map.getTilesForRadius(2);
+
+        var building = gameLogic.town.addBuilding(BuildingCodes.FARM, tiles[1]);
+        var building = gameLogic.town.addBuilding(BuildingCodes.HOUSE, tiles[2]);
+        var building = gameLogic.town.addBuilding(BuildingCodes.STEAM_PLANT, tiles[3]);
+        var building = gameLogic.town.addBuilding(BuildingCodes.FACTORY, tiles[0]);
     };
 
 
@@ -81,10 +88,6 @@ function IngameState() {
             gameLogic.map.increaseCurrentRadius();
             if (this.tileCounter <= 6) {
                 var tile = gameLogic.map.getTilesForRadius(2)[this.tileCounter + 1];
-                var building = gameLogic.town.addBuilding(this.tileCounter, tile);
-                var buff = BuildingBuff.make(10);
-                buff.assignToBuilding(building);
-                this.tileCounter++;
             }
         }
     };

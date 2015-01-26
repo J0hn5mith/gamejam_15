@@ -4,8 +4,8 @@
  */
 var BuildingConstants = {
     COAL_CONSUMPTION: 1,
-    COAL_CONSUMPTION_INTERVAL: 1
-
+    COAL_CONSUMPTION_INTERVAL: 1,
+    FACTORY_PRODUCTION_INTERVAL: 1
 };
 
 var BuildingCodes = {
@@ -133,7 +133,6 @@ function Factory() {
     this.code = BuildingCodes.FACTORY;
     this.hasSteamPlantInrange = false;
     this.steamPlantsInRange = [];
-    this.justBuilt = true;
     this.timer = 0;
 
     this.update = function(timeDelta) {
@@ -182,9 +181,8 @@ function Factory() {
         var components = new ComponentsState();
         if (this.timer >= 1 && this.getIsActive()) {
             this.timer -= 1;
-            components.gears = 10;
+            components.gears = 1;
         }
-        components.gears = 10;
         return components;
 
     }
@@ -321,7 +319,53 @@ function Canon() {
 }
 
 
-function DrawableBuilding() {
+function BuildingModel() {
+
+}
+
+BuildingModel.make = function(code){
+    var color = null;
+    var geometry = new THREE.CylinderGeometry( 0.1, 0.1, 0.5, 32 );
+    switch (code) {
+        case BuildingCodes.FARM:
+            color = Farm;
+            color = 0x00ffff;
+            geometry = new THREE.CylinderGeometry( 0.1, 0.1, 1.0, 32 );
+            break;
+        case BuildingCodes.HOUSE:
+            color = 0xff0000;
+            geometry = new THREE.CylinderGeometry( 0.1, 0.1, 1.5, 32 );
+            break;
+        case BuildingCodes.FACTORY:
+            color = 0xff0000;
+            geometry = new THREE.CylinderGeometry( 0.1, 0.1, 2.0, 32 );
+            break;
+        case BuildingCodes.STEAM_PLANT:
+            color = 0xff0000;
+            geometry = new THREE.CylinderGeometry( 0.1, 0.1, 2.5, 32 );
+            break;
+        case BuildingCodes.MINI_LOV:
+            color = 0xff0000;
+            geometry = new THREE.CylinderGeometry( 0.1, 0.1, 3.0, 32 );
+            break;
+        case BuildingCodes.MINI_TRU:
+            color = 0xff0000;
+            geometry = new THREE.CylinderGeometry( 0.1, 0.1, 3.5, 32 );
+            break;
+        case BuildingCodes.CANON:
+            color = 0xff0000;
+            geometry = new THREE.CylinderGeometry( 0.1, 0.1, 4.0, 32 );
+            break;
+        case BuildingCodes.TOWER:
+            color = 0xff0000;
+            break;
+        case BuildingCodes.NONE:
+            //
+            break;
+    }
+    var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+    var cylinder = new THREE.Mesh( geometry, material );
+    return cylinder;
 
 }
 
