@@ -1,7 +1,7 @@
 body {
   padding: 0px;
   margin: 0px;
-  font-family: 'teenregular';
+  font-family: 'teenregular', sans-serif;
 }
 
 form, table {
@@ -152,17 +152,16 @@ img {
   position: absolute;
   left: 10px;
   bottom: 10px;
-  height: 36px;
+  height: 30px;
   padding: 0px 10px;
   border: 2px solid #ccc;
   border-radius: 12px;
-  line-height: 36px;
-  font-size: 20px;
+  line-height: 30px;
+  font-size: 16px;
   text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
   cursor: default;
   background: #fff;
-  z-index: 1000;
 }
 
 #assembly_panel {
@@ -201,7 +200,8 @@ img {
 }
 
 .assembly_input:hover,
-#assembly_output.active:hover {
+#assembly_output.active:hover,
+#assembly_output.dragging {
   border: 2px solid #777 !important;	
 }
 
@@ -229,6 +229,39 @@ img {
   width: 80px;
   height: 50px;
   background: url(../img/assembly_arrow.png) 0px 0px no-repeat;	
+}
+
+#assembly_output_draggable {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 46px;
+  height: 46px;
+  background: url(../img/assembly_result.png) -2px -2px no-repeat;
+}
+
+#assembly_hint {
+  display: none;
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  padding: 5px 10px;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
+  cursor: default;
+  background: #fff;
+}
+
+#assembly_hint_title {
+  font-family: 'teenbold', sans-serif;
+  line-height: 30px;
+  font-size: 20px;
+}
+
+#assembly_hint_description {
+  line-height: 24px;
+  font-size: 16px;
 }
 
 #fps {

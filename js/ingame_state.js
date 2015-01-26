@@ -13,7 +13,7 @@ function IngameState() {
         cam = new Camera();
         cam.initPerspectiveCamera(75, 1.0, 1000.0);
 
-        this.camVerticalAngle = toRad(15);
+        this.camVerticalAngle = toRad(30);
         this.camHorizontalAngle = toRad(45);
         this.camZoom = 7.0;
         this.moveCamera();
@@ -101,8 +101,7 @@ function IngameState() {
         gameLogic.update(timer.delta);
         this.debugUpdate();
         
-        gui.updateResources();
-        gui.updateComponents();
+        gui.update();
     };
 
 
@@ -140,6 +139,7 @@ function IngameState() {
         cam.setAspectRatio(game.WIDTH / game.HEIGHT);
         jQuery("#gui").width(game.WIDTH).height(game.HEIGHT);
         jQuery("#assembly_panel").css("left", ((game.WIDTH / 2.0) - 150) + "px");
+        jQuery("#assembly_hint").css("max-width", ((game.WIDTH / 2.0) - 194) + "px");
     };
 
 }

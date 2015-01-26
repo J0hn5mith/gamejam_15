@@ -85,6 +85,8 @@ function DrawableHexagonTile() {
     this.SPAWN_ANIMATION_SPEED = 3.6;
     
     this.FLOATING_ANIMATION_SPEED = 1.0;
+    
+    this.DISTANCE_TO_TOWER_Y_INFLUENCE = 0.3;
 
     this.tile;
     this.drawableTileIndex;
@@ -100,6 +102,7 @@ function DrawableHexagonTile() {
     this.buildingModel;
     
     this.spawnY;
+    this.distanceToTowerY;
     this.floatingAnimationTimer;
     
    
@@ -109,16 +112,17 @@ function DrawableHexagonTile() {
       this.setOrthogonalPosition();
       
       this.node = new THREE.Object3D();
+      this.node.position.set(this.orthogonalPosition.x, 0, this.orthogonalPosition.y);
+      
+      this.createTileModel(animateSpawn);
+      this.buildingModel = null;
       
       this.spawnY = 0;
       if(animateSpawn) {
           this.spawnY = randFloat(this.SPAWN_ANIMATION_Y_MIN, this.SPAWN_ANIMATION_Y_MAX);
       }
-      this.node.position.set(this.orthogonalPosition.x, this.spawnY, this.orthogonalPosition.y);
-      
-      this.createTileModel(animateSpawn);
-      this.buildingModel = null;
-      
+      var distanceToTower = this.tile.map.getDistanceToCenter(this.tile.position) + 1.0;
+      this.distanceToTowerY = -Math.sqrt(distanceToTower) * this.DISTANCE_TO_TOWER_Y_INFLUENCE;
       this.floatingAnimationTimer = randFloat(0.0, 6.2832);
     };
     
@@ -213,7 +217,7 @@ function DrawableHexagonTile() {
         floatingAnimationY *= Math.sin(this.floatingAnimationTimer + this.orthogonalPosition.y);
         floatingAnimationY *= floatingAmplitude;
         
-        this.node.position.setY(this.spawnY + floatingAnimationY);
+        this.node.position.setY(this.spawnY + this.distanceToTowerY + floatingAnimationY);
         if(this.selectionNode != null) {
             this.selectionNode.position.copy(this.node.position);
         }
