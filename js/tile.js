@@ -225,7 +225,8 @@ function DrawableHexagonTile() {
 
     
     this.addBuilding = function() {
-        this.buildingModel = new DrawableBuilding();
+        //this.buildingModel = new DrawableBuilding();
+        this.buildingModel = true;
     };
 
 

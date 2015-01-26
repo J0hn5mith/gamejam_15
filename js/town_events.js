@@ -5,16 +5,15 @@
 function TownEventsPrototype() {
     this.events = {
         1: {
-            "name": {
+            0: {
                 target: BuildingCodes.FARM,
                 title: "Upgrade Farm to Level 2",
                 description: "Drag upgrade icon unto desired tile.",
                 action: function() {
-                    alert("HALLO");
+                    //alert("HALLO");
                 }
             }
-        },
-        2: {}
+        }
     };
 
     this.getRandomEventForLevel = function(){
