@@ -2,7 +2,7 @@ var assemblyRecipes = {
 
 	//House
     "III" : {
-      target : BuildingCodes.HOUSE,
+      target : BuildingCodes.EMPTY,
       title : "Building House Level 1",
       description : "Drag upgrade icon unto desired tile.",
       action : function() {

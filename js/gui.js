@@ -325,13 +325,17 @@ function Gui() {
       jQuery("#assembly_output_draggable").css({ left : "0px", top : "0px" });
       this.hideAssemblyHint();
       
-      var recipe = this.assemblyInput[0] + this.assemblyInput[1] + this.assemblyInput[2];
-      if(gameLogic.assembler.doesRecipeExist(recipe)) {
+      var outputOffset = jQuery("#assembly_output").offset();
+      var gameOffset = jQuery("#game").offset();
+      var outputLeft = outputOffset.left - gameOffset.left;
+      var outputTop = outputOffset.top - gameOffset.top;
+      
+      if(mouse.x < outputLeft || mouse.x > outputLeft + 50 ||
+              mouse.y < outputTop || mouse.y > outputTop + 50) {
           
-          if(this.selectedMapTile != null) {
-              var building = this.selectedMapTile.tile.building;
-              //if(this.sele)
-              console.log(recipe); //TODO
+          var recipe = this.assemblyInput[0] + this.assemblyInput[1] + this.assemblyInput[2];
+          if(gameLogic.assembler.doesRecipeExist(recipe)) {
+              gameLogic.assembler.assembleRecipe(recipe, this.selectedMapTile);
           }
       }
   };
