@@ -40,6 +40,9 @@ function IngameState() {
         var building = gameLogic.town.addBuilding(BuildingCodes.HOUSE, tiles[2]);
         var building = gameLogic.town.addBuilding(BuildingCodes.STEAM_PLANT, tiles[3]);
         var building = gameLogic.town.addBuilding(BuildingCodes.FACTORY, tiles[0]);
+        var building = gameLogic.town.addBuilding(BuildingCodes.MINI_LOV, tiles[4]);
+        var building = gameLogic.town.addBuilding(BuildingCodes.MINI_TRU, tiles[5]);
+        var building = gameLogic.town.addBuilding(BuildingCodes.CANON, tiles[6]);
     };
 
 
@@ -50,6 +53,8 @@ function IngameState() {
         gameLogic = GameLogic.makeGameLogic();
         
         this.drawableMap = DrawableMap.makeDrawableMap(gameLogic.map);
+        var centerTile = gameLogic.map.getTile(6,6);
+        building = gameLogic.town.addBuilding(BuildingCodes.TOWER, centerTile);
         this.debugShow();
 
         var ambientLight = new THREE.AmbientLight(0x444444);
