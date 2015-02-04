@@ -26,27 +26,46 @@ function Assembler() {
         var assembly = assemblyRecipes[recipe];
 
         if(assembly.target == null) {
-            assembly.action(null);
+            this.executeAssembly(recipe, assembly, null);
         
         } else if(selectedDrawableTile != null) {
             
             var tile = selectedDrawableTile.tile;
             
             if(assembly.target == BuildingCodes.ANY) {
-                assembly.action(tile);
+                this.executeAssembly(recipe, assembly, tile);
             
             } else if(assembly.target == BuildingCodes.EMPTY) {
 
                 if(tile.building == null) {
-                    assembly.action(tile);
+                    this.executeAssembly(recipe, assembly, tile);
                 }
                 
             } else {
                 if(tile.building != null && tile.building.code == assembly.target) {
-                    assembly.action(tile);
+                    this.executeAssembly(recipe, assembly, tile);
                 }
             }                  
         } 
+    };
+    
+    
+    this.executeAssembly = function(recipe, assembly, tile) {
+        assembly.action(tile);
+        
+        var ingredients = recipe.split("");
+        for(var i = 0; i < ingredients.length; i++) {
+            var input = ingredients[i];
+            if(input == "I") {
+                gameLogic.playerState.components.beams--;
+            } else if(input == "O") {
+                gameLogic.playerState.components.pipes--;
+            } else if(input == "X") {
+                gameLogic.playerState.components.gears--;
+            } else if(input == "T") {
+                gameLogic.playerState.components.pistons--;
+            }
+        }
     };
   
 };
