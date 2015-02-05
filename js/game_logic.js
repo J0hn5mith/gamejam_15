@@ -56,11 +56,13 @@ function GameLogic() {
         if (minLovResult) {
             var neighbourhoodTown = this.neighbourTowns[1];
             minLovResult.getEffect().apply(neighbourhoodTown);
+            DebugPanel.print(minLovResult.name);
         }
         var minTruResult = this.minTruEventManager.update(timeDelta, this.town);
         if (minTruResult) {
             var neighbourhoodTown = this.neighbourTowns[1];
             minTruResult.getEffect().apply(neighbourhoodTown);
+            DebugPanel.print(minTruResult.name);
         }
 
         this.playerState.applyTrends();

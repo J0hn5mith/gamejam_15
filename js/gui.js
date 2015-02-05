@@ -402,3 +402,22 @@ function Gui() {
   };
   
 }
+
+function DebugPanelPrototype(){
+
+    this.print = function(text){
+        var element = this.getElement();
+        var tag = "<p>"  + text + "</p>";
+        element.prepend(tag);
+    };
+
+    this.getElement = function(){
+        if (!this.element){
+            this.element = jQuery("#debug_console_test_panel");
+        }
+
+        return this.element;
+    }
+}
+
+var DebugPanel = new DebugPanelPrototype();
