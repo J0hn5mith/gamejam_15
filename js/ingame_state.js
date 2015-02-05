@@ -7,6 +7,7 @@ function IngameState() {
     this.drawableMap;
     
     this.paused = false;
+    this.blockMapInteraction = false;
 
 
     this.init = function() {
@@ -62,10 +63,16 @@ function IngameState() {
         keyboard.registerKeyUpHandler(Keyboard.P, function() {
             game.state.paused = !game.state.paused;
         });
+        keyboard.registerKeyUpHandler(Keyboard.SPACE_BAR, function() {
+            game.state.paused = !game.state.paused;
+        });
 
         gui.show();
         
-        gui.overlay.openEvent("This is my title", "What do we do now?", 0, function() { alert("hallo"); });
+        //DEBUG
+        keyboard.registerKeyUpHandler(Keyboard.H, function() {
+            gui.overlay.openEvent("Treasure found", "We found a treasure in an abandonned apartment in the old part of town. We just earned four steel. <br /><br />What do we do now?", Overlay.STYRO_DOG_EYES, function() { alert("hallo"); });
+        });
     };
 
 
@@ -75,34 +82,39 @@ function IngameState() {
 
     this.update = function() {
         
-        if(mouse.dragging && mouse.draggingMode == "camera" && (mouse.dragDeltaX != 0 || mouse.dragDeltaY != 0)) {
-            this.camHorizontalAngle += mouse.dragDeltaX * toRad(0.2);
-            this.camVerticalAngle += mouse.dragDeltaY * toRad(0.2);
-            this.updateCamera();
+        if(!this.blockMapInteraction) {
+            
+            if(mouse.dragging && mouse.draggingMode == "camera" && (mouse.dragDeltaX != 0 || mouse.dragDeltaY != 0)) {
+                this.camHorizontalAngle += mouse.dragDeltaX * toRad(0.2);
+                this.camVerticalAngle += mouse.dragDeltaY * toRad(0.2);
+                this.updateCamera();
+            }
+            
+            if((keyboard.isPressed(Keyboard.ARROW_LEFT) || keyboard.isPressed(Keyboard.A)) &&
+                    !keyboard.isPressed(Keyboard.ARROW_RIGHT) && !keyboard.isPressed(Keyboard.D)) {
+                this.camHorizontalAngle += toRad(60.0) * timer.delta;
+                this.updateCamera();
+            }
+            if((keyboard.isPressed(Keyboard.ARROW_RIGHT) || keyboard.isPressed(Keyboard.D)) &&
+                    !keyboard.isPressed(Keyboard.ARROW_LEFT) && !keyboard.isPressed(Keyboard.A)) {
+                this.camHorizontalAngle -= toRad(60.0) * timer.delta;
+                this.updateCamera();
+            }
+            if((keyboard.isPressed(Keyboard.ARROW_UP) || keyboard.isPressed(Keyboard.W)) &&
+                    !keyboard.isPressed(Keyboard.ARROW_DOWN) && !keyboard.isPressed(Keyboard.S)) {
+                this.camVerticalAngle += toRad(60.0) * timer.delta;
+                this.updateCamera();
+            }
+            if((keyboard.isPressed(Keyboard.ARROW_DOWN) || keyboard.isPressed(Keyboard.S)) &&
+                    !keyboard.isPressed(Keyboard.ARROW_UP) && !keyboard.isPressed(Keyboard.W)) {
+                this.camVerticalAngle -= toRad(60.0) * timer.delta;
+                this.updateCamera();
+            }
+            
+            this.drawableMap.mouseSelect();
+        } else {
+            this.drawableMap.mouseDeselect();
         }
-        
-        if((keyboard.isPressed(Keyboard.ARROW_LEFT) || keyboard.isPressed(Keyboard.A)) &&
-                !keyboard.isPressed(Keyboard.ARROW_RIGHT) && !keyboard.isPressed(Keyboard.D)) {
-            this.camHorizontalAngle += toRad(60.0) * timer.delta;
-            this.updateCamera();
-        }
-        if((keyboard.isPressed(Keyboard.ARROW_RIGHT) || keyboard.isPressed(Keyboard.D)) &&
-                !keyboard.isPressed(Keyboard.ARROW_LEFT) && !keyboard.isPressed(Keyboard.A)) {
-            this.camHorizontalAngle -= toRad(60.0) * timer.delta;
-            this.updateCamera();
-        }
-        if((keyboard.isPressed(Keyboard.ARROW_UP) || keyboard.isPressed(Keyboard.W)) &&
-                !keyboard.isPressed(Keyboard.ARROW_DOWN) && !keyboard.isPressed(Keyboard.S)) {
-            this.camVerticalAngle += toRad(60.0) * timer.delta;
-            this.updateCamera();
-        }
-        if((keyboard.isPressed(Keyboard.ARROW_DOWN) || keyboard.isPressed(Keyboard.S)) &&
-                !keyboard.isPressed(Keyboard.ARROW_UP) && !keyboard.isPressed(Keyboard.W)) {
-            this.camVerticalAngle -= toRad(60.0) * timer.delta;
-            this.updateCamera();
-        }
-        
-        this.drawableMap.mouseSelect();
         
         if(!this.paused) {
             this.drawableMap.update();
