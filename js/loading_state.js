@@ -13,8 +13,6 @@ function LoadingState() {
     this.percentage = 0;
     this.fakeLoadingCountdown = 0.0;
     this.soundLoadingCountdown = 0.0;
-    
-    this.paused = false;
 
 
     this.init = function () {

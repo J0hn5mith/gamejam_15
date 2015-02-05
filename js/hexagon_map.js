@@ -242,6 +242,11 @@ function DrawableMap() {
     };
     
     
+    this.mouseDeselect = function() {
+        gui.setSelectedMapTile(null);
+    };
+    
+    
     this.update = function() {
         
         if(this.currentRadius < this.map.getCurrentRadius()) {
