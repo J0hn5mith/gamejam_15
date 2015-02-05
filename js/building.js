@@ -561,6 +561,9 @@ BuildingModel.make = function(code) {
     }
     var material = new THREE.MeshBasicMaterial({color: color});
     var cylinder = new THREE.Mesh(geometry, material);
+    cylinder.castShadow = true;
+    cylinder.receiveShadow = true;
+    cylinder.frustumCulled = false; // prevents errors while generating shadows
     return cylinder;
 
 }

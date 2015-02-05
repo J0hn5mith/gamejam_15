@@ -61,7 +61,7 @@ function IngameState() {
         s.add(ambientLight);
 
         var light = new THREE.DirectionalLight(0xffffff);
-        light.position.set(0.5, 0.8, 0.0).normalize();
+        light.position.set(0.5, 0.8, -0.2).normalize();
 
         light.castShadow = true;
 
