@@ -1,4 +1,6 @@
 function Gui() {
+    
+  this.overlay;
   
   this.assemblyInput = [];
   
@@ -21,6 +23,8 @@ function Gui() {
   
   
   this.init = function() {
+      
+    this.overlay = new Overlay();
     
     this.assemblyInput[0] = "I";
     this.assemblyInput[1] = "I";

@@ -264,12 +264,8 @@ img {
   font-size: 16px;
 }
 
-#fps {
-  background: #fff;
-  color: #000;
-}
-
 #overlay_container {
+  display: none;
   position: absolute;
   left: 0px;
   top: 0px;
@@ -290,6 +286,7 @@ img {
   background: #fff;
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
 }
+
 .overlay .image {
   position: absolute;
   left: 0px;
@@ -317,3 +314,7 @@ img {
   background: #f00;
 }
 
+#fps {
+  background: #fff;
+  color: #000;
+}
