@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" type="text/css" href="css/fontface.css"/>
     <link rel="stylesheet" type="text/css" href="css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="css/overlay.css"/>
     <script type="text/javascript" src="js/jquery-1.11.2.min.js"></script>
     <script type="text/javascript" src="lib/shader_loader.js"></script>
     <script type="text/javascript" src="js/soundmanager2.js"></script>
@@ -31,9 +32,11 @@
     <script type="text/javascript" src="js/tile.js"></script>
     <script type="text/javascript" src="js/hexagon_map.js"></script>
     <script type="text/javascript" src="js/neighbour_town.js"></script>
-	<script type="text/javascript" src="js/research_result.js"></script>
+    <script type="text/javascript" src="js/research_result.js"></script>
     <script type="text/javascript" src="js/building.js"></script>
     <script type="text/javascript" src="js/town_events.js"></script>
+    <script type="text/javascript" src="js/min_lov_events.js"></script>
+    <script type="text/javascript" src="js/min_tru_event.js"></script>
     <script type="text/javascript" src="js/town.js"></script>
     <script type="text/javascript" src="js/preloading_manager.js"></script>
     <script type="text/javascript" src="js/player_state.js"></script>
@@ -44,8 +47,10 @@
     <script type="text/javascript" src="js/assembly_recipes.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
 
-    <script data-src="js/shader/floatingHexagon/vertex.glsl" data-name='floatingHexagon' type="x-shader/x-vertex" id="floatingHexagon_vertex"></script>
-    <script data-src="js/shader/floatingHexagon/fragment.glsl" data-name='floatingHexagon' type="x-shader/x-fragment" id="floatingHexagon_fragment"></script>
+    <script data-src="js/shader/floatingHexagon/vertex.glsl" data-name='floatingHexagon' type="x-shader/x-vertex"
+            id="floatingHexagon_vertex"></script>
+    <script data-src="js/shader/floatingHexagon/fragment.glsl" data-name='floatingHexagon' type="x-shader/x-fragment"
+            id="floatingHexagon_fragment"></script>
 </head>
 <body>
 <div id="game_box">
@@ -60,41 +65,61 @@
         </div>
     </div>
     <div id="gui">
-    
-     <div id="resources_panel" class="no_camera_dragging">
-      <div id="coal_stock" class="resource_stock">
-       <div class="value">0</div>
-       <div class="trend"></div>
-      </div>
-      <div id="iron_stock" class="resource_stock">
-       <div class="value">0</div>
-       <div class="trend"></div>
-      </div>
-     </div>
-     
-     <div id="components_panel" class="no_camera_dragging">
-      <div id="beam_stock" class="component_stock">0</div>
-      <div id="pipe_stock" class="component_stock">0</div>
-      <div id="gear_stock" class="component_stock">0</div>
-      <div id="piston_stock" class="component_stock">0</div>
-     </div>
-     
-     <div id="one_line_hint" class="no_camera_dragging"></div>
-     
-     <div id="building_hint" class="no_camera_dragging"></div>
-     
-     <div id="assembly_panel">
-      <div id="assembly_input_0" class="assembly_input no_camera_dragging">&nbsp;</div>
-      <div id="assembly_input_1" class="assembly_input no_camera_dragging">&nbsp;</div>
-      <div id="assembly_input_2" class="assembly_input no_camera_dragging">&nbsp;</div>
-      <div id="assembly_arrow" class="no_camera_dragging">&nbsp;</div>
-      <div id="assembly_output"><div id="assembly_output_draggable">&nbsp;</div></div>
-     </div>
-     
-     <div id="assembly_hint" class="no_camera_dragging">
-      <div id="assembly_hint_title"></div>
-      <div id="assembly_hint_description"></div>
-     </div>
+
+        <div id="resources_panel" class="no_camera_dragging">
+            <div id="coal_stock" class="resource_stock">
+                <div class="value">0</div>
+                <div class="trend"></div>
+            </div>
+            <div id="iron_stock" class="resource_stock">
+                <div class="value">0</div>
+                <div class="trend"></div>
+            </div>
+        </div>
+
+        <div id="components_panel" class="no_camera_dragging">
+            <div id="beam_stock" class="component_stock">0</div>
+            <div id="pipe_stock" class="component_stock">0</div>
+            <div id="gear_stock" class="component_stock">0</div>
+            <div id="piston_stock" class="component_stock">0</div>
+        </div>
+
+        <div id="one_line_hint" class="no_camera_dragging"></div>
+
+        <div id="building_hint" class="no_camera_dragging"></div>
+
+        <div id="assembly_panel">
+            <div id="assembly_input_0" class="assembly_input no_camera_dragging">&nbsp;</div>
+            <div id="assembly_input_1" class="assembly_input no_camera_dragging">&nbsp;</div>
+            <div id="assembly_input_2" class="assembly_input no_camera_dragging">&nbsp;</div>
+            <div id="assembly_arrow" class="no_camera_dragging">&nbsp;</div>
+            <div id="assembly_output">
+                <div id="assembly_output_draggable">&nbsp;</div>
+            </div>
+        </div>
+
+        <div id="assembly_hint" class="no_camera_dragging">
+            <div id="assembly_hint_title"></div>
+            <div id="assembly_hint_description"></div>
+        </div>
+        <div id="overlay-hello" class="overlay">
+            <div class="overlay-inner">
+                <div id="overlay-title" class="overlay-title">
+                    <h1>Title</h1>
+                </div>
+                <div id="overlay-text" class="overlay-text">
+                    <p>
+                        Overlay text
+                    </p>
+                </div>
+                <div id="overlay-option-panel-1" class="overlay-option-panel">
+                    <div id="overlay-option-button-1" class="overlay-option-button">Hello World</div>
+                    <!--<div id="overlay-option-button-2" class="overlay-option-button">Hello World</div>-->
+                    <!--<div id="overlay-option-button-3" class="overlay-option-button">Hello World</div>-->
+                    <!--<div id="overlay-option-button-4" class="overlay-option-button">Hello World</div>-->
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </body>
