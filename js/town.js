@@ -25,26 +25,27 @@ function Town() {
 
     this.update = function(timeDelta, playerState) {
         this.updateSteamPlants(timeDelta, playerState);
+        var updateNeighbourhood = this.addedBuildings.length > 0 || this.removedBuildings.length > 0 || this.plantListUpdateRequired;
         for (var i = 0; i < this.buildings.length; i++) {
             var building = this.buildings[i];
             building.update(timeDelta);
             Building.updateBuffs(building, timeDelta);
-            if (
-                this.plantListUpdateRequired
-                && (building.code == BuildingCodes.FACTORY || building.code == BuildingCodes.TOWER )
-            ) {
-                building.updateSteamPlantsInRange();
-
+            if (updateNeighbourhood) {
+                building.updateNeighbourhood();
             }
 
             if (building.code == BuildingCodes.FACTORY) {
                 playerState.componentTrend.add(building.harvestComponents());
-
             }
         }
 
         if (this.plantListUpdateRequired) {
             this.plantListUpdateRequired = false;
+        }
+
+        if (updateNeighbourhood) {
+            this.addedBuildings = [];
+            this.removedBuildings = [];
         }
     };
 

@@ -4,8 +4,8 @@
  */
 var BuildingConstants = {
     COAL_CONSUMPTION: 1,
-    COAL_CONSUMPTION_INTERVAL: 1
-
+    COAL_CONSUMPTION_INTERVAL: 1,
+    FACTORY_PRODUCTION_INTERVAL: 1
 };
 
 var BuildingCodes = {
@@ -17,9 +17,9 @@ var BuildingCodes = {
     MINI_LOV: 4,
     MINI_TRU: 5,
     CANON: 6,
-	TOWER: 7,
-	NONE: 10,
-}
+    TOWER: 7,
+    NONE: 10
+};
 
 
 function Building() {
@@ -39,7 +39,7 @@ Building.updateBuffs = function(building, timeDelta) {
     for (var i = 0; i < building.buffs.length; i++) {
         var buff = building.buffs[i];
         var toDelete = buff.update(timeDelta);
-        if (!toDelete){
+        if (!toDelete) {
             newBuffList.push(buff)
         }
     }
@@ -71,10 +71,10 @@ Building.make = function(code, tile, town) {
         case BuildingCodes.CANON:
             building = new Canon();
             break;
-		case BuildingCodes.TOWER:
+        case BuildingCodes.TOWER:
             building = new Tower();
             break;
-		case BuildingCodes.NONE:
+        case BuildingCodes.NONE:
             //
             break;
     }
@@ -82,79 +82,138 @@ Building.make = function(code, tile, town) {
     building.town = town;
     building.buffs = [];
 
-    if (building.code == BuildingCodes.FACTORY || building.code == BuildingCodes.TOWER) {
-        building.updateSteamPlantsInRange();
+    building.updateNeighbourhood();
 
-    }
     return building;
 };
 
 
 function Farm() {
-    this.tile;
-    this.debugColor = 0x00ffff;
     this.code = BuildingCodes.FARM;
+    this.tile = null;
+    this.level = 1;
 
     this.update = function(timeDelta) {
 
+    };
+
+
+    this.updateNeighbourhood = function() {
+
+    };
+
+
+    this.getIsActive = function() {
+        return true;
+    };
+
+
+    this.upgrade = function() {
+        this.level++;
     };
 }
 Farm.RANGE = 2;
+Farm.COLOR_CODE = 0x0B610B;
 
 
 function House() {
-    this.tile;
-    this.debugColor = 0xff00ff;
     this.code = BuildingCodes.HOUSE;
-    this.hasFarmInrang = false;
+    this.tile = null;
+    this.level = 1;
+    this.farmsInRange = [];
     this.isActive = true;
 
     this.update = function(timeDelta) {
-        this.isActive = this.checkForFarm();
-        if (!this.isActive) {
-            var i = 0;
-        }
 
     };
 
-    this.checkForFarm = function() {
-        return this.town.checkForBuilding(
+
+    this.updateNeighbourhood = function() {
+        this.farmsInRange = this.getFarmsInRange();
+    };
+
+
+    this.getIsActive = function() {
+        return this.hasActiveFarmInRange();
+    };
+
+
+    this.hasActiveFarmInRange = function() {
+        for (var i in this.farmsInRange) {
+            var farm = this.farmsInRange[i];
+            if (farm.getIsActive()) {
+                return true
+            }
+        }
+        return false;
+
+    };
+
+
+    this.upgrade = function() {
+        this.level++;
+    };
+
+
+    this.getFarmsInRange = function() {
+        return this.town.getBuildingsOfTypeInRange(
             this.tile.position,
             Farm.RANGE,
             BuildingCodes.FARM
         );
-    }
+    };
 }
 House.RANGE = 2;
+House.COLOR_CODE = 0xB45F04;
 
 
 function Factory() {
-    this.tile;
-    this.debugColor = 0xffff00;
     this.code = BuildingCodes.FACTORY;
-    this.hasSteamPlantInrange = false;
-    this.steamPlantsInRange = [];
-    this.justBuilt = true;
+    this.tile = null;
+    this.level = 1;
+    this.debugColor = 0xffff00;
     this.timer = 0;
+    this.housesInRange = [];
+    this.steamPlantsInRange = [];
 
     this.update = function(timeDelta) {
-        var hasFarm = this.checkForHouse();
-        var hasPlant = true;
-        this.isActive = hasFarm && hasPlant;
-        this.timer += timeDelta;
+        if (this.getIsActive()){
+            this.timer += timeDelta;
+        }
+    };
+
+    this.updateNeighbourhood = function() {
+        this.steamPlantsInRange = this.getSteamPlantsInRange();
+        this.housesInRange = this.getHousesInRange();
+    };
+
+    this.upgrade = function() {
+        this.level++;
     };
 
     this.getIsActive = function() {
-        var hasFarm = this.checkForHouse();
-        var hasPlant = true;
-        return hasFarm && this.hasActivePlantInRange();
+        return this.hasActiveHouseInRange() && this.hasActivePlantInRange();
     };
 
-    this.hasActivePlantInRange = function() {
-        for (var i = 0; i < this.plantsInRange.length; i++) {
-            var plant = this.plantsInRange[i];
 
-            if (plant.isActive) {
+    this.hasActivePlantInRange = function() {
+        for (var i = 0; i < this.steamPlantsInRange.length; i++) {
+            var plant = this.steamPlantsInRange[i];
+
+            if (plant.getIsActive()) {
+                return true
+            }
+        }
+        return false;
+
+    };
+
+
+    this.hasActiveHouseInRange = function() {
+        for (var i in this.housesInRange) {
+            var house = this.housesInRange[i];
+
+            if (house.getIsActive()) {
                 return true;
             }
         }
@@ -162,8 +221,8 @@ function Factory() {
 
     };
 
-    this.checkForHouse = function() {
-        return this.town.checkForBuilding(
+    this.getHousesInRange = function() {
+        return this.town.getBuildingsOfTypeInRange(
             this.tile.position,
             House.RANGE,
             BuildingCodes.HOUSE
@@ -171,8 +230,9 @@ function Factory() {
     };
 
 
-    this.updateSteamPlantsInRange = function() {
-        this.plantsInRange = this.town.getBuildingsOfTypeInRange(this.tile.position,
+    this.getSteamPlantsInRange = function() {
+        return this.town.getBuildingsOfTypeInRange(
+            this.tile.position,
             SteamPlant.RANGE,
             BuildingCodes.STEAM_PLANT
         )
@@ -183,28 +243,58 @@ function Factory() {
         var components = new ComponentsState();
         if (this.timer >= 1 && this.getIsActive()) {
             this.timer -= 1;
-            components.gears = 10;
+            components.gears = 1;
         }
-        components.gears = 10;
         return components;
 
     }
 }
+Factory.COLOR_CODE = 0xA4A4A4;
 
 
 function SteamPlant() {
     this.code = BuildingCodes.STEAM_PLANT;
+    this.tile = null;
+    this.level = 1;
     this.timer = 0;
-    this.debugColor = 0x00ff00;
     this.isActive = true;
 
-    this.init = function(tile) {
-
-    };
 
     this.update = function(timeDelta) {
-        this.timer += timeDelta;
+        if (this.getIsActive()) {
+            this.timer += timeDelta;
+        }
     };
+
+
+    this.updateNeighbourhood = function() {
+        this.housesInRange = this.getHousesInRange();
+    };
+
+
+    this.getIsActive = function() {
+        return this.isActive && this.hasActiveHouseInRange();
+
+    };
+
+
+    this.hasActiveHouseInRange = function() {
+        for (var i in this.housesInRange) {
+            var house = this.housesInRange[i];
+
+            if (house.getIsActive()) {
+                return true;
+            }
+        }
+        return false;
+
+    };
+
+
+    this.upgrade = function() {
+        this.level++;
+    };
+
 
     this.fuel = function(playerState) {
         var resources = playerState.resources;
@@ -222,7 +312,7 @@ function SteamPlant() {
             }
         }
         return this.isActive;
-    }
+    };
 
 
     this.setIsActive = function(isActive) {
@@ -230,8 +320,9 @@ function SteamPlant() {
 
     };
 
-    this.checkForHouse = function() {
-        return this.town.checkForBuilding(
+
+    this.getHousesInRange = function() {
+        return this.town.getBuildingsOfTypeInRange(
             this.tile.position,
             House.RANGE,
             BuildingCodes.HOUSE
@@ -239,26 +330,49 @@ function SteamPlant() {
     };
 }
 SteamPlant.RANGE = 1;
+SteamPlant.COLOR_CODE = 0xF2F2F2;
 
 
 function MiniLov() {
-    this.tile;
-    this.debugColor = 0x0000ff;
     this.code = BuildingCodes.MINI_LOV;
-    this.isActive = false;
-
-    this.init = function(tile) {
-
-    };
+    this.tile = null;
+    this.level = 1;
+    this.housesInRange = [];
 
 
     this.update = function(timeDelta) {
-        this.isActive = this.checkForHouse();
+    };
+
+
+    this.updateNeighbourhood = function() {
+        this.housesInRange = this.getHousesInRange();
+    };
+
+
+    this.getIsActive = function() {
+        return this.hasActiveHouseInRange();
+    };
+
+
+    this.upgrade = function() {
+        this.level++;
+    };
+
+
+    this.hasActiveHouseInRange = function() {
+        for (var i in this.housesInRange) {
+            var house = this.housesInRange[i];
+
+            if (house.getIsActive()) {
+                return true;
+            }
+        }
+        return false;
 
     };
 
-    this.checkForHouse = function() {
-        return this.town.checkForBuilding(
+    this.getHousesInRange = function() {
+        return this.town.getBuildingsOfTypeInRange(
             this.tile.position,
             House.RANGE,
             BuildingCodes.HOUSE
@@ -266,37 +380,77 @@ function MiniLov() {
     };
 
 }
+MiniLov.COLOR_CODE = 0xFE2EC8;
 
 
 function MiniTru() {
-    this.tile;
-    this.debugColor = 0xff0000;
     this.code = BuildingCodes.MINI_TRU;
-    this.plantsInRange = false;
+    this.tile = null;
+    this.level = 1;
+    this.housesInRange = [];
 
     this.update = function(timeDelta) {
-        this.isActive = this.checkForHouse();
     };
 
-    this.checkForHouse = function() {
-        return this.town.checkForBuilding(
+
+    this.upgrade = function() {
+        this.level++;
+    };
+
+
+    this.getIsActive = function() {
+        return this.hasActiveHouseInRange();
+    };
+
+
+    this.updateNeighbourhood = function() {
+        this.housesInRange = this.getHousesInRange();
+    };
+
+
+    this.hasActiveHouseInRange = function() {
+        for (var i in this.housesInRange) {
+            var house = this.housesInRange[i];
+
+            if (house.getIsActive()) {
+                return true;
+            }
+        }
+        return false;
+
+    };
+
+
+    this.getHousesInRange = function() {
+        return this.town.getBuildingsOfTypeInRange(
             this.tile.position,
             House.RANGE,
             BuildingCodes.HOUSE
         );
     };
 }
+MiniTru.COLOR_CODE = 0x2E64FE;
 
 
 function Tower() {
-    this.tile;
-    this.debugColor = 0xff9900;
     this.code = BuildingCodes.TOWER;
+    this.tile = null;
+    this.level = 1;
     this.steamPlantsInRange = [];
 
 
     this.update = function(timeDelta) {
 
+    };
+
+
+    this.updateNeighbourhood = function() {
+
+    };
+
+
+    this.upgrade = function() {
+        this.level++;
     };
 
 
@@ -307,11 +461,12 @@ function Tower() {
         )
     };
 }
+Tower.COLOR_CODE = 0x000000;
 
 function Canon() {
-    this.tile;
-    this.debugColor = 0xff99ff;
     this.code = BuildingCodes.CANON;
+    this.tile = null;
+    this.level = 1;
     this.steamPlantsInRange = [];
 
 
@@ -319,10 +474,94 @@ function Canon() {
 
     };
 
+
+    this.getIsActive = function() {
+        return this.hasActiveHouseInRange() && this.hasActivePlantInRange();
+    };
+
+
+    this.getSteamPlantsInRange = function() {
+        return this.town.getBuildingsOfTypeInRange(
+            this.tile.position,
+            SteamPlant.RANGE,
+            BuildingCodes.STEAM_PLANT
+        )
+    };
+
+
+    this.updateNeighbourhood = function() {
+        this.steamPlantsInRange = this.getSteamPlantsInRange();
+    };
+
+
+    this.upgrade = function() {
+        this.level++;
+    };
+
+
+    this.hasActivePlantInRange = function() {
+        for (var i = 0; i < this.steamPlantsInRange.length; i++) {
+            var plant = this.steamPlantsInRange[i];
+
+            if (plant.getIsActive()) {
+                return true
+            }
+        }
+        return false;
+
+    };
+
+}
+Canon.COLOR_CODE = 0xFE2E2E;
+
+
+function BuildingModel() {
+
 }
 
-
-function DrawableBuilding() {
+BuildingModel.make = function(code) {
+    var color = null;
+    var geometry = new THREE.CylinderGeometry(0.1, 0.1, 5.0, 32);
+    switch (code) {
+        case BuildingCodes.FARM:
+            color = Farm;
+            color = Farm.COLOR_CODE;
+            geometry = new THREE.CylinderGeometry(0.1, 0.1, 1.0, 32);
+            break;
+        case BuildingCodes.HOUSE:
+            color = House.COLOR_CODE;
+            geometry = new THREE.CylinderGeometry(0.1, 0.1, 1.5, 32);
+            break;
+        case BuildingCodes.FACTORY:
+            color = Factory.COLOR_CODE;
+            geometry = new THREE.CylinderGeometry(0.1, 0.1, 2.0, 32);
+            break;
+        case BuildingCodes.STEAM_PLANT:
+            color = SteamPlant.COLOR_CODE;
+            geometry = new THREE.CylinderGeometry(0.1, 0.1, 2.5, 32);
+            break;
+        case BuildingCodes.MINI_LOV:
+            color = MiniLov.COLOR_CODE;
+            geometry = new THREE.CylinderGeometry(0.1, 0.1, 3.0, 32);
+            break;
+        case BuildingCodes.MINI_TRU:
+            color = MiniTru.COLOR_CODE;
+            geometry = new THREE.CylinderGeometry(0.1, 0.1, 3.5, 32);
+            break;
+        case BuildingCodes.CANON:
+            color = Canon.COLOR_CODE;
+            geometry = new THREE.CylinderGeometry(0.1, 0.1, 4.0, 32);
+            break;
+        case BuildingCodes.TOWER:
+            color = Tower.COLOR_CODE;
+            break;
+        case BuildingCodes.NONE:
+            //
+            break;
+    }
+    var material = new THREE.MeshBasicMaterial({color: color});
+    var cylinder = new THREE.Mesh(geometry, material);
+    return cylinder;
 
 }
 
@@ -368,7 +607,7 @@ function BuildingBuff() {
     };
 }
 
-BuildingBuff.make = function(duration, onStartFunction, onEndFunction){
+BuildingBuff.make = function(duration, onStartFunction, onEndFunction) {
     var buff = new BuildingBuff();
     buff.duration = duration;
     buff.onStartFunction = onStartFunction;
