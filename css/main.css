@@ -268,3 +268,20 @@ img {
   background: #fff;
   color: #000;
 }
+
+#overlay_container {
+  position: absolute;
+  width: 780px;
+  height: 480px;
+  background: #0f0;
+}
+
+.overlay {
+  width: 79px;
+  height: 36px;
+  padding-left: 41px;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
+}

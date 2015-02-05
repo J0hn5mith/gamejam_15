@@ -390,11 +390,15 @@ function Gui() {
       jQuery("#gui").width(game.WIDTH).height(game.HEIGHT);
       jQuery("#assembly_panel").css("left", ((game.WIDTH / 2.0) - 150) + "px");
       jQuery("#assembly_hint").css("max-width", ((game.WIDTH / 2.0) - 194) + "px");
-      
+
       var assemblyPanelPosition = jQuery("#assembly_panel").position();
       
       this.assemblyOutputX = assemblyPanelPosition.left + 250;
       this.assemblyOutputY = assemblyPanelPosition.top;
+
+      jQuery("#overlay_container")
+          .css("left", ((game.WIDTH - 780) / 2.0) + "px")
+          .css("top", ((game.HEIGHT - 480) / 2.0) + "px");
   };
   
 }
