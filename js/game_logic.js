@@ -52,8 +52,8 @@ function GameLogic() {
         this.applyNeighbourTownEffects();
         this.updateTownEvents(timeDelta);
         this.town.update(timeDelta, this.playerState);
-        var minLovEvent = this.minLovEventManager.update(timeDelta, this.town);
-        if (minLovEvent) {
+        var minLovResult = this.minLovEventManager.update(timeDelta, this.town);
+        if (minLovResult) {
             //var overlay = jQuery('#overlay-hello')[0];
             //var id = '#' + overlay;
             //jQuery(overlay).addClass('overlay-open');
@@ -61,14 +61,17 @@ function GameLogic() {
             //var button = jQuery('#overlay-option-button-1')[0];
             //overlay.innerHTML = '<ol><li>html data</li></ol>';
             //button.onclick = function() {
-            minLovEvent.action(1)
+            //minLovEvent.action(1)
+            var neighbourhoodTown = this.neighbourTowns[1];
+            minLovResult.getEffect().apply(neighbourhoodTown);
+            alert(minLovResult.name);
             //};
-            var i = 10;
         }
-        var minTruEvent = this.minTruEventManager.update(timeDelta, this.town);
-        if (minTruEvent) {
-            var i = 10;
-            minTruEvent.action(1)
+        var minTruResult = this.minTruEventManager.update(timeDelta, this.town);
+        if (minTruResult) {
+            var neighbourhoodTown = this.neighbourTowns[1];
+            minTruResult.getEffect().apply(neighbourhoodTown);
+            alert(minTruResult.name);
         }
 
         this.playerState.applyTrends();
