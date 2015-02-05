@@ -19,7 +19,7 @@ function MinTruEventManager() {
         if (EVENT_INTERVAL <= this.timer) {
             this.timer -= EVENT_INTERVAL;
             level = 1;
-            var research = this.eventRepository.getRandomResearchForLevel(level);
+            var research = this.eventRepository.getRandomResultForLevel(level);
             return research;
         }
 

@@ -64,14 +64,14 @@ function GameLogic() {
             //minLovEvent.action(1)
             var neighbourhoodTown = this.neighbourTowns[1];
             minLovResult.getEffect().apply(neighbourhoodTown);
-            alert(minLovResult.name);
+            //alert(minLovResult.name);
             //};
         }
         var minTruResult = this.minTruEventManager.update(timeDelta, this.town);
         if (minTruResult) {
             var neighbourhoodTown = this.neighbourTowns[1];
             minTruResult.getEffect().apply(neighbourhoodTown);
-            alert(minTruResult.name);
+            //alert(minTruResult.name);
         }
 
         this.playerState.applyTrends();

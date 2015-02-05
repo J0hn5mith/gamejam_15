@@ -74,7 +74,7 @@ MinLovRepository.addEntry(
 MinLovRepository.addEntry(
     ResearchResult.make(
         "Build a university",
-        NeighbourTownEffect.make(1.1,-5,1.1,-5),
+        NeighbourTownEffect.make(1.1, 1, 1.1, 1),
         "When I grow up, I'm going to bovine university!",
         [[""]]
     ),1 );	
@@ -121,7 +121,7 @@ function MinTruResearchResultRepository(){
 
 
     this.getRandomResultForLevel = function(level) {
-        return this.list[0];
+        return this.list[1][1];
 
     };
 
