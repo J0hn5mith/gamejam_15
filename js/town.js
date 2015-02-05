@@ -12,6 +12,8 @@ function Town() {
     this.removedBuildings = [];
     this.plantListUpdateRequired = false;
 
+    this.tower = null;
+
     this.activePlants = [];
     this.inactivePlants = [];
 
@@ -47,6 +49,24 @@ function Town() {
             this.addedBuildings = [];
             this.removedBuildings = [];
         }
+    };
+
+
+    this.addTower = function(){
+        var centerTile = gameLogic.map.getTile(6,6);
+        this.tower = this.addBuilding(BuildingCodes.TOWER, centerTile);
+    };
+
+
+    this.getBuildingsOfType = function(buildingType) {
+        var result = [];
+        for(var buildingID in this.buildings){
+            var building = this.buildings[buildingID];
+            if (building.code == buildingType){
+                result.push(building);
+            }
+        }
+        return result;
     };
 
 

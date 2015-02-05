@@ -243,10 +243,28 @@ function Factory() {
         var components = new ComponentsState();
         if (this.timer >= 1 && this.getIsActive()) {
             this.timer -= 1;
-            components.gears = 1;
+
+            var max = 3;
+            if (this.town.tower.level > 2){
+                max++;
+            }
+
+            switch (rand(1,max)){
+                case 1:
+                    components.beams++;
+                    break;
+                case 2:
+                    components.pipes++;
+                    break;
+                case 3:
+                    components.gears++;
+                    break;
+                case 4:
+                    components.pistons++;
+                    break;
+            }
         }
         return components;
-
     }
 }
 Factory.COLOR_CODE = 0xA4A4A4;
@@ -451,6 +469,7 @@ function Tower() {
 
     this.upgrade = function() {
         this.level++;
+        gameLogic.map.increaseCurrentRadius();
     };
 
 

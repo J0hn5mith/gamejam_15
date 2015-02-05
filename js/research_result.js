@@ -44,14 +44,23 @@ ResearchResult.make = function(name, effect, text, variableSets) {
 function MinLovResearchResultRepository(){
     this.list = [];
 
+
     this.getResearchResult = function(developmentLevel) {
         return this.list[1][1];
     };
 
+
     this.getRandomResultForLevel = function(level) {
-        return this.list[level][rand(1, this.list[level].length)];
+        var random =rand(1, this.list[level].length)-1 ;
+        return this.list[level][random];
 
     };
+
+
+    this.getMaxLevel = function(level) {
+        return this.list.length;
+    };
+
 
    this.addEntry = function(researchResult, level){
        if(!this.list[level]){
@@ -77,7 +86,7 @@ MinLovRepository.addEntry(
         NeighbourTownEffect.make(1.1, 1, 1.1, 1),
         "When I grow up, I'm going to bovine university!",
         [[""]]
-    ),1 );	
+    ),2 );
 	
 MinLovRepository.addEntry(
     ResearchResult.make(
@@ -85,7 +94,7 @@ MinLovRepository.addEntry(
         NeighbourTownEffect.make(0.8,0,1.2,0),
         "Hakuna Matata! What a wonderful phrase Hakuna Matata! Ain't no passing craze. ",
         [["template"]]
-    ),1 );
+    ),3 );
 	
 MinLovRepository.addEntry(
     ResearchResult.make(
@@ -93,7 +102,7 @@ MinLovRepository.addEntry(
         NeighbourTownEffect.make(0.8,0,1.2,0),
         "One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin.",
         [[""]]
-    ),1 );	
+    ),4 );
 	
 MinLovRepository.addEntry(
     ResearchResult.make(
@@ -101,7 +110,7 @@ MinLovRepository.addEntry(
         NeighbourTownEffect.make(0.5,0,1.5,0),
         "Pastor {0} will be a loyal ally!",
         [["Charles Ware","Brent Hawkes", "Abiel Foster","Adam Daniel Williams"]]
-    ),1 );
+    ),5 );
 
 MinLovRepository.addEntry(
     ResearchResult.make(
@@ -109,15 +118,19 @@ MinLovRepository.addEntry(
         NeighbourTownEffect.make(0.8,0,1.2,0),
         "The new movie {0} will be great!",
         [["Top Secret!", "Love in Windland", "Lost in the woods"]]
-    ),1 );
+    ),6 );
 	
 
 function MinTruResearchResultRepository(){
     this.list = [];
 
     this.getRandomResultForLevel = function(level) {
-        return this.list[level][rand(1, this.list[level].length)];
+        return this.list[level][rand(0, this.list[level].length - 1)];
 
+    };
+
+    this.getMaxLevel = function(level) {
+        return this.list.length;
     };
 
    this.addEntry = function(researchResult, level){

@@ -3,7 +3,7 @@ function Map() {
 
     this.radius = 0;
     this.size = 0;
-    this.currentRadius = 3;
+    this.currentRadius = 1;
     this.centerPosition = null;
     this.tiles = [];
 

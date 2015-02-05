@@ -169,6 +169,10 @@ var assemblyRecipes = {
         action: function(tile) {
             alert("HALLO");
             tile.building.upgrade()
+        },
+        levelRequirements:{
+            min: 1,
+            max: 1
         }
     },
 
@@ -178,6 +182,10 @@ var assemblyRecipes = {
         description: "Drag upgrade icon unto desired tile.",
         action: function(tile) {
             tile.building.upgrade()
+        },
+        levelRequirements:{
+            min: 2,
+            max: 2
         }
     },
 
@@ -186,7 +194,6 @@ var assemblyRecipes = {
         title: "Increase Minitru productivity",
         description: "Drag upgrade icon unto desired tile.",
         action: function(tile) {
-            alert("HALLO");
         }
     },
 
@@ -200,8 +207,6 @@ var assemblyRecipes = {
         description: "Drag upgrade icon unto desired tile.",
         action: function(tile) {
             gameLogic.town.addBuilding(BuildingCodes.MINI_LOV, tile);
-            alert("HALLO");
-
         }
     },
 
@@ -211,6 +216,11 @@ var assemblyRecipes = {
         description: "Drag upgrade icon unto desired tile.",
         action: function(tile) {
             tile.building.upgrade()
+
+        },
+        levelRequirements:{
+            min: 1,
+            max: 1
         }
     },
 
@@ -220,6 +230,10 @@ var assemblyRecipes = {
         description: "Drag upgrade icon unto desired tile.",
         action: function(tile) {
             tile.building.upgrade();
+        },
+        levelRequirements:{
+            min: 2,
+            max: 2
         }
     },
 
@@ -261,7 +275,6 @@ var assemblyRecipes = {
         title: "Upgrade Canon to Level 3",
         description: "Drag upgrade icon unto desired tile.",
         action: function(tile) {
-            alert("HALLO");
             tile.building.upgrade()
         }
     },
@@ -271,7 +284,6 @@ var assemblyRecipes = {
         title: "Increase Canon productivity",
         description: "Drag upgrade icon unto desired tile.",
         action: function(tile) {
-            alert("HALLO");
         }
     },
 
@@ -284,6 +296,10 @@ var assemblyRecipes = {
         description: "Drag upgrade icon unto desired tile.",
         action: function(tile) {
             tile.building.upgrade()
+        },
+        levelRequirements:{
+           min: 0,
+            max: 2
         }
     },
 
@@ -294,6 +310,10 @@ var assemblyRecipes = {
         action: function(tile) {
             alert("HALLO");
             tile.building.upgrade()
+        },
+        levelRequirements:{
+            min: 3,
+            max: 4
         }
     },
 
@@ -302,8 +322,11 @@ var assemblyRecipes = {
         title: "Upgrade Tower to Level 6-7",
         description: "Drag upgrade icon unto desired tile.",
         action: function(tile) {
-            alert("HALLO");
             tile.building.upgrade()
+        },
+        levelRequirements:{
+            min: 5,
+            max: 6
         }
     },
 

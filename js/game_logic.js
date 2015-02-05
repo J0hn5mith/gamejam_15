@@ -7,6 +7,11 @@ function GameLogic() {
 
     this.NUM_TOWNS = 6;
 
+    //  Town Events
+    this.TOWN_EVENT_MEAN_INTERVAL = 10;
+    this.TOWN_EVENT_VARIANCE = 5;
+    this.townEventTimer = 0;
+
     this.playerState;
     this.neighbourTowns;
 
@@ -32,8 +37,8 @@ function GameLogic() {
         this.assembler = new Assembler();
         this.assembler.init();
 
-        this.minLovEventManager = MinLovEventManager.make();
-        this.minTruEventManager = MinTruEventManager.make();
+        this.minLovEventManager = MinLovEventManager.make(this.town);
+        this.minTruEventManager = MinTruEventManager.make(this.town);
     };
 
 
@@ -56,21 +61,16 @@ function GameLogic() {
         if (minLovResult) {
             var neighbourhoodTown = this.neighbourTowns[1];
             minLovResult.getEffect().apply(neighbourhoodTown);
-            DebugPanel.print(minLovResult.name);
         }
         var minTruResult = this.minTruEventManager.update(timeDelta, this.town);
         if (minTruResult) {
             var neighbourhoodTown = this.neighbourTowns[1];
             minTruResult.getEffect().apply(neighbourhoodTown);
-            DebugPanel.print(minTruResult.name);
         }
 
         this.playerState.applyTrends();
     };
 
-    this.townEventTimer = 0;
-    this.TOWN_EVENT_MEAN_INTERVAL = 10;
-    this.TOWN_EVENT_VARIANCE = 5;
 
     this.updateTownEvents = function(delta) {
         this.townEventTimer += delta;

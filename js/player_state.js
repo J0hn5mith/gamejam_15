@@ -19,10 +19,15 @@ function PlayerState() {
         this.resources.iron = 10;
         this.resources.coal = 10;
 
-        this.components.beams = 5;
-        this.components.pipes = 5;
-        this.components.gears = 0;
-        this.components.pistons = 0;
+        //this.components.beams = 5;
+        //this.components.pipes = 5;
+        //this.components.gears = 5;
+        //this.components.pistons = 0;
+
+        this.components.beams = 100;
+        this.components.pipes = 100;
+        this.components.gears = 100;
+        this.components.pistons = 100;
 
     };
 
