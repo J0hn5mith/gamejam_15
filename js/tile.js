@@ -186,6 +186,9 @@ function DrawableHexagonTile() {
       
       this.tileModel = new THREE.Mesh(geometry, material);
       this.tileModel.userData = { drawableTileIndex : this.drawableTileIndex };
+      this.tileModel.castShadow = true;
+      this.tileModel.receiveShadow = true;
+      this.tileModel.frustumCulled = false; // prevents errors while generating shadows
       
       this.node.add(this.tileModel);
    };

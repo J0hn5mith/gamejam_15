@@ -53,15 +53,18 @@ function IngameState() {
 
         light.castShadow = true;
 
-        light.shadowCameraVisible = false;
+        // light.shadowCameraVisible = true; DEBUG shadow
 
         light.shadowCameraNear = -5;
-        light.shadowCameraFar = 25;
+        light.shadowCameraFar = 20;
 
-        light.shadowCameraLeft = -10;
-        light.shadowCameraRight = 10;
-        light.shadowCameraTop = 10;
-        light.shadowCameraBottom = -10;
+        light.shadowCameraLeft = -15;
+        light.shadowCameraRight = 15;
+        light.shadowCameraTop = 15;
+        light.shadowCameraBottom = -15;
+        
+        light.shadowMapWidth = 1024;
+        light.shadowMapHeight = 1024;
 
         s.add(light);
 
@@ -117,8 +120,8 @@ function IngameState() {
         }
         if (this.camVerticalAngle > toRad(89)) {
             this.camVerticalAngle = toRad(89);
-        } else if (this.camVerticalAngle < toRad(20)) {
-            this.camVerticalAngle = toRad(20);
+        } else if (this.camVerticalAngle < toRad(15)) {
+            this.camVerticalAngle = toRad(15);
         }
 
         var camX = this.camZoom * Math.cos(this.camVerticalAngle) * Math.cos(this.camHorizontalAngle);
