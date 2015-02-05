@@ -231,6 +231,17 @@ function DrawableMap() {
     };
     
     
+    this.mouseSelect = function() {
+        var results = cam.getObjectsAtCoords(mouse.x, mouse.y, this.node.children);
+        if(results.length > 0) {
+            var index = results[0].object.userData.drawableTileIndex;
+            gui.setSelectedMapTile(this.drawableTiles[index]);
+        } else {
+            gui.setSelectedMapTile(null);
+        }
+    };
+    
+    
     this.update = function() {
         
         if(this.currentRadius < this.map.getCurrentRadius()) {
@@ -248,14 +259,6 @@ function DrawableMap() {
 
         for(var i = 0; i < this.drawableTiles.length; i++) {
             this.drawableTiles[i].update(floatingAmplitude);
-        }
-        
-        var results = cam.getObjectsAtCoords(mouse.x, mouse.y, this.node.children);
-        if(results.length > 0) {
-            var index = results[0].object.userData.drawableTileIndex;
-            gui.setSelectedMapTile(this.drawableTiles[index]);
-        } else {
-            gui.setSelectedMapTile(null);
         }
     };
     

@@ -3,8 +3,8 @@ function Game() {
     this.WIDTH = 900;
     this.HEIGHT = 600;
 
-    this.MIN_WIDTH = 600;
-    this.MIN_HEIGHT = 400;
+    this.MIN_WIDTH = 900;
+    this.MIN_HEIGHT = 560;
 
     this.DEBUG = true;
 

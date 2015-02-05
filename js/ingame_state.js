@@ -5,6 +5,8 @@ function IngameState() {
     this.camZoom;
 
     this.drawableMap;
+    
+    this.paused = false;
 
 
     this.init = function() {
@@ -16,7 +18,7 @@ function IngameState() {
         this.camVerticalAngle = toRad(30);
         this.camHorizontalAngle = toRad(45);
         this.camZoom = 7.0;
-        this.moveCamera();
+        this.updateCamera();
 
         gameLogic = GameLogic.makeGameLogic();
 
@@ -79,10 +81,14 @@ function IngameState() {
         light.shadowMapHeight = 1024;
 
         s.add(light);
+        
+        keyboard.registerKeyUpHandler(Keyboard.P, function() {
+            game.state.paused = !game.state.paused;
+        });
 
         gui.show();
-
-        //jQuery("#overlay_event").show();
+        
+        gui.overlay.openEvent("This is my title", "What do we do now?", 0, function() { alert("hallo"); });
     };
 
 
@@ -105,23 +111,47 @@ function IngameState() {
 
 
     this.update = function() {
-
-        if(mouse.dragging && mouse.draggingMode == "camera" && (mouse.dragDeltaX != 0 || mouse.dragDeltaY != 0)) {
-            this.moveCamera();
-        }
-
-        this.drawableMap.update();
-        gameLogic.update(timer.delta);
-        this.debugUpdate();
         
-        gui.update();
+        if(mouse.dragging && mouse.draggingMode == "camera" && (mouse.dragDeltaX != 0 || mouse.dragDeltaY != 0)) {
+            this.camHorizontalAngle += mouse.dragDeltaX * toRad(0.2);
+            this.camVerticalAngle += mouse.dragDeltaY * toRad(0.2);
+            this.updateCamera();
+        }
+        
+        if((keyboard.isPressed(Keyboard.ARROW_LEFT) || keyboard.isPressed(Keyboard.A)) &&
+                !keyboard.isPressed(Keyboard.ARROW_RIGHT) && !keyboard.isPressed(Keyboard.D)) {
+            this.camHorizontalAngle += toRad(60.0) * timer.delta;
+            this.updateCamera();
+        }
+        if((keyboard.isPressed(Keyboard.ARROW_RIGHT) || keyboard.isPressed(Keyboard.D)) &&
+                !keyboard.isPressed(Keyboard.ARROW_LEFT) && !keyboard.isPressed(Keyboard.A)) {
+            this.camHorizontalAngle -= toRad(60.0) * timer.delta;
+            this.updateCamera();
+        }
+        if((keyboard.isPressed(Keyboard.ARROW_UP) || keyboard.isPressed(Keyboard.W)) &&
+                !keyboard.isPressed(Keyboard.ARROW_DOWN) && !keyboard.isPressed(Keyboard.S)) {
+            this.camVerticalAngle += toRad(60.0) * timer.delta;
+            this.updateCamera();
+        }
+        if((keyboard.isPressed(Keyboard.ARROW_DOWN) || keyboard.isPressed(Keyboard.S)) &&
+                !keyboard.isPressed(Keyboard.ARROW_UP) && !keyboard.isPressed(Keyboard.W)) {
+            this.camVerticalAngle -= toRad(60.0) * timer.delta;
+            this.updateCamera();
+        }
+        
+        this.drawableMap.mouseSelect();
+        
+        if(!this.paused) {
+            this.drawableMap.update();
+            gameLogic.update(timer.delta);
+            this.debugUpdate();
+            
+            gui.update();
+        }
     };
 
 
-    this.moveCamera = function() {
-
-        this.camHorizontalAngle += mouse.dragDeltaX * toRad(0.2);
-        this.camVerticalAngle += mouse.dragDeltaY * toRad(0.2);
+    this.updateCamera = function() {
 
         if (this.camHorizontalAngle > toRad(180)) {
             this.camHorizontalAngle -= toRad(360);
