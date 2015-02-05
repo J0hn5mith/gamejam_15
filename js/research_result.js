@@ -49,7 +49,7 @@ function MinLovResearchResultRepository(){
     };
 
     this.getRandomResultForLevel = function(level) {
-        return this.list[1][1];
+        return this.list[level][rand(1, this.list[level].length)];
 
     };
 
@@ -115,13 +115,8 @@ MinLovRepository.addEntry(
 function MinTruResearchResultRepository(){
     this.list = [];
 
-    this.getResearchResult = function(developmentLevel) {
-        return this.list[1][1];
-    };
-
-
     this.getRandomResultForLevel = function(level) {
-        return this.list[1][1];
+        return this.list[level][rand(1, this.list[level].length)];
 
     };
 

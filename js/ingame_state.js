@@ -81,6 +81,8 @@ function IngameState() {
         s.add(light);
 
         gui.show();
+
+        //jQuery("#overlay_event").show();
     };
 
 
