@@ -163,10 +163,10 @@ function Gui() {
     var gameResourceTrend = gameLogic.playerState.resourceTrend;
     
     if(gameResources.coal != this.resources.coal) {
-      jQuery("#coal_stock .value").html(gameResources.coal.toString(10));
+      jQuery("#coal_stock .value").html(Math.round(gameResources.coal).toString(10));
     }
     if(gameResources.iron != this.resources.iron) {
-      jQuery("#iron_stock .value").html(gameResources.iron.toString(10));
+      jQuery("#iron_stock .value").html(Math.round(gameResources.iron).toString(10));
     }
     
     if(gameResourceTrend.coal > 0.001) {
