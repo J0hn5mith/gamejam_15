@@ -397,8 +397,8 @@ function Gui() {
       this.assemblyOutputY = assemblyPanelPosition.top;
 
       jQuery("#overlay_container")
-          .css("left", ((game.WIDTH - 780) / 2.0) + "px")
-          .css("top", ((game.HEIGHT - 480) / 2.0) + "px");
+          .css("left", ((game.WIDTH - 880) / 2.0) + "px")
+          .css("top", ((game.HEIGHT - 540) / 2.0) + "px");
   };
   
 }
