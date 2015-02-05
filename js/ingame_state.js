@@ -94,7 +94,7 @@ function IngameState() {
         
         //DEBUG
         keyboard.registerKeyUpHandler(Keyboard.H, function() {
-            gui.overlay.openEvent("Treasure found", "We found a treasure in an abandonned apartment in the old part of town. We just earned four steel. <br /><br />What do we do now?", 0, function() { alert("hallo"); });
+            gui.overlay.openEvent("Treasure found", "We found a treasure in an abandonned apartment in the old part of town. We just earned four steel. <br /><br />What do we do now?", Overlay.STYRO_DOG_EYES, function() { alert("hallo"); });
         });
     };
 
