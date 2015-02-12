@@ -1,7 +1,15 @@
 function IngameState() {
+    
+    this.CAM_MAX_SPEED = toRad(60.0);
+    this.CAM_ACCELERATION = toRad(720.0);
+    this.CAM_DECELERATION = toRad(360.0);
 
     this.camVerticalAngle;
     this.camHorizontalAngle;
+    
+    this.camVerticalSpeed = 0.0;
+    this.camHorizontalSpeed = 0.0;
+    
     this.camZoom;
 
     this.drawableMap;
@@ -129,24 +137,55 @@ function IngameState() {
             
             if((keyboard.isPressed(Keyboard.ARROW_LEFT) || keyboard.isPressed(Keyboard.A)) &&
                     !keyboard.isPressed(Keyboard.ARROW_RIGHT) && !keyboard.isPressed(Keyboard.D)) {
-                this.camHorizontalAngle += toRad(60.0) * timer.delta;
-                this.updateCamera();
-            }
-            if((keyboard.isPressed(Keyboard.ARROW_RIGHT) || keyboard.isPressed(Keyboard.D)) &&
+                this.camHorizontalSpeed += this.CAM_ACCELERATION * timer.delta;
+                
+            } else if((keyboard.isPressed(Keyboard.ARROW_RIGHT) || keyboard.isPressed(Keyboard.D)) &&
                     !keyboard.isPressed(Keyboard.ARROW_LEFT) && !keyboard.isPressed(Keyboard.A)) {
-                this.camHorizontalAngle -= toRad(60.0) * timer.delta;
-                this.updateCamera();
+                this.camHorizontalSpeed -= this.CAM_ACCELERATION * timer.delta;
+                
+            } else {
+                if(this.camHorizontalSpeed > 0) {
+                    this.camHorizontalSpeed -= this.CAM_DECELERATION * timer.delta;
+                    if(this.camHorizontalSpeed < 0) {
+                        this.camHorizontalSpeed = 0;
+                    }
+                } else if(this.camHorizontalSpeed < 0) {
+                    this.camHorizontalSpeed += this.CAM_DECELERATION * timer.delta;
+                    if(this.camHorizontalSpeed > 0) {
+                        this.camHorizontalSpeed = 0;
+                    }
+                }
             }
+            
             if((keyboard.isPressed(Keyboard.ARROW_UP) || keyboard.isPressed(Keyboard.W)) &&
                     !keyboard.isPressed(Keyboard.ARROW_DOWN) && !keyboard.isPressed(Keyboard.S)) {
-                this.camVerticalAngle += toRad(60.0) * timer.delta;
-                this.updateCamera();
-            }
-            if((keyboard.isPressed(Keyboard.ARROW_DOWN) || keyboard.isPressed(Keyboard.S)) &&
+                this.camVerticalSpeed += this.CAM_ACCELERATION * timer.delta;
+                
+            } else if((keyboard.isPressed(Keyboard.ARROW_DOWN) || keyboard.isPressed(Keyboard.S)) &&
                     !keyboard.isPressed(Keyboard.ARROW_UP) && !keyboard.isPressed(Keyboard.W)) {
-                this.camVerticalAngle -= toRad(60.0) * timer.delta;
+                this.camVerticalSpeed -= this.CAM_ACCELERATION * timer.delta;
+            } else {
+                if(this.camVerticalSpeed > 0) {
+                    this.camVerticalSpeed -= this.CAM_DECELERATION * timer.delta;
+                    if(this.camVerticalSpeed < 0) {
+                        this.camVerticalSpeed = 0;
+                    }
+                } else if(this.camVerticalSpeed < 0) {
+                    this.camVerticalSpeed += this.CAM_DECELERATION * timer.delta;
+                    if(this.camVerticalSpeed > 0) {
+                        this.camVerticalSpeed = 0;
+                    }
+                }
+            }
+            
+            if(this.camHorizontalSpeed != 0.0 || this.camVerticalSpeed != 0.0) {
+                this.camHorizontalSpeed = limit(this.camHorizontalSpeed, -this.CAM_MAX_SPEED, this.CAM_MAX_SPEED);
+                this.camVerticalSpeed = limit(this.camVerticalSpeed, -this.CAM_MAX_SPEED, this.CAM_MAX_SPEED);
+                this.camHorizontalAngle += this.camHorizontalSpeed * timer.delta;
+                this.camVerticalAngle += this.camVerticalSpeed * timer.delta;
                 this.updateCamera();
             }
+
             
             this.drawableMap.mouseSelect();
         } else {
