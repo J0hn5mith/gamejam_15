@@ -13,8 +13,7 @@ var NeighbourTownConfiguration = {
     PRODUCTIVITY_LEVEL_MAX: 1.0,
     HAPPYNES_LEVEL_MIN: 0.0,
     HAPPYNES_LEVEL_MAX: 1.0,
-    MIN_ATTACK_INTERVAL: 0, // per minute
-    MAX_ATTACK_INTERVAL: 1
+    ATTACK_INTERVAL: 1
 }
 
 function NeighbourTown() {
@@ -129,35 +128,52 @@ function ResourcesProductionStrategy() {
         return result;
     }
 }
+
 ResourcesProductionStrategy.make = function(coalFactor, ironFactor) {
     var strategy = new ResourcesProductionStrategy();
     strategy.coal_production_factor = coalFactor;
     strategy.iron_production_factor = ironFactor;
 
 
-}
+};
 
 
 function AttackProductionStrategy() {
     this.timer = 0;
     this.nextAttackTime = 5;
+    this.angerFactor = 0;
+    this.angerFactorChangeFactor = 0;
     this.attack_interval_mean = 0;
     this.attack_interval_variance = 0;
     this.attack_repository = [];
 
+
+    this.update = function(neighbourTown, timeDelta){
+        var delta = 0;
+
+        if(neighbourTown)
+        neighbourTown.state.happyness -= delta;
+
+    };
+
+
     this.produce = function(neighbourTown, timeDelta) {
         this.timer += timeDelta;
-        if (this.timer >= this.nextAttackTime) {
+        if (this.timer >= NeighbourTownConfiguration.ATTACK_INTERVAL) {
+            this.timer -= NeighbourTownConfiguration.ATTACK_INTERVAL;
             //this.timer = NeighbourTownConfiguration.;
             //return = [];
         }
+    };
+
+    this.getAttackProbability = function(){
     }
 }
 
-AttackProductionStrategy.make = function(interval, variance) {
+AttackProductionStrategy.make = function(increaseRate, decreaseRate) {
     var strategy = new AttackProductionStrategy();
-    strategy.attack_interval_mean = interval;
-    strategy.attack_interval_variance = variance;
+    strategy.increaseRate = increaseRate;
+    strategy.decreaseRate = decreaseRate;
     return strategy;
 
 }
@@ -267,12 +283,12 @@ function NeighbourTownFactoryPrototype() {
     ];
 
     this.attack_strategy = [
-        AttackProductionStrategy.make(1),
-        AttackProductionStrategy.make(0.7),
-        AttackProductionStrategy.make(0.6),
-        AttackProductionStrategy.make(0.5),
-        AttackProductionStrategy.make(0.4),
-        AttackProductionStrategy.make(0.4),
+        AttackProductionStrategy.make(0.05, 0.01),
+        AttackProductionStrategy.make(0.04, 0.02),
+        AttackProductionStrategy.make(0.02, 0.1),
+        AttackProductionStrategy.make(0.01, 0.1),
+        AttackProductionStrategy.make(0.05, 0.1),
+        AttackProductionStrategy.make(0.05, 0.2)
     ];
     this.makeNeighbourTown = function(number) {
     }
