@@ -43,6 +43,12 @@ function Assembler() {
                 
             } else {
                 if(tile.building != null && tile.building.code == assembly.target) {
+                    if (assembly.hasOwnProperty('levelRequirements')){
+                        var requirements = assembly.levelRequirements;
+                        if (tile.building.level < requirements.min || tile.building.level > requirements.max){
+                            return
+                        }
+                    }
                     this.executeAssembly(recipe, assembly, tile);
                 }
             }                  

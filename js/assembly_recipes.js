@@ -108,7 +108,18 @@ var assemblyRecipes = {
         title: "Increase Factory productivity",
         description: "Drag upgrade icon unto desired tile.",
         action: function(tile) {
-            alert("HALLO");
+            var buff = BuildingBuff.make(
+                100,
+                function(building) {
+                    building.emissionIntervall *= 0.5;
+
+                },
+                function(building) {
+                    building.emissionIntervall *= 2.0;
+
+                }
+            );
+            buff.assignToBuilding(tile.building);
         }
     },
 
@@ -169,6 +180,10 @@ var assemblyRecipes = {
         action: function(tile) {
             alert("HALLO");
             tile.building.upgrade()
+        },
+        levelRequirements: {
+            min: 1,
+            max: 1
         }
     },
 
@@ -178,6 +193,10 @@ var assemblyRecipes = {
         description: "Drag upgrade icon unto desired tile.",
         action: function(tile) {
             tile.building.upgrade()
+        },
+        levelRequirements: {
+            min: 2,
+            max: 2
         }
     },
 
@@ -186,7 +205,19 @@ var assemblyRecipes = {
         title: "Increase Minitru productivity",
         description: "Drag upgrade icon unto desired tile.",
         action: function(tile) {
-            alert("HALLO");
+            var buff = BuildingBuff.make(
+                100,
+                function(building) {
+                    building.level += 1;
+
+                },
+                function(building) {
+                    building.level -= 1;
+
+                }
+            );
+            buff.assignToBuilding(tile.building);
+
         }
     },
 
@@ -200,8 +231,6 @@ var assemblyRecipes = {
         description: "Drag upgrade icon unto desired tile.",
         action: function(tile) {
             gameLogic.town.addBuilding(BuildingCodes.MINI_LOV, tile);
-            alert("HALLO");
-
         }
     },
 
@@ -211,6 +240,11 @@ var assemblyRecipes = {
         description: "Drag upgrade icon unto desired tile.",
         action: function(tile) {
             tile.building.upgrade()
+
+        },
+        levelRequirements: {
+            min: 1,
+            max: 1
         }
     },
 
@@ -220,6 +254,10 @@ var assemblyRecipes = {
         description: "Drag upgrade icon unto desired tile.",
         action: function(tile) {
             tile.building.upgrade();
+        },
+        levelRequirements: {
+            min: 2,
+            max: 2
         }
     },
 
@@ -228,7 +266,18 @@ var assemblyRecipes = {
         title: "Increase Minilov productivity",
         description: "Drag upgrade icon unto desired tile.",
         action: function(tile) {
-            tile.building.upgrade();
+            var buff = BuildingBuff.make(
+                100,
+                function(building) {
+                    building.level += 1;
+
+                },
+                function(building) {
+                    building.level -= 1;
+
+                }
+            );
+            buff.assignToBuilding(tile.building);
         }
     },
 
@@ -241,8 +290,6 @@ var assemblyRecipes = {
         title: "Building Canon Level 1",
         description: "Drag upgrade icon unto desired tile.",
         action: function(tile) {
-            alert("HALLO");
-            tile.building.upgrade()
         }
     },
 
@@ -251,7 +298,6 @@ var assemblyRecipes = {
         title: "Upgrade Canon to Level 2",
         description: "Drag upgrade icon unto desired tile.",
         action: function(tile) {
-            alert("HALLO");
             tile.building.upgrade()
         }
     },
@@ -261,7 +307,6 @@ var assemblyRecipes = {
         title: "Upgrade Canon to Level 3",
         description: "Drag upgrade icon unto desired tile.",
         action: function(tile) {
-            alert("HALLO");
             tile.building.upgrade()
         }
     },
@@ -271,7 +316,6 @@ var assemblyRecipes = {
         title: "Increase Canon productivity",
         description: "Drag upgrade icon unto desired tile.",
         action: function(tile) {
-            alert("HALLO");
         }
     },
 
@@ -284,6 +328,10 @@ var assemblyRecipes = {
         description: "Drag upgrade icon unto desired tile.",
         action: function(tile) {
             tile.building.upgrade()
+        },
+        levelRequirements: {
+            min: 0,
+            max: 2
         }
     },
 
@@ -294,6 +342,10 @@ var assemblyRecipes = {
         action: function(tile) {
             alert("HALLO");
             tile.building.upgrade()
+        },
+        levelRequirements: {
+            min: 3,
+            max: 4
         }
     },
 
@@ -302,8 +354,11 @@ var assemblyRecipes = {
         title: "Upgrade Tower to Level 6-7",
         description: "Drag upgrade icon unto desired tile.",
         action: function(tile) {
-            alert("HALLO");
             tile.building.upgrade()
+        },
+        levelRequirements: {
+            min: 5,
+            max: 6
         }
     },
 
@@ -315,7 +370,13 @@ var assemblyRecipes = {
         title: "Exchange for Random Resources",
         description: "Drag upgrade icon unto desired tile.",
         action: function(tile) {
-            alert("HALLO");
+            var randomInt = rand(1,2);
+            if (randomInt == 1 ){
+                gameLogic.playerState.resources.coal += 10;
+            }
+            else{
+                gameLogic.playerState.resources.iron += 10;
+            }
         }
     },
 
@@ -324,7 +385,21 @@ var assemblyRecipes = {
         title: "Exchange for one Random Component",
         description: "Drag upgrade icon unto desired tile.",
         action: function(tile) {
-            alert("HALLO");
+            var randomInt = rand(1,4);
+            if (randomInt == 1 ){
+                gameLogic.playerState.components.beams += 10;
+            }
+            else if (randomInt == 2 ){
+                gameLogic.playerState.components.pipes += 10;
+
+            }
+            else if (randomInt == 3 ){
+                gameLogic.playerState.components.gears += 10;
+
+            }
+            else{
+                gameLogic.playerState.components.pistons += 10;
+            }
         }
     },
 

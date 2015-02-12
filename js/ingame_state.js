@@ -36,27 +36,6 @@ function IngameState() {
     };
 
 
-    this.debugShow = function() {
-        var effect = new NeighbourTownEffect();
-        effect.townId = 1;
-        effect.productivityDelta = 10;
-        gameLogic.neighbourTownEffectQueue.add(effect);
-        var event = new NeighbourTownEvent();
-        event.init(1);
-        gameLogic.neighbourTownEvents.push(event);
-
-        var tiles = gameLogic.map.getTilesForRadius(2);
-
-        var building = gameLogic.town.addBuilding(BuildingCodes.FARM, tiles[1]);
-        var building = gameLogic.town.addBuilding(BuildingCodes.HOUSE, tiles[2]);
-        var building = gameLogic.town.addBuilding(BuildingCodes.STEAM_PLANT, tiles[3]);
-        var building = gameLogic.town.addBuilding(BuildingCodes.FACTORY, tiles[0]);
-        var building = gameLogic.town.addBuilding(BuildingCodes.MINI_LOV, tiles[4]);
-        var building = gameLogic.town.addBuilding(BuildingCodes.MINI_TRU, tiles[5]);
-        var building = gameLogic.town.addBuilding(BuildingCodes.CANON, tiles[6]);
-    };
-
-
     this.show = function() {
 
         renderer.setClearColor(0xffffff);
@@ -64,9 +43,7 @@ function IngameState() {
         gameLogic = GameLogic.makeGameLogic();
         
         this.drawableMap = DrawableMap.makeDrawableMap(gameLogic.map);
-        var centerTile = gameLogic.map.getTile(6,6);
-        building = gameLogic.town.addBuilding(BuildingCodes.TOWER, centerTile);
-        this.debugShow();
+        gameLogic.town.addTower();
 
         var ambientLight = new THREE.AmbientLight(0x444444);
         s.add(ambientLight);
@@ -110,20 +87,6 @@ function IngameState() {
     this.hide = function() {
         gui.hide();
     };
-
-    this.timeForRadius = 9;
-    this.tileCounter = 0;
-    this.debugUpdate = function(delta) {
-        this.timeForRadius += timer.delta;
-        if (this.timeForRadius > 1) {
-            this.timeForRadius = 0;
-            gameLogic.map.increaseCurrentRadius();
-            if (this.tileCounter <= 6) {
-                var tile = gameLogic.map.getTilesForRadius(2)[this.tileCounter + 1];
-            }
-        }
-    };
-
 
     this.update = function() {
         
@@ -195,8 +158,7 @@ function IngameState() {
         if(!this.paused) {
             this.drawableMap.update();
             gameLogic.update(timer.delta);
-            this.debugUpdate();
-            
+
             gui.update();
         }
     };

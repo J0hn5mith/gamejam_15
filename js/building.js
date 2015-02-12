@@ -171,6 +171,7 @@ function Factory() {
     this.code = BuildingCodes.FACTORY;
     this.tile = null;
     this.level = 1;
+    this.emissionIntervall = 1;
     this.debugColor = 0xffff00;
     this.timer = 0;
     this.housesInRange = [];
@@ -241,12 +242,30 @@ function Factory() {
 
     this.harvestComponents = function() {
         var components = new ComponentsState();
-        if (this.timer >= 1 && this.getIsActive()) {
-            this.timer -= 1;
-            components.gears = 1;
+        if (this.timer >= this.emissionIntervall && this.getIsActive()) {
+            this.timer -= this.emissionIntervall;
+
+            var max = 3;
+            if (this.town.tower.level > 2){
+                max++;
+            }
+
+            switch (rand(1,max)){
+                case 1:
+                    components.beams++;
+                    break;
+                case 2:
+                    components.pipes++;
+                    break;
+                case 3:
+                    components.gears++;
+                    break;
+                case 4:
+                    components.pistons++;
+                    break;
+            }
         }
         return components;
-
     }
 }
 Factory.COLOR_CODE = 0xA4A4A4;
@@ -451,6 +470,7 @@ function Tower() {
 
     this.upgrade = function() {
         this.level++;
+        gameLogic.map.increaseCurrentRadius();
     };
 
 
@@ -578,19 +598,21 @@ function BuildingBuff() {
 
     this.assignToBuilding = function(building) {
         this.building = building;
-        this.building.buffs.push(building);
+        this.building.buffs.push(this);
         this.onStart();
     };
+
 
     this.removeFromBuilding = function() {
         this.onEnd();
     };
 
+
     this.update = function(timeDelta) {
         this.lifeTime += timeDelta;
-        if (this.lifeTime <= this.duration) {
+        if (this.lifeTime >= this.duration) {
             this.removeFromBuilding();
-            return false;
+            return true;
         }
 
     };
@@ -602,6 +624,7 @@ function BuildingBuff() {
         }
 
     };
+
 
     this.onEnd = function() {
         if (this.onEndFunction) {
