@@ -27,8 +27,13 @@ function NeighbourTown() {
     this.resourcesProductionStrategy;
     this.attackProductionStrategy;
     this.eventProductionStrategy;
+    
+    this.drawableNeighbourTown;
 
-    this.init = function() {
+    this.init = function(townId) {
+    	
+    	this.townId = townId;
+    	
         this.resoucresPool = new ResourcesState();
         this.attackPool = [];
         this.eventPool = [];
@@ -38,6 +43,8 @@ function NeighbourTown() {
         this.attackProductionStrategy = new AttackProductionStrategy();
         this.eventProductionStrategy = new NeighbourTownEventProductionStrategy();
 
+        this.drawableNeighbourTown = new DrawableNeighbourTown();
+        this.drawableNeighbourTown.init(this);
     };
 
 
@@ -94,12 +101,7 @@ function NeighbourTown() {
     }
 
 }
-NeighbourTown.makeNeighbourTown = function() {
-    var neighbourTown = new NeighbourTown();
-    neighbourTown.init();
-    return neighbourTown;
 
-};
 
 function NeighbourTownState() {
     this.productivity = 1;
@@ -296,5 +298,91 @@ function NeighbourTownFactoryPrototype() {
 
 var NeighbourTownFactory = new NeighbourTownFactoryPrototype();
 //NeighbourTownFactory.init()
+
+
+function DrawableNeighbourTown() {
+	
+    this.TILE_HEIGHT = 0.15;
+    this.TILE_SIZE = 1.5;
+	
+    this.FLOATING_ANIMATION_SPEED = 0.6;
+    this.DISTANCE_FROM_TOWER = 6;
+	
+	this.neighbourTown;
+	this.townId;
+	
+	this.x;
+	this.z;
+
+	this.node;
+	
+    this.colorH;
+    this.colorS;
+    this.colorL;
+    
+    this.tileModel;
+	
+	
+	this.init = function(neighbourTown) {
+		
+		this.neighbourTown = neighbourTown;
+		this.townId = this.neighbourTown.townId;
+		
+		this.x = Math.sin(this.townId * toRad(60)) * this.DISTANCE_FROM_TOWER;
+		this.z = Math.cos(this.townId * toRad(60)) * this.DISTANCE_FROM_TOWER;
+		
+		this.node = new THREE.Object3D();
+	    this.node.position.set(this.x, -0.8, this.z);
+	    this.node.rotation.set(0, toRad(30), 0);
+	    
+		this.colorH = randFloat(0.075, 0.095);
+		this.colorS = randFloat(0.2, 0.3);
+		this.colorL = randFloat(0.35, 0.55);
+	    
+	    this.createTileModel();
+	    this.createBuildings();
+	};
+	
+	
+	this.createTileModel = function() {
+		
+	      var geometry = Shapes3D.makeHexagonVolume(this.TILE_SIZE, -this.TILE_HEIGHT, 0);
+	      
+	      var color = HSLtoHex(this.colorH, this.colorS, this.colorL);
+	      var material = new THREE.MeshLambertMaterial({ color : color, ambient : color });
+	      
+	      this.tileModel = new THREE.Mesh(geometry, material);
+	      this.tileModel.userData = { neighbourTown : this.townId };
+	      this.tileModel.castShadow = true;
+	      this.tileModel.receiveShadow = true;
+	      this.tileModel.frustumCulled = false; // prevents errors while generating shadows
+	      
+	      this.node.add(this.tileModel);
+	};
+	
+	
+	this.createBuildings = function() {
+		
+	};
+	
+	
+    this.showSelection = function(r, g, b) {
+    	var tileModelColor = this.tileModel.material.color;
+    	var rgb = HSLtoRGB(this.colorH, 1.0, this.colorL);
+    	var hex = RGBtoHex(
+    			Math.round((rgb.r + r) / 2),
+    			Math.round((rgb.g + g) / 2),
+    			Math.round((rgb.b + b) / 2)
+    	);
+    	tileModelColor.setHex(hex);
+    };
+    
+    
+    this.hideSelection = function() {
+    	var tileModelColor = this.tileModel.material.color;
+    	tileModelColor.setHex(HSLtoHex(this.colorH, this.colorS, this.colorL));
+    };
+	
+}
 
 

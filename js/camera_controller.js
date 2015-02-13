@@ -21,7 +21,7 @@ function CameraController() {
         this.verticalSpeed = 0.0;
         this.horizontalSpeed = 0.0;
         
-        this.zoom = 7.0;
+        this.zoom = 6.4;
         
         this.update();
 	};
@@ -105,7 +105,7 @@ function CameraController() {
         var camZ = this.zoom * Math.cos(this.verticalAngle) * Math.sin(this.horizontalAngle);
 
         cam.setPosition(camX, camY, camZ);
-        cam.lookAt(0, -2, 0);
+        cam.lookAt(0, -1.5, 0);
 	};
     
 }

@@ -22,22 +22,22 @@ function BuildingModel() {
 		if(building.code == BuildingCodes.HOUSE) {
 			// Level 1
 			this.addHouse(0.16, 0.20, 0.20, 0.08, 0x663300); // 0
-			this.addGear(0.15, 0.03, 0.04, 18, 0x888888); // 1
+			this.addGear(0.15, 0.03, 0.04, 12, 0x888888); // 1
 			// Level 2
 			this.addHouse(0.16, 0.20, 0.16, 0.08, 0x663300); // 2
-			this.addGear(0.15, 0.03, 0.04, 18, 0x888888); // 3
+			this.addGear(0.15, 0.03, 0.04, 12, 0x888888); // 3
 			// Level 3
 			this.addHouse(0.16, 0.20, 0.24, 0.08, 0x663300); // 4
-			this.addGear(0.15, 0.03, 0.04, 18, 0x888888); // 5
+			this.addGear(0.15, 0.03, 0.04, 12, 0x888888); // 5
 			
 		} else if(building.code == BuildingCodes.TOWER) {
 			// Level 1
 			this.addCupola(0.20, 18, 2, 0x555555); // 0
-			this.addGear(0.20, 0.03, 0.04, 24, 0x888888); // 1
+			this.addGear(0.22, 0.03, 0.04, 18, 0xcc8844); // 1
 			// Level 1-7
 			for(var i = 1; i <= 7; i++) {
 				this.addCylinder(0.20 + (0.02 * i), 0.20, 18, 0x555555);
-				this.addGear(0.21 + (0.02 * i), 0.03, 0.04, 24, 0x888888);
+				this.addGear(0.22 + (0.02 * i), 0.03, 0.04, 18, 0xcc8844);
 			}
 
 
@@ -111,14 +111,14 @@ function BuildingModel() {
 			
 			if(this.building.code == BuildingCodes.HOUSE) {
 				this.elements[0].position.set(-0.17, -0.24 + (t[1] * 0.28), -0.12);
-				this.elements[0].rotation.set(0.0, (t[1] * toRad(120)), 0.0);
+				this.elements[0].rotation.set(0.0, toRad(40) + (t[1] * toRad(120)), 0.0);
 				
 				this.elements[1].position.set(-0.17, 0.0, -0.12);
 				this.elements[1].rotation.set(0.0, (t[1] * toRad(-240)), 0.0);
 				
 				if(t[2] > 0.0) {
 					this.elements[2].position.set(0.19, -0.20 + (t[2] * 0.24), -0.08);
-					this.elements[2].rotation.set(0.0, (t[2] * toRad(120)), 0.0);
+					this.elements[2].rotation.set(0.0, toRad(-20) + (t[2] * toRad(120)), 0.0);
 					
 					this.elements[3].position.set(0.19, 0.0, -0.08);
 					this.elements[3].rotation.set(0.0, (t[2] * toRad(-240)), 0.0);
@@ -129,7 +129,7 @@ function BuildingModel() {
 
 				if(t[3] > 0.0) {
 					this.elements[4].position.set(-0.02, -0.28 + (t[3] * 0.32), 0.22);
-					this.elements[4].rotation.set(0.0, (t[3] * toRad(120)), 0.0);
+					this.elements[4].rotation.set(0.0, toRad(70) + (t[3] * toRad(120)), 0.0);
 					
 					this.elements[5].position.set(-0.02, 0.0, 0.22);
 					this.elements[5].rotation.set(0.0, (t[3] * toRad(-240)), 0.0);
@@ -162,10 +162,10 @@ function BuildingModel() {
 						this.elements[(i * 2) + 1].position.set(0.0, -1000, 0.0);
 					}
 				}
-				this.elements[0].position.set(0.0, height, 0.0);
+				this.elements[0].position.set(0.0, height + 0.04, 0.0);
 				this.elements[0].rotation.set(0.0, (t[1] * toRad(120)) + rotation, 0.0);
 				
-				this.elements[1].position.set(0.0, height - 0.04, 0.0);
+				this.elements[1].position.set(0.0, height - 0.0, 0.0);
 				this.elements[1].rotation.set(0.0, (t[1] * toRad(120)) + rotation, 0.0);
 			}
 		}

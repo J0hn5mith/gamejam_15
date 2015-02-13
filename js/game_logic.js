@@ -10,6 +10,7 @@ function GameLogic() {
     
     this.map;
     
+    this.neighbourTownsNode;
     this.neighbourTowns;
     this.neighbourTownEffectQueue;
     this.neighbourTownEvents;
@@ -29,6 +30,9 @@ function GameLogic() {
         this.map = new Map();
         this.map.init(6);        
         
+        this.neighbourTownsNode = new THREE.Object3D();
+        s.add(this.neighbourTownsNode);
+        
         this.neighbourTownEffectQueue = new NeighbourTownEffectQueue();
         this.neighbourTownEvents = [];
         this.initNeighbourCities();
@@ -47,8 +51,27 @@ function GameLogic() {
     this.initNeighbourCities = function() {
         this.neighbourTowns = [];
         for(var i = 0; i < this.NUM_TOWNS; i++) {
-            this.neighbourTowns.push(NeighbourTown.makeNeighbourTown());
+        	var neighbourTown = new NeighbourTown();
+            neighbourTown.init(i);
+            this.neighbourTowns.push(neighbourTown);
+            this.neighbourTownsNode.add(neighbourTown.drawableNeighbourTown.node);
         }
+    };
+    
+    
+    this.neighbourTownMouseSelect = function() {
+        var results = cam.getObjectsAtCoords(mouse.x, mouse.y, this.neighbourTownsNode.children);
+        if(results.length > 0) {
+            var index = results[0].object.userData.neighbourTown;
+            gui.setSelectedNeighbourTown(this.neighbourTowns[index]);
+        } else {
+            gui.setSelectedNeighbourTown(null);
+        }
+    };
+    
+    
+    this.neighbourTownMouseDeselect = function() {
+        gui.setSelectedNeighbourTown(null);
     };
 
 
@@ -135,12 +158,5 @@ function GameLogic() {
         }
     };
 
-};
-
-
-GameLogic.makeGameLogic = function() {
-    var gameLogic = new GameLogic();
-    gameLogic.init();
-    return gameLogic;
 };
 

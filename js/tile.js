@@ -142,7 +142,7 @@ function DrawableTile() {
       
       this.colorH = randFloat(0.075, 0.095);
       this.colorS = randFloat(0.2, 0.3);
-      this.colorL = randFloat(0.35, 0.55)
+      this.colorL = randFloat(0.35, 0.55);
       
       this.createTileModel(animateSpawn);
       this.buildingModel = null;

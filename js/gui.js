@@ -20,9 +20,12 @@ function Gui() {
   this.draggingGrabOffsetY = 0;
   
   this.selectedMapTile = null;
+  this.selectedNeighbourTown = null;
   
   this.currentRecipe;
   this.currentAssembly;
+  
+  this.mapClickMode = 0;
   
   
   this.init = function() {
@@ -118,7 +121,12 @@ function Gui() {
         }
     });
     
+    mouse.registerUpArea("mapClick", -10000, -10000, 30000, 30000, function() {
+    	gui.mapClick();
+    });
+    
     jQuery("#gui").show();
+    
   };
   
   
@@ -327,17 +335,27 @@ function Gui() {
       jQuery("#assembly_output").addClass("dragging");
       gameLogic.map.drawableMap.showBuildableTiles(this.currentAssembly);
       
-      mouse.registerUpArea("place", -10000, -10000, 30000, 30000, function() {
-    	  
-          jQuery("#assembly_output").removeClass("dragging");
-          gameLogic.map.drawableMap.hideBuildableTiles();
-          if(gui.selectedMapTile != null) {
-        	  gui.selectedMapTile.showSelection(255, 255, 255);
-          }
-          
-          mouse.deleteUpArea("place");
-          gui.placeAssemblyOutput(this.currentAssembly);
-      });
+      this.mapClickMode = 1;
+  };
+  
+  
+  this.mapClick = function() {
+	  
+	  if(this.mapClickMode == 0) {
+		  if(this.selectedNeighbourTown != null) {
+			  console.log(this.selectedNeighbourTown.townId);
+		  }
+		  
+	  } else if(this.mapClickMode == 1) {
+	      jQuery("#assembly_output").removeClass("dragging");
+	      gameLogic.map.drawableMap.hideBuildableTiles();
+	      if(gui.selectedMapTile != null) {
+	    	  gui.selectedMapTile.showSelection(255, 255, 255);
+	      }
+	      
+	      this.mapClickMode = 0;
+	      gui.placeAssemblyOutput(this.currentAssembly);
+	  }
   };
   
   
@@ -379,8 +397,8 @@ function Gui() {
       if(gameLogic.assembler.doesRecipeExist(recipe)) {
           jQuery("#assembly_hint_title").html(gameLogic.assembler.getTitle(recipe));
           jQuery("#assembly_hint_description").html(gameLogic.assembler.getDescription(recipe));
+          jQuery("#assembly_hint").show();
       }
-      jQuery("#assembly_hint").show();
   };
   
   
@@ -413,6 +431,19 @@ function Gui() {
   };
   
   
+  this.setSelectedNeighbourTown = function(newTown) {
+      if(newTown != this.selectedNeighbourTown) {
+          if(this.selectedNeighbourTown != null) {
+        	  this.selectedNeighbourTown.drawableNeighbourTown.hideSelection();
+          }
+          if(newTown != null) {
+              newTown.drawableNeighbourTown.showSelection(255, 255, 255);
+          }
+          this.selectedNeighbourTown = newTown;
+      }
+  };
+  
+  
   this.resize = function() {
       jQuery("#gui").width(game.WIDTH).height(game.HEIGHT);
       jQuery("#assembly_panel").css("left", ((game.WIDTH / 2.0) - 150) + "px");
@@ -433,9 +464,9 @@ function Gui() {
 function DebugPanelPrototype(){
 
     this.print = function(text){
-        var element = this.getElement();
-        var tag = "<p>"  + text + "</p>";
-        element.prepend(tag);
+        //var element = this.getElement();
+        //var tag = "<p>"  + text + "</p>";
+        //element.prepend(tag);
     };
 
     this.getElement = function(){

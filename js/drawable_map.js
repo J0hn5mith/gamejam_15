@@ -48,6 +48,11 @@ function DrawableMap() {
     };
     
     
+    this.mouseDeselect = function() {
+        gui.setSelectedMapTile(null);
+    };
+    
+    
     this.showBuildableTiles = function(assembly) {
         for(var i = 0; i < this.drawableTiles.length; i++) {
         	if(this.drawableTiles[i].tile.isBuildable(assembly)) {
@@ -61,11 +66,6 @@ function DrawableMap() {
         for(var i = 0; i < this.drawableTiles.length; i++) {
             this.drawableTiles[i].hideBuildable();
         }
-    };
-    
-    
-    this.mouseDeselect = function() {
-        gui.setSelectedMapTile(null);
     };
     
     

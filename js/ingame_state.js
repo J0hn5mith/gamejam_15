@@ -10,12 +10,13 @@ function IngameState() {
 
         s = new THREE.Scene();
         cam = new Camera();
-        cam.initPerspectiveCamera(75, 1.0, 1000.0);
+        cam.initPerspectiveCamera(75, 0.1, 100.0);
         
         this.cameraController = new CameraController();
         this.cameraController.init();
         
-        gameLogic = GameLogic.makeGameLogic();
+        gameLogic = new GameLogic();
+        gameLogic.init();
 
         gui = new Gui();
         gui.init();
@@ -75,9 +76,11 @@ function IngameState() {
         if(!this.blockMapInteraction) {
         	this.cameraController.mouseAndKeyboardInput();            
             gameLogic.map.drawableMap.mouseSelect();
+            gameLogic.neighbourTownMouseSelect();
             
         } else {
         	gameLogic.map.drawableMap.mouseDeselect();
+        	gameLogic.neighbourTownMouseDeselect();
         }
         
         if(!this.paused) {

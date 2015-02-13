@@ -4,7 +4,7 @@ var assemblyRecipes = {
     "III": {
         target: BuildingCodes.EMPTY,
         title: "Building House Level 1",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             gameLogic.town.addBuilding(BuildingCodes.HOUSE, tile);
         }
@@ -13,7 +13,7 @@ var assemblyRecipes = {
     "IOI": {
         target: BuildingCodes.HOUSE,
         title: "Upgrade House to Level 2",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             tile.building.upgrade();
         },
@@ -23,7 +23,7 @@ var assemblyRecipes = {
     "XIO": {
         target: BuildingCodes.HOUSE,
         title: "Upgrade House to Level 3",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             tile.building.upgrade();
         },
@@ -33,7 +33,7 @@ var assemblyRecipes = {
     "IXI": {
         target: BuildingCodes.HOUSE,
         title: "Increase House productivity",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             alert("HALLO");
         }
@@ -43,7 +43,7 @@ var assemblyRecipes = {
     "IIO": {
         target: BuildingCodes.EMPTY,
         title: "Building Farm Level 1",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             gameLogic.town.addBuilding(BuildingCodes.FARM, tile);
 
@@ -53,7 +53,7 @@ var assemblyRecipes = {
     "XII": {
         target: BuildingCodes.FARM,
         title: "Upgrade Farm to Level 2",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             tile.building.upgrade();
         }
@@ -62,7 +62,7 @@ var assemblyRecipes = {
     "XOI": {
         target: BuildingCodes.FARM,
         title: "Upgrade Farm to Level 3",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             tile.building.upgrade();
         }
@@ -71,7 +71,7 @@ var assemblyRecipes = {
     "IIX": {
         target: BuildingCodes.FARM,
         title: "Increase Farm productivity",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             alert("HALLO");
         }
@@ -81,7 +81,7 @@ var assemblyRecipes = {
     "OIO": {
         target: BuildingCodes.EMPTY,
         title: "Building Factory Level 1",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             gameLogic.town.addBuilding(BuildingCodes.FACTORY, tile);
         }
@@ -90,7 +90,7 @@ var assemblyRecipes = {
     "OOI": {
         target: BuildingCodes.FACTORY,
         title: "Upgrade Factory to Level 2",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             tile.building.upgrade();
         }
@@ -99,7 +99,7 @@ var assemblyRecipes = {
     "XXO": {
         target: BuildingCodes.FACTORY,
         title: "Upgrade Factory to Level 3",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             tile.building.upgrade();
         }
@@ -108,7 +108,7 @@ var assemblyRecipes = {
     "XOO": {
         target: BuildingCodes.FACTORY,
         title: "Increase Factory productivity",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             var buff = BuildingBuff.make(
                 100,
@@ -129,7 +129,7 @@ var assemblyRecipes = {
     "OII": {
         target: BuildingCodes.EMPTY,
         title: "Building Steamengine Level 1",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             gameLogic.town.addBuilding(BuildingCodes.STEAM_PLANT, tile);
         }
@@ -138,7 +138,7 @@ var assemblyRecipes = {
     "IOO": {
         target: BuildingCodes.STEAM_PLANT,
         title: "Upgrade Steamengine to Level 2",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             tile.building.upgrade();
         }
@@ -147,7 +147,7 @@ var assemblyRecipes = {
     "OXX": {
         target: BuildingCodes.STEAM_PLANT,
         title: "Upgrade Steamengine to Level 3",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             tile.building.upgrade();
         }
@@ -156,7 +156,7 @@ var assemblyRecipes = {
     "OOX": {
         target: BuildingCodes.STEAM_PLANT,
         title: "Increase Steamengine productivity",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             alert("HALLO");
         }
@@ -169,7 +169,7 @@ var assemblyRecipes = {
     "XXI": {
         target: BuildingCodes.EMPTY,
         title: "Building Minitru Level 1",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             gameLogic.town.addBuilding(BuildingCodes.MINI_TRU, tile);
         }
@@ -178,7 +178,7 @@ var assemblyRecipes = {
     "XXT": {
         target: BuildingCodes.MINI_TRU,
         title: "Upgrade Minitru to Level 2",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             alert("HALLO");
             tile.building.upgrade()
@@ -189,7 +189,7 @@ var assemblyRecipes = {
     "XTT": {
         target: BuildingCodes.MINI_TRU,
         title: "Upgrade Minitru to Level 3",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             tile.building.upgrade()
         },
@@ -202,7 +202,7 @@ var assemblyRecipes = {
     "IOT": {
         target: BuildingCodes.MINI_TRU,
         title: "Increase Minitru productivity",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             var buff = BuildingBuff.make(
                 100,
@@ -227,7 +227,7 @@ var assemblyRecipes = {
     "IXX": {
         target: BuildingCodes.EMPTY,
         title: "Building Minilov Level 1",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             gameLogic.town.addBuilding(BuildingCodes.MINI_LOV, tile);
         }
@@ -236,7 +236,7 @@ var assemblyRecipes = {
     "TXX": {
         target: BuildingCodes.MINI_LOV,
         title: "Upgrade Minilov to Level 2",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             tile.building.upgrade()
 
@@ -250,7 +250,7 @@ var assemblyRecipes = {
     "TTX": {
         target: BuildingCodes.MINI_LOV,
         title: "Upgrade Minilov to Level 3",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             tile.building.upgrade();
         },
@@ -263,7 +263,7 @@ var assemblyRecipes = {
     "TOI": {
         target: BuildingCodes.MINI_LOV,
         title: "Increase Minilov productivity",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             var buff = BuildingBuff.make(
                 100,
@@ -287,7 +287,7 @@ var assemblyRecipes = {
     "XIX": {
         target: BuildingCodes.EMPTY,
         title: "Building Canon Level 1",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
         }
     },
@@ -295,7 +295,7 @@ var assemblyRecipes = {
     "XTX": {
         target: BuildingCodes.CANON,
         title: "Upgrade Canon to Level 2",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             tile.building.upgrade()
         }
@@ -304,7 +304,7 @@ var assemblyRecipes = {
     "TXT": {
         target: BuildingCodes.CANON,
         title: "Upgrade Canon to Level 3",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             tile.building.upgrade()
         }
@@ -313,7 +313,7 @@ var assemblyRecipes = {
     "TIO": {
         target: BuildingCodes.CANON,
         title: "Increase Canon productivity",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
         }
     },
@@ -323,42 +323,47 @@ var assemblyRecipes = {
      ************************/
     "OOO": {
         target: BuildingCodes.TOWER,
-        title: "Upgrade Tower to Level 2-3",
-        description: "Drag upgrade icon unto desired tile.",
+        title: "Upgrade Tower to Level 2",
+        description: "Drag upgrade icon onto Styro&#39;s tower.",
         action: function(tile) {
-            tile.building.upgrade()
+            tile.building.upgrade();
+            if(tile.building.level == 2) {
+            	assemblyRecipes["OOO"].title = "Upgrade Tower to Level 3";
+            } else {
+            	delete assemblyRecipes["OOO"];
+            }
         },
-        levelRequirements: {
-            min: 0,
-            max: 2
-        }
+        levelRequirements: { min: 1, max: 2 }
     },
 
     "XXX": {
         target: BuildingCodes.TOWER,
-        title: "Upgrade Tower to Level 4-5",
-        description: "Drag upgrade icon unto desired tile.",
+        title: "Upgrade Tower to Level 4",
+        description: "Drag upgrade icon onto Styro&#39;s tower.",
         action: function(tile) {
-            alert("HALLO");
-            tile.building.upgrade()
+            tile.building.upgrade();
+            if(tile.building.level == 4) {
+            	assemblyRecipes["XXX"].title = "Upgrade Tower to Level 5";
+            } else {
+            	delete assemblyRecipes["XXX"];
+            }
         },
-        levelRequirements: {
-            min: 3,
-            max: 4
-        }
+        levelRequirements: { min: 3, max: 4 }
     },
 
     "TTT": {
         target: BuildingCodes.TOWER,
-        title: "Upgrade Tower to Level 6-7",
-        description: "Drag upgrade icon unto desired tile.",
+        title: "Upgrade Tower to Level 6",
+        description: "Drag upgrade icon onto Styro&#39;s tower.",
         action: function(tile) {
-            tile.building.upgrade()
+            tile.building.upgrade();
+            if(tile.building.level == 6) {
+            	assemblyRecipes["TTT"].title = "Upgrade Tower to Level 7";
+            } else {
+            	delete assemblyRecipes["TTT"];
+            }
         },
-        levelRequirements: {
-            min: 5,
-            max: 6
-        }
+        levelRequirements: { min: 5, max: 6 }
     },
 
     /************************
@@ -367,7 +372,7 @@ var assemblyRecipes = {
     "IIX": {
         target: null,
         title: "Exchange for Random Resources",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             var randomInt = rand(1,2);
             if (randomInt == 1 ){
@@ -382,7 +387,7 @@ var assemblyRecipes = {
     "OXI": {
         target: null,
         title: "Exchange for one Random Component",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             var randomInt = rand(1,4);
             if (randomInt == 1 ){
@@ -406,7 +411,7 @@ var assemblyRecipes = {
     "OXO": {
         target: BuildingCodes.ANY,
         title: "Send mobile Canon for defense destrict",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             alert("HALLO");
         }
@@ -415,7 +420,7 @@ var assemblyRecipes = {
     "OIX": {
         target: BuildingCodes.ANY,
         title: "Send a Bomb Disarming Robot to decrease attack chance",
-        description: "Drag upgrade icon unto desired tile.",
+        description: "Drag upgrade icon onto desired tile.",
         action: function(tile) {
             alert("HALLO");
         }
