@@ -21,9 +21,7 @@ function Assembler() {
     };
     
     
-    this.assembleRecipe = function(recipe, selectedDrawableTile) {
-        
-        var assembly = assemblyRecipes[recipe];
+    this.assembleRecipe = function(recipe, assembly, selectedDrawableTile) {
 
         if(assembly.target == null) {
             this.executeAssembly(recipe, assembly, null);
@@ -31,27 +29,9 @@ function Assembler() {
         } else if(selectedDrawableTile != null) {
             
             var tile = selectedDrawableTile.tile;
-            
-            if(assembly.target == BuildingCodes.ANY) {
-                this.executeAssembly(recipe, assembly, tile);
-            
-            } else if(assembly.target == BuildingCodes.EMPTY) {
-
-                if(tile.building == null) {
-                    this.executeAssembly(recipe, assembly, tile);
-                }
-                
-            } else {
-                if(tile.building != null && tile.building.code == assembly.target) {
-                    if (assembly.hasOwnProperty('levelRequirements')){
-                        var requirements = assembly.levelRequirements;
-                        if (tile.building.level < requirements.min || tile.building.level > requirements.max){
-                            return
-                        }
-                    }
-                    this.executeAssembly(recipe, assembly, tile);
-                }
-            }                  
+            if(tile.isBuildable(assembly)) {
+            	this.executeAssembly(recipe, assembly, tile);
+            }          
         } 
     };
     

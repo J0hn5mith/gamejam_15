@@ -1,18 +1,22 @@
 function Map() {
-    // http://keekerdc.com/2011/03/hexagon-grids-coordinate-systems-and-distance-calculations/
 
-    this.radius = 0;
-    this.size = 0;
-    this.currentRadius = 1;
-    this.centerPosition = null;
+    this.radius;
+    this.size;
+    
+    this.currentRadius;
+    
     this.tiles = [];
+    this.centerPosition;
+    
+    this.drawableMap;
 
     
     this.init = function(radius) {
       
         this.radius = radius;
         this.size = (radius * 2) + 1;
-        this.centerPosition = new Position2D.makePosition(radius, radius);
+        
+        this.currentRadius = 1;
 
         for(var x = 0; x < this.size; x++) {
             this.tiles[x] = [];
@@ -22,6 +26,15 @@ function Map() {
                 this.tiles[x][y] = tile;
             }
         }
+        this.centerPosition = new Position2D.makePosition(radius, radius);
+        
+        this.drawableMap = new DrawableMap();
+        this.drawableMap.init(this);
+    };
+    
+    
+    this.update = function() {
+    	this.drawableMap.update();
     };
 
 
@@ -36,7 +49,7 @@ function Map() {
 
 
     this.setTile = function(x, y, tile) {
-        if (!this.doesTileExist(x, y)) {
+        if(!this.doesTileExist(x, y)) {
             return false;
         }
         this.tiles[x][y] = tile;
@@ -184,94 +197,3 @@ function Map() {
     };
 
 }
-
-
-function DrawableMap() {
-    
-    this.FLOATING_AMPLITUDE_MIN = 0.05;
-    this.FLOATING_AMPLITUDE_MAX = 0.1;
-    this.FLOATING_AMPLITUDE_SPEED = 0.5;
-  
-    this.map;
-    this.node;
-    
-    this.drawableTiles = [];
-    this.currentRadius = 0;
-    
-    this.floatingAmplitudeTimer = 0;
-
-
-    this.init = function(map) {
-      
-        this.map = map;
-        
-        this.node = new THREE.Object3D();
-        s.add(this.node);
-        
-        this.currentRadius = map.getCurrentRadius();
-        
-        var tiles = this.map.getAllVisibleTiles();
-        this.addDrawableTiles(tiles, false);
-    };
-
-
-    this.addDrawableTiles = function(tiles, animateSpawn) {
-        for(var i = 0; i < tiles.length; i++) {
-           this.addDrawableTile(tiles[i], animateSpawn);
-        }
-    };
-
-
-    this.addDrawableTile = function(tile, animateSpawn) {
-        var drawableTileIndex = this.drawableTiles.length;
-        var drawableTile = new DrawableHexagonTile();
-        drawableTile.init(tile, drawableTileIndex, animateSpawn);
-        this.node.add(drawableTile.node);
-        this.drawableTiles.push(drawableTile);
-    };
-    
-    
-    this.mouseSelect = function() {
-        var results = cam.getObjectsAtCoords(mouse.x, mouse.y, this.node.children);
-        if(results.length > 0) {
-            var index = results[0].object.userData.drawableTileIndex;
-            gui.setSelectedMapTile(this.drawableTiles[index]);
-        } else {
-            gui.setSelectedMapTile(null);
-        }
-    };
-    
-    
-    this.mouseDeselect = function() {
-        gui.setSelectedMapTile(null);
-    };
-    
-    
-    this.update = function() {
-        
-        if(this.currentRadius < this.map.getCurrentRadius()) {
-            this.currentRadius++;
-            this.addDrawableTiles(this.map.getTilesForRadius(this.currentRadius), true);
-        }
-        
-        this.floatingAmplitudeTimer += timer.delta * this.FLOATING_AMPLITUDE_SPEED;
-        if(this.floatingAmplitudeTimer > 6.2832) {
-            this.floatingAmplitudeTimer -= 6.2832;
-        }
-        var floatingAmplitude = 0.5 + (0.5 * Math.sin(this.floatingAmplitudeTimer));
-        floatingAmplitude *= this.FLOATING_AMPLITUDE_MAX - this.FLOATING_AMPLITUDE_MIN;
-        floatingAmplitude += this.FLOATING_AMPLITUDE_MIN;
-
-        for(var i = 0; i < this.drawableTiles.length; i++) {
-            this.drawableTiles[i].update(floatingAmplitude);
-        }
-    };
-    
-}
-
-
-DrawableMap.makeDrawableMap = function(map) {
-    var drawableMap = new DrawableMap();
-    drawableMap.init(map);
-    return drawableMap;
-};

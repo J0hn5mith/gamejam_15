@@ -16,7 +16,8 @@ var assemblyRecipes = {
         description: "Drag upgrade icon unto desired tile.",
         action: function(tile) {
             tile.building.upgrade();
-        }
+        },
+    	levelRequirements: { min: 1, max: 1 }
     },
 
     "XIO": {
@@ -25,7 +26,8 @@ var assemblyRecipes = {
         description: "Drag upgrade icon unto desired tile.",
         action: function(tile) {
             tile.building.upgrade();
-        }
+        },
+    	levelRequirements: { min: 2, max: 2 }
     },
 
     "IXI": {
@@ -181,10 +183,7 @@ var assemblyRecipes = {
             alert("HALLO");
             tile.building.upgrade()
         },
-        levelRequirements: {
-            min: 1,
-            max: 1
-        }
+        levelRequirements: { min: 1, max: 1 }
     },
 
     "XTT": {

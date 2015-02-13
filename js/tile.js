@@ -57,34 +57,59 @@ Vector3D.makeVector = function(x, y, z) {
 
 
 function Tile() {
+	
+	this.map;
   
-    this.position = new Position2D();
-    this.map;
-    this.building = null;
+    this.position;
+    
+    this.building;
 
 
     this.init = function(x, y, map) {
         this.map = map;
         this.building = null;
+        this.position = new Position2D();
         this.position.init(x, y)
     };
 
+    
     this.addBuilding = function(building) {
         this.building = building;
-    }
+    };
+    
+    
+    this.isBuildable = function(assembly) {
+    	
+    	if(assembly.target == BuildingCodes.ANY) {
+            return true;
+        
+        } else if(assembly.target == BuildingCodes.EMPTY) {
+            return this.building == null;
+            
+        } else if(this.building != null && this.building.code == assembly.target) {
+            if(!assembly.hasOwnProperty("levelRequirements")) {
+            	return true;
+            }
+            var requirements = assembly.levelRequirements;
+            if(this.building.level >= requirements.min && this.building.level <= requirements.max) {
+                return true;
+            }
+        }
+    	return false;
+    };
 }
 
 
-function DrawableHexagonTile() {
+function DrawableTile() {
     
-    this.TILE_HEIGHT = 0.12;
+    this.TILE_HEIGHT = 0.15;
     this.TILE_SIZE = 0.92;
     
     this.SPAWN_ANIMATION_Y_MIN = -10;
     this.SPAWN_ANIMATION_Y_MAX = -30;
     this.SPAWN_ANIMATION_SPEED = 3.6;
     
-    this.FLOATING_ANIMATION_SPEED = 1.0;
+    this.FLOATING_ANIMATION_SPEED = 0.6;
     
     this.DISTANCE_TO_TOWER_Y_INFLUENCE = 0.3;
 
@@ -92,8 +117,9 @@ function DrawableHexagonTile() {
     this.drawableTileIndex;
     this.orthogonalPosition;
     
-    //this.shaderUniforms;
-    //this.shaderAttributes;
+    this.colorH;
+    this.colorS;
+    this.colorL;
     
     this.node;
     this.selectionNode;
@@ -113,6 +139,10 @@ function DrawableHexagonTile() {
       
       this.node = new THREE.Object3D();
       this.node.position.set(this.orthogonalPosition.x, 0, this.orthogonalPosition.y);
+      
+      this.colorH = randFloat(0.075, 0.095);
+      this.colorS = randFloat(0.2, 0.3);
+      this.colorL = randFloat(0.35, 0.55)
       
       this.createTileModel(animateSpawn);
       this.buildingModel = null;
@@ -137,52 +167,12 @@ function DrawableHexagonTile() {
     };
     
     
-    /*this.createShaderUniforms = function(geometry) {
-        this.shaderUniforms = {
-            time : { type : "f", value : 0 },
-            amplitude : { type : "f", value : 0 },
-            tileX : { type : "f", value : this.orthogonalPosition.x },
-            tileY : { type : "f", value : this.orthogonalPosition.y },
-        };
-    };*/
-    
-    
-    /*this.createShaderAttributes = function(geometry) {
-        this.shaderAttributes = {
-            aCol : { type : "c", value : [] }
-        };
-  
-        var color = this.getColorCode();
-        
-        for(var v = 0; v < geometry.vertices.length; v++) {
-          this.shaderAttributes.aCol.value.push(new THREE.Color(color));
-        }
-    };*/
-    
-    
     this.createTileModel = function() {
 
-      var geometry = Shapes3D.makeHexagonVolume(
-          this.TILE_SIZE,
-          -this.TILE_HEIGHT / 2,
-          this.TILE_HEIGHT / 2
-      );
-
-      //this.createShaderUniforms(geometry);
-      //this.createShaderAttributes(geometry);
+      var geometry = Shapes3D.makeHexagonVolume(this.TILE_SIZE, -this.TILE_HEIGHT, 0);
       
-      /*var material = new THREE.ShaderMaterial({
-        uniforms : THREE.ShaderLib["lambert"].uniforms, //this.shaderUniforms,
-        attributes : this.shaderAttributes,
-        vertexShader : "#define USE_MAP\n"+THREE.ShaderLib["lambert"].vertexShader, //shaders.floatingHexagon.vertex,
-        fragmentShader : "#define USE_MAP\n"+THREE.ShaderLib["lambert"].fragmentShader
-      });*/
-      
-      var color = this.getColorCode();
-      var material = new THREE.MeshLambertMaterial({ 
-          color : color,
-          ambient : color,
-      });
+      var color = HSLtoHex(this.colorH, this.colorS, this.colorL);
+      var material = new THREE.MeshLambertMaterial({ color : color, ambient : color });
       
       this.tileModel = new THREE.Mesh(geometry, material);
       this.tileModel.userData = { drawableTileIndex : this.drawableTileIndex };
@@ -195,10 +185,6 @@ function DrawableHexagonTile() {
 
 
     this.update = function(floatingAmplitude) {
-        
-        //this.shaderUniforms.time.value += timer.delta;
-        //this.shaderUniforms.amplitude.value = 0.05 + (Math.sin(this.shaderUniforms.time.value) * 0.05);
-        
 
         if(this.spawnY < 0) {
             var velocity = Math.sqrt(Math.abs(this.spawnY)) * this.SPAWN_ANIMATION_SPEED;
@@ -222,63 +208,35 @@ function DrawableHexagonTile() {
             this.selectionNode.position.copy(this.node.position);
         }
 
-        if(!this.buildingModel && this.tile.building) {
+        if(this.buildingModel == null && this.tile.building) {
             this.addBuilding();
+        }
+        if(this.buildingModel != null) {
+        	this.buildingModel.update();
         }
     };
 
     
     this.addBuilding = function() {
-        //this.buildingModel = new DrawableBuilding();
-        this.buildingModel = BuildingModel.make(this.tile.building.code);
-        this.node.add(this.buildingModel);
-        //s.add(this.buildingModel);
-        //this.buildingModel.position.copy(this.node.position);
-        //this.buildingModel = true;
-    };
-
-
-    this.getColorCode = function() {
-        var distance = this.tile.map.getDistanceToCenter(this.tile.position);
-        var color;
-        if (distance == 0) {
-            color = 0x000000;
-        }
-        else if (distance == 1) {
-            color = 0xFF0000;
-        }
-        else if (distance == 2) {
-            color = 0x00FF00;
-        }
-        else if (distance == 3) {
-            color = 0x0000FF;
-        }
-        else if (distance == 4) {
-            color = 0xFF00FF;
-        }
-        else {
-            color = Math.random() * 0xffffff;
-        }
-        return color;
+        this.buildingModel = new BuildingModel();
+        this.buildingModel.init(this.tile.building, this.drawableTileIndex);
+        this.node.add(this.buildingModel.node);
     };
     
     
-    this.showSelection = function(color) {
+    this.showBuildable = function(color) {
 
         this.selectionNode = new THREE.Object3D();
         
-        var outlineWidth = 0.006 * cam.threeJSCamera.position.distanceTo(this.node.position);
+        var outlineWidth = 0.005 * cam.threeJSCamera.position.distanceTo(this.node.position);
         
         var geometry = Shapes3D.makeHexagonVolume(
             this.TILE_SIZE + (2 * outlineWidth),
-            (-this.TILE_HEIGHT / 2) - outlineWidth,
-            (this.TILE_HEIGHT / 2) + outlineWidth
+            (-this.TILE_HEIGHT) - outlineWidth,
+            outlineWidth
         );
         
-        var material = new THREE.MeshBasicMaterial({
-            color : color,
-            side : THREE.BackSide
-        });
+        var material = new THREE.MeshBasicMaterial({ color : 0x00cc00, side : THREE.BackSide });
         
         var selectionTile = new THREE.Mesh(geometry, material);
         this.selectionNode.add(selectionTile);
@@ -288,9 +246,27 @@ function DrawableHexagonTile() {
     };
     
     
-    this.hideSelection = function() {
+    this.hideBuildable = function() {
         s.remove(this.selectionNode);
         this.selectionNode = null;
+    };
+    
+    
+    this.showSelection = function(r, g, b) {
+    	var tileModelColor = this.tileModel.material.color;
+    	var rgb = HSLtoRGB(this.colorH, 1.0, this.colorL);
+    	var hex = RGBtoHex(
+    			Math.round((rgb.r + r) / 2),
+    			Math.round((rgb.g + g) / 2),
+    			Math.round((rgb.b + b) / 2)
+    	);
+    	tileModelColor.setHex(hex);
+    };
+    
+    
+    this.hideSelection = function() {
+    	var tileModelColor = this.tileModel.material.color;
+    	tileModelColor.setHex(HSLtoHex(this.colorH, this.colorS, this.colorL));
     };
     
 }

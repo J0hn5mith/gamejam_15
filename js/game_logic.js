@@ -1,27 +1,25 @@
-/**
- *
- * Created by janmeier on 23.01.15.
- */
-
 function GameLogic() {
 
     this.NUM_TOWNS = 6;
 
-    //  Town Events
     this.TOWN_EVENT_MEAN_INTERVAL = 10;
     this.TOWN_EVENT_VARIANCE = 5;
     this.townEventTimer = 0;
 
     this.playerState;
+    
+    this.map;
+    
     this.neighbourTowns;
-
-    this.neighbourTownEffectQueue = new NeighbourTownEffectQueue();
-    this.neighbourTownEvents = [];
-    this.map = new Map();
-    this.town = new Town();
+    this.neighbourTownEffectQueue;
+    this.neighbourTownEvents;
+    
+    this.town;
 
     this.assembler;
-
+    
+    this.minLovEventManager;
+    this.minTruEventManager;
 
     this.init = function() {
 
@@ -29,10 +27,14 @@ function GameLogic() {
         this.playerState.init();
 
         this.map = new Map();
-        this.map.init(6);
+        this.map.init(6);        
+        
+        this.neighbourTownEffectQueue = new NeighbourTownEffectQueue();
         this.neighbourTownEvents = [];
         this.initNeighbourCities();
+        
         this.town = Town.make(this.map);
+        this.town.addTower();
 
         this.assembler = new Assembler();
         this.assembler.init();
@@ -44,25 +46,28 @@ function GameLogic() {
 
     this.initNeighbourCities = function() {
         this.neighbourTowns = [];
-        for (var i = 0; i < this.NUM_TOWNS; i++) {
+        for(var i = 0; i < this.NUM_TOWNS; i++) {
             this.neighbourTowns.push(NeighbourTown.makeNeighbourTown());
         }
     };
 
 
-    this.update = function(timeDelta) {
-        this.updateNeighbours(timeDelta);
+    this.update = function() {
+    	
+    	this.map.update();
+    	
+        this.updateNeighbours(timer.delta);
         this.harvestResources();
         this.handleNeighbourTownEvents();
         this.applyNeighbourTownEffects();
-        this.updateTownEvents(timeDelta);
-        this.town.update(timeDelta, this.playerState);
-        var minLovResult = this.minLovEventManager.update(timeDelta, this.town);
+        this.updateTownEvents(timer.delta);
+        this.town.update(timer.delta, this.playerState);
+        var minLovResult = this.minLovEventManager.update(timer.delta, this.town);
         if (minLovResult) {
             var neighbourhoodTown = this.neighbourTowns[1];
             minLovResult.getEffect().apply(neighbourhoodTown);
         }
-        var minTruResult = this.minTruEventManager.update(timeDelta, this.town);
+        var minTruResult = this.minTruEventManager.update(timer.delta, this.town);
         if (minTruResult) {
             var neighbourhoodTown = this.neighbourTowns[1];
             minTruResult.getEffect().apply(neighbourhoodTown);
@@ -132,10 +137,10 @@ function GameLogic() {
 
 };
 
+
 GameLogic.makeGameLogic = function() {
     var gameLogic = new GameLogic();
     gameLogic.init();
     return gameLogic;
-
 };
 

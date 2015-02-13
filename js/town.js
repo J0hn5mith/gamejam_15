@@ -4,8 +4,8 @@
  */
 
 
-
 function Town() {
+    
     this.map;
     this.buildings = [];
     this.addedBuildings = [];
@@ -17,6 +17,7 @@ function Town() {
     this.activePlants = [];
     this.inactivePlants = [];
 
+    
     this.init = function(map) {
         this.map = map;
         this.activePlants = [];
@@ -53,7 +54,7 @@ function Town() {
 
 
     this.addTower = function(){
-        var centerTile = gameLogic.map.getTile(6,6);
+        var centerTile = this.map.getTile(6,6);
         this.tower = this.addBuilding(BuildingCodes.TOWER, centerTile);
     };
 
@@ -84,6 +85,7 @@ function Town() {
         return result;
     };
 
+    
     this.checkForBuilding = function(position, radius, buildingType) {
         return this.getBuildingsOfTypeInRange(position, radius, buildingType).length > 0;
     };
@@ -123,6 +125,7 @@ function Town() {
 
     };
 
+    
     this.addBuilding = function(buildingCode, tile) {
         var building = Building.make(buildingCode, tile, this);
         tile.addBuilding(building);
@@ -135,9 +138,10 @@ function Town() {
                 this.plantListUpdateRequired = true;
                 break;
         }
-        return building
+        return building;
     };
 
+    
     this.removeBuilding = function(building) {
         // Remove the buidling from the tiles
         s.remove(building.tile.shape);
@@ -152,6 +156,7 @@ function Town() {
         }
     };
 
+    
     this.removePlant = function(plant) {
         var index = this.activePlants.indexOf(plant);
         if (index >= 0) {
@@ -169,12 +174,10 @@ function Town() {
             console.log("Something strange happened:)")
         }
         this.plantListUpdateRequired = true;
-
-
-    }
-
+    };
 
 }
+
 
 Town.make = function(map) {
     var town = new Town();

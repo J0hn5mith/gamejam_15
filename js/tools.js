@@ -71,3 +71,57 @@ function createCanvas(width, height) {
   canvas.height = height;
   return canvas;
 }
+
+
+function HSLtoRGB(h, s, l) {
+    
+    if(s == 0) {
+        return { r : Math.round(l * 255), g : Math.round(l * 255), b : Math.round(l * 255) };
+    }
+    
+    var q;
+    if(l < 0.5) {
+        q = l * (1 + s);
+    } else {
+        q = l + s - (l * s);
+    }
+    var p = (2 * l) - q;
+
+    return {
+        r : Math.round(HueToRGB(p, q, h + (1 / 3)) * 255),
+        g : Math.round(HueToRGB(p, q, h) * 255),
+        b : Math.round(HueToRGB(p, q, h - (1 / 3)) * 255)
+    };
+}
+
+
+function HueToRGB(p, q, t) {
+    
+    if(t < 0) {
+        t += 1;
+    }
+    if(t > 1) {
+        t -= 1;
+    }
+    
+    if(t < 1 / 6) {
+        return p + (6 * (q - p) * t);
+    } else if(t < 1 / 2) {
+        return q;
+    } else if(t < 2/3) {
+        return p + (6 * (q - p) * ((2 / 3) - t));
+    } else {
+        return p;
+    }
+}
+
+
+function HSLtoHex(h, s, l) {
+    var rgb = HSLtoRGB(h, s, l);
+    return RGBtoHex(rgb.r, rgb.g, rgb.b);
+}
+
+
+function RGBtoHex(r, g, b) {
+    return (r * 65536) + (g * 256) + b;
+}

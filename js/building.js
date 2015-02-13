@@ -452,6 +452,7 @@ MiniTru.COLOR_CODE = 0x2E64FE;
 
 
 function Tower() {
+	
     this.code = BuildingCodes.TOWER;
     this.tile = null;
     this.level = 1;
@@ -482,6 +483,7 @@ function Tower() {
     };
 }
 Tower.COLOR_CODE = 0x000000;
+
 
 function Canon() {
     this.code = BuildingCodes.CANON;
@@ -534,59 +536,6 @@ function Canon() {
 }
 Canon.COLOR_CODE = 0xFE2E2E;
 
-
-function BuildingModel() {
-
-}
-
-BuildingModel.make = function(code) {
-    var color = null;
-    var geometry = new THREE.CylinderGeometry(0.1, 0.1, 5.0, 32);
-    switch (code) {
-        case BuildingCodes.FARM:
-            color = Farm;
-            color = Farm.COLOR_CODE;
-            geometry = new THREE.CylinderGeometry(0.1, 0.1, 1.0, 32);
-            break;
-        case BuildingCodes.HOUSE:
-            color = House.COLOR_CODE;
-            geometry = new THREE.CylinderGeometry(0.1, 0.1, 1.5, 32);
-            break;
-        case BuildingCodes.FACTORY:
-            color = Factory.COLOR_CODE;
-            geometry = new THREE.CylinderGeometry(0.1, 0.1, 2.0, 32);
-            break;
-        case BuildingCodes.STEAM_PLANT:
-            color = SteamPlant.COLOR_CODE;
-            geometry = new THREE.CylinderGeometry(0.1, 0.1, 2.5, 32);
-            break;
-        case BuildingCodes.MINI_LOV:
-            color = MiniLov.COLOR_CODE;
-            geometry = new THREE.CylinderGeometry(0.1, 0.1, 3.0, 32);
-            break;
-        case BuildingCodes.MINI_TRU:
-            color = MiniTru.COLOR_CODE;
-            geometry = new THREE.CylinderGeometry(0.1, 0.1, 3.5, 32);
-            break;
-        case BuildingCodes.CANON:
-            color = Canon.COLOR_CODE;
-            geometry = new THREE.CylinderGeometry(0.1, 0.1, 4.0, 32);
-            break;
-        case BuildingCodes.TOWER:
-            color = Tower.COLOR_CODE;
-            break;
-        case BuildingCodes.NONE:
-            //
-            break;
-    }
-    var material = new THREE.MeshBasicMaterial({color: color});
-    var cylinder = new THREE.Mesh(geometry, material);
-    cylinder.castShadow = true;
-    cylinder.receiveShadow = true;
-    cylinder.frustumCulled = false; // prevents errors while generating shadows
-    return cylinder;
-
-}
 
 function BuildingBuff() {
     this.id = 0;

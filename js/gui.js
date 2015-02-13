@@ -21,6 +21,9 @@ function Gui() {
   
   this.selectedMapTile = null;
   
+  this.currentRecipe;
+  this.currentAssembly;
+  
   
   this.init = function() {
       
@@ -311,15 +314,29 @@ function Gui() {
   
   
   this.startDraggingAssemblyOutput = function() {
+	  
+	  this.currentRecipe = this.assemblyInput[0] + this.assemblyInput[1] + this.assemblyInput[2];
+      if(!gameLogic.assembler.doesRecipeExist(this.currentRecipe)) {
+    	  return;
+      }
+      this.currentAssembly = assemblyRecipes[this.currentRecipe];
       
       this.draggingGrabOffsetX = mouse.x - this.assemblyOutputX;
       this.draggingGrabOffsetY = mouse.y - this.assemblyOutputY;
       
       jQuery("#assembly_output").addClass("dragging");
+      gameLogic.map.drawableMap.showBuildableTiles(this.currentAssembly);
+      
       mouse.registerUpArea("place", -10000, -10000, 30000, 30000, function() {
+    	  
           jQuery("#assembly_output").removeClass("dragging");
+          gameLogic.map.drawableMap.hideBuildableTiles();
+          if(gui.selectedMapTile != null) {
+        	  gui.selectedMapTile.showSelection(255, 255, 255);
+          }
+          
           mouse.deleteUpArea("place");
-          gui.placeAssemblyOutput();
+          gui.placeAssemblyOutput(this.currentAssembly);
       });
   };
   
@@ -340,12 +357,10 @@ function Gui() {
       
       if(mouse.x < this.assemblyOutputX || mouse.x > this.assemblyOutputX + 50 ||
               mouse.y < this.assemblyOutputY || mouse.y > this.assemblyOutputY + 50) {
-          
-          var recipe = this.assemblyInput[0] + this.assemblyInput[1] + this.assemblyInput[2];
-          if(gameLogic.assembler.doesRecipeExist(recipe)) {
-              gameLogic.assembler.assembleRecipe(recipe, this.selectedMapTile);
-          }
+          gameLogic.assembler.assembleRecipe(this.currentRecipe, this.currentAssembly, this.selectedMapTile);
       }
+      this.currentRecipe = "";
+      this.currentAssembly = null;
   };
   
   
@@ -383,7 +398,15 @@ function Gui() {
               this.selectedMapTile.hideSelection();
           }
           if(newMapTile != null) {
-              newMapTile.showSelection(0x0000ff);
+        	  if(this.currentAssembly != null) {
+                  if(newMapTile.tile.isBuildable(this.currentAssembly)) {
+                	  newMapTile.showSelection(63, 255, 63);
+                  } else {
+                	  newMapTile.showSelection(255, 63, 63);
+                  }
+        	  } else {
+        		  newMapTile.showSelection(255, 255, 255);
+        	  }
           }
           this.selectedMapTile = newMapTile;
       }
@@ -421,7 +444,7 @@ function DebugPanelPrototype(){
         }
 
         return this.element;
-    }
+    };
 }
 
 var DebugPanel = new DebugPanelPrototype();
