@@ -17,6 +17,28 @@ var NeighbourTownConfiguration = {
 }
 
 function NeighbourTown() {
+	
+	this.TITLES = [
+		"Zylphia, City of Water",
+		"Leander, City of Sand",
+		"Cephas, City of the Sky",
+		"Okami, City of Wood",
+		"Morax, City of Hills",
+		"Nelly, City of Fire"
+	];
+	
+	
+	this.IMAGES = [
+	       		{ x : 0, y : 3 },
+	       		{ x : 1, y : 0 },
+	       		{ x : 2, y : 3 },
+	       		{ x : 3, y : 4 },
+	       		{ x : 4, y : 2 },
+	       		{ x : 5, y : 4 },
+	 ];
+	
+	
+	
     this.townId;
 
     this.resourcesPool;
@@ -45,6 +67,21 @@ function NeighbourTown() {
 
         this.drawableNeighbourTown = new DrawableNeighbourTown();
         this.drawableNeighbourTown.init(this);
+    };
+    
+    
+    this.getTitle = function() {
+    	return this.TITLES[this.townId];
+    };
+    
+    
+    this.getDescription = function() {
+    	
+    };
+    
+    
+    this.getImageOffset = function() {
+    	return this.IMAGES[this.townId];
     };
 
 

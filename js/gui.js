@@ -342,8 +342,8 @@ function Gui() {
   this.mapClick = function() {
 	  
 	  if(this.mapClickMode == 0) {
-		  if(this.selectedNeighbourTown != null) {
-			  console.log(this.selectedNeighbourTown.townId);
+		  if(!game.state.blockMapInteraction && this.selectedNeighbourTown != null) {
+			  gui.overlay.openNeighbourTown(this.selectedNeighbourTown, function() {  });
 		  }
 		  
 	  } else if(this.mapClickMode == 1) {

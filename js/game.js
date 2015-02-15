@@ -6,7 +6,7 @@ function Game() {
     this.MIN_WIDTH = 900;
     this.MIN_HEIGHT = 560;
 
-    this.DEBUG = true;
+    this.DEBUG = false;
 
     this.TIME_PER_FRAME = 20;
 

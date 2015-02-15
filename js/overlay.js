@@ -27,6 +27,32 @@ function Overlay() {
     };
     
     
+    this.openNeighbourTown = function(town, closeCallback) {
+        
+        game.state.paused = true;
+        game.state.blockMapInteraction = true;
+        
+        jQuery("#overlay_container").show();
+        jQuery("#overlay_neighbour_town").show();
+        
+        var image = town.getImageOffset();
+        jQuery("#overlay_neighbour_town .image").css("background-position", (-395 * image.x) + "px " + (-536 * image.y) + "px")
+        jQuery("#overlay_neighbour_town .title").html(town.getTitle());
+        jQuery("#overlay_neighbour_town .description").html(town.getDescription());
+        
+        jQuery("#overlay_neighbour_town .ok_button").click(function() {
+            
+            jQuery("#overlay_event").hide();
+            jQuery("#overlay_container").hide();
+            
+            game.state.paused = false;
+            game.state.blockMapInteraction = false;
+            
+            jQuery("#overlay_event .ok_button").off("click");
+            
+            closeCallback();
+        });
+    };
     
 }
 
