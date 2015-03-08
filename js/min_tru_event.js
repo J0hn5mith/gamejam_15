@@ -31,6 +31,8 @@ function MinTruEventManager() {
     };
 
     this.calculateLevel = function(){
+        return 3;
+        //TODO: DEBUG
 
         var minTruBuildings = this.town.getBuildingsOfType(BuildingCodes.MINI_TRU);
         var levelSum = 0;

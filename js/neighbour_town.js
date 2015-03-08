@@ -246,8 +246,12 @@ function NeighbourTownEffect() {
         town.state.happyness *= this.happynessFactor;
         town.state.happyness += this.happynessDelta;
 
-        this.applySideEffect(town);
+        //this.applySideEffect(town);
 
+    };
+
+    this.getCallback = function(){
+        return this.apply;
     };
 
     this.init = function(productivityDelta, productivityFactor, happynessDelta, happynessFactor) {
@@ -259,11 +263,11 @@ function NeighbourTownEffect() {
 
     this.applySideEffect = function(town) {
         // Do something
-    }
+    };
 }
 
 NeighbourTownEffect.make = function(productivityDelta, productivityFactor, happynessDelta, happynessFactor) {
-    var result = new NeighbourTownEffect()
+    var result = new NeighbourTownEffect();
     result.init(productivityDelta, productivityFactor, happynessDelta, happynessFactor)
     return result
 }

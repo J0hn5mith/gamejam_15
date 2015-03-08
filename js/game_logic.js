@@ -7,18 +7,18 @@ function GameLogic() {
     this.townEventTimer = 0;
 
     this.playerState;
-    
+
     this.map;
-    
+
     this.neighbourTownsNode;
     this.neighbourTowns;
     this.neighbourTownEffectQueue;
     this.neighbourTownEvents;
-    
+
     this.town;
 
     this.assembler;
-    
+
     this.minLovEventManager;
     this.minTruEventManager;
 
@@ -28,15 +28,15 @@ function GameLogic() {
         this.playerState.init();
 
         this.map = new Map();
-        this.map.init(6);        
-        
+        this.map.init(6);
+
         this.neighbourTownsNode = new THREE.Object3D();
         s.add(this.neighbourTownsNode);
-        
+
         this.neighbourTownEffectQueue = new NeighbourTownEffectQueue();
         this.neighbourTownEvents = [];
         this.initNeighbourCities();
-        
+
         this.town = Town.make(this.map);
         this.town.addTower();
 
@@ -50,35 +50,35 @@ function GameLogic() {
 
     this.initNeighbourCities = function() {
         this.neighbourTowns = [];
-        for(var i = 0; i < this.NUM_TOWNS; i++) {
-        	var neighbourTown = new NeighbourTown();
+        for (var i = 0; i < this.NUM_TOWNS; i++) {
+            var neighbourTown = new NeighbourTown();
             neighbourTown.init(i);
             this.neighbourTowns.push(neighbourTown);
             this.neighbourTownsNode.add(neighbourTown.drawableNeighbourTown.node);
         }
     };
-    
-    
+
+
     this.neighbourTownMouseSelect = function() {
         var results = cam.getObjectsAtCoords(mouse.x, mouse.y, this.neighbourTownsNode.children);
-        if(results.length > 0) {
+        if (results.length > 0) {
             var index = results[0].object.userData.neighbourTown;
             gui.setSelectedNeighbourTown(this.neighbourTowns[index]);
         } else {
             gui.setSelectedNeighbourTown(null);
         }
     };
-    
-    
+
+
     this.neighbourTownMouseDeselect = function() {
         gui.setSelectedNeighbourTown(null);
     };
 
 
     this.update = function() {
-    	
-    	this.map.update();
-    	
+
+        this.map.update();
+
         this.updateNeighbours(timer.delta);
         this.harvestResources();
         this.handleNeighbourTownEvents();
@@ -87,13 +87,22 @@ function GameLogic() {
         this.town.update(timer.delta, this.playerState);
         var minLovResult = this.minLovEventManager.update(timer.delta, this.town);
         if (minLovResult) {
-            var neighbourhoodTown = this.neighbourTowns[1];
-            minLovResult.getEffect().apply(neighbourhoodTown);
+            gui.overlay.openNeighbourEvent(
+                minLovResult.name,
+                minLovResult.text,
+                Overlay.STYRO_MAD,
+                minLovResult.getEffect().getCallback()
+            );
         }
         var minTruResult = this.minTruEventManager.update(timer.delta, this.town);
         if (minTruResult) {
-            var neighbourhoodTown = this.neighbourTowns[1];
-            minTruResult.getEffect().apply(neighbourhoodTown);
+            gui.overlay.openNeighbourEvent(
+                minTruResult.name,
+                minTruResult.text,
+                Overlay.STYRO_MAD,
+                minTruResult.getEffect().getCallback()
+            );
+
         }
 
         this.playerState.applyTrends();

@@ -14,16 +14,16 @@ function ResearchResult(){
         this.effect = effect;
         this.text = text;
         this.variableSets = variableSets;
-    }
+    };
 
     this.getDescriptionText = function() {
        var randomIndex = Math.floor(Math.random()*1000)%this.variableSets.length;
        return this.text.format(this.variableSets[randomIndex]);
-    }
+    };
 
     this.getEffect  = function(){
         return this.effect;
-    }
+    };
 
 
     this.getPossibleTargets = function(neighbourTownList) {
@@ -37,7 +37,7 @@ ResearchResult.make = function(name, effect, text, variableSets) {
     var result = new ResearchResult();
     result.init(name, effect, text, variableSets);
     return result;
-}
+};
 
 
 
@@ -156,7 +156,7 @@ MinTruRepository.addEntry(
         NeighbourTownEffect.make(1.3,0,0.7,0),
         "Global Warming is a Hoax",
         [[""]]
-    ),1 );
+    ),2 );
 	
 MinTruRepository.addEntry(
     ResearchResult.make(
@@ -165,7 +165,7 @@ MinTruRepository.addEntry(
         NeighbourTownEffect.make(1.1,0,0,0),
         "We have the ability to provide clean water for every man, woman and child on this planet",
         [[""]]
-    ),1 );
+    ),3 );
 	
 MinTruRepository.addEntry(
     ResearchResult.make(
@@ -173,7 +173,7 @@ MinTruRepository.addEntry(
         NeighbourTownEffect.make(1.2,0,0.8,0),
         "",
         [[""]]
-    ),1 );
+    ),4 );
 	
 MinTruRepository.addEntry(
     ResearchResult.make(
