@@ -7,10 +7,20 @@ function TownEventsPrototype() {
         1: {
             0: {
                 target: BuildingCodes.FARM,
-                title: "Upgrade Farm to Level 2",
-                description: "Drag upgrade icon unto desired tile.",
+                title: "Fire",
+                description: "A fire broke out in your town. All your factory's productivity is lowered by 50%",
                 action: function() {
-                    //alert("HALLO");
+                    var buff = BuildingBuff.make(
+                        10,
+                        function(building){
+                            building.productivity *= 0.5;
+                        },
+                        function(building){
+                            building.productivity *= 0.5;
+                        }
+                    )
+                    //TODO: This way of calculating the buff effects can have nasty side effects => Fins better ones!
+                    gameLogic.town.utils.applyBuffToBuildingTypes(BuildingCodes.FACTORY,buff);
                 }
             }
         }

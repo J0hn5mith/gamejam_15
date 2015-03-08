@@ -176,10 +176,11 @@ function Factory() {
     this.timer = 0;
     this.housesInRange = [];
     this.steamPlantsInRange = [];
+    this.productivity = 1;
 
     this.update = function(timeDelta) {
         if (this.getIsActive()){
-            this.timer += timeDelta;
+            this.timer += timeDelta*this.productivity;
         }
     };
 

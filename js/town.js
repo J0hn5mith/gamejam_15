@@ -19,6 +19,8 @@ function Town() {
 
     
     this.init = function(map) {
+        this.utils = new TownUtils();
+        this.utils.init(this);
         this.map = map;
         this.activePlants = [];
         this.inactivePlants = [];
@@ -61,9 +63,13 @@ function Town() {
 
     this.getBuildingsOfType = function(buildingType) {
         var result = [];
+
+        if (!(buildingType.constructor === Array)){
+            buildingType = [buildingType]
+        }
         for(var buildingID in this.buildings){
             var building = this.buildings[buildingID];
-            if (building.code == buildingType){
+            if (buildingType.indexOf(building.code) > -1){
                 result.push(building);
             }
         }
@@ -184,4 +190,22 @@ Town.make = function(map) {
     town.init(map);
     return town;
 };
+
+function TownUtils() {
+
+    this.init = function(town){
+        this.town = town;
+    };
+
+    this.applyBuffToBuildingTypes = function(buildingTypes, buff) {
+        var buildings = this.town.getBuildingsOfType(buildingTypes);
+
+        for (var buildingID in buildings) {
+            var building = buildings[buildingID];
+            var buffCopy = {};
+            jQuery.extend(buffCopy,buff);
+            buff.assignToBuilding(building)
+        }
+    };
+}
 

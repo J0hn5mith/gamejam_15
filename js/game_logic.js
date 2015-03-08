@@ -108,7 +108,12 @@ function GameLogic() {
             this.townEventTimer += (Math.random() - 0.5) * this.TOWN_EVENT_VARIANCE;
 
             var event = TownEvents.getRandomEventForLevel(1);
-            event.action();
+            gui.overlay.openEvent(
+                event.title,
+                event.description,
+                Overlay.STYRO_MAD,
+                event.action
+            );
         }
     };
 
